@@ -15,14 +15,18 @@ ArtixAudioProcessor::ArtixAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
 	: AudioProcessor(BusesProperties()
 	#if ! JucePlugin_IsMidiEffect
-		#if ! JucePlugin_IsSynth
-			.withInput("Input", juce::AudioChannelSet::stereo(), true)
-		#endif
+	#if ! JucePlugin_IsSynth
+		.withInput("Input", juce::AudioChannelSet::stereo(), true)
+	#endif
 		.withOutput("Output", juce::AudioChannelSet::stereo(), true)
 	#endif
 	)
 #endif
-{}
+{
+	state = juce::ValueTree(Artix::ID::AppState);
+	channelMappers = new Artix::Midi::ChannelMapperList(state);
+	state.addChild(juce::ValueTree(Artix::ID::MidiChannelMapper), -1, nullptr);
+}
 
 ArtixAudioProcessor::~ArtixAudioProcessor() {}
 

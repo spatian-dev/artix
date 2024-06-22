@@ -17,6 +17,7 @@ namespace Artix::Midi {
 	class ChannelMapper : public juce::ReferenceCountedObject {
 		public:
 		ChannelMapper(const juce::ValueTree& v);
+		~ChannelMapper();
 
 		int getInputChannel() const;
 		void setInputChannel(int ch);

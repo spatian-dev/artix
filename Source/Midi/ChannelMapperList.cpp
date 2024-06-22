@@ -12,10 +12,12 @@
 
 namespace Artix::Midi {
     ChannelMapperList::ChannelMapperList(const juce::ValueTree& v) : ChannelMapperValueTreeList(v) {
-        jassert(v.hasType(Artix::ID::MidiChannelMapperList));
+        buildItems();
     }
 
-    ChannelMapperList::~ChannelMapperList() {}
+    ChannelMapperList::~ChannelMapperList() {
+        freeItems();
+    }
 
     juce::ReferenceCountedArray<ChannelMapper> ChannelMapperList::getItems() const {
         return items;
@@ -35,8 +37,19 @@ namespace Artix::Midi {
         items.removeObject(item);
     }
 
-    void ChannelMapperList::onItemAdded(ChannelMapper* item) {}
-    void ChannelMapperList::onItemRemoved(ChannelMapper* item) {}
-    void ChannelMapperList::onItemsOrderChanged() {}
-    void ChannelMapperList::onListRedirected() {}
+    void ChannelMapperList::onItemAdded(ChannelMapper* item) {
+        DBG("Added " << item->getState().toXmlString());
+    }
+
+    void ChannelMapperList::onItemRemoved(ChannelMapper* item) {
+        DBG("Removed " << item->getState().toXmlString());
+    }
+
+    void ChannelMapperList::onItemsOrderChanged() {
+        DBG("Items Order Changed");
+    }
+
+    void ChannelMapperList::onListRedirected() {
+        DBG("List Redirected");
+    }
 }

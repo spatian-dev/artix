@@ -11,10 +11,11 @@
 #pragma once
 #include <JuceHeader.h>
 #include "Midi/ChannelMapperList.h"
-
-using MidiChannelMapperListRCPtr = juce::ReferenceCountedObjectPtr<Artix::Midi::ChannelMapperList>;
+#include "Identifiers.h"
 
 class ArtixAudioProcessor : public juce::AudioProcessor {
+	using MidiChannelMapperListRCPtr = juce::ReferenceCountedObjectPtr<Artix::Midi::ChannelMapperList>;
+
 	public:
 	ArtixAudioProcessor();
 	~ArtixAudioProcessor() override;
@@ -48,6 +49,7 @@ class ArtixAudioProcessor : public juce::AudioProcessor {
 	void setStateInformation(const void* data, int sizeInBytes) override;
 
 	private:
-	MidiChannelMapperListRCPtr mcmList;
+	juce::ValueTree state;
+	MidiChannelMapperListRCPtr channelMappers;
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ArtixAudioProcessor)
 };

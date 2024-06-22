@@ -15,6 +15,9 @@ namespace Artix::Midi {
 		jassert(v.hasType(Artix::ID::MidiChannelMapper));
 	}
 
+	ChannelMapper::~ChannelMapper() {
+	}
+
 	int ChannelMapper::getInputChannel() const {
 		return state[Artix::ID::InputChannelNumber];
 	}

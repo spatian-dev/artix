@@ -28,13 +28,34 @@ namespace Artix::Util {
 		public:
 		ValueTreeList(const juce::ValueTree& parent) : parent(parent) {
 			this->parent.addListener(this);
-			buildItems();
 		}
 
 		virtual ~ValueTreeList() {
 			jassert(items.size() == 0);
+		}
+
+		void buildItems() {
+			jassert(items.size() == 0);
+			ScopedLockType lock(mutex);
+			for (const auto& v : parent) {
+				if (!isSuitable(v)) {
+					continue;
+				}
+
+				T* item = createItem(v);
+				if (item != nullptr) {
+					items.add(item);
+				}
+			}
+		}
+
+		void freeItems() {
 			parent.removeListener(this);
-			freeItems();
+
+			ScopedLockType lock(mutex);
+			while (items.size() > 0) {
+				deleteItem(items.removeAndReturn(items.size() - 1));
+			}
 		}
 
 		virtual bool isSuitable(const juce::ValueTree&) const = 0;
@@ -71,28 +92,6 @@ namespace Artix::Util {
 		juce::ValueTree parent;
 		juce::Array<T*, Mutex> items;
 		Mutex mutex;
-
-		void buildItems() {
-			jassert(items.size() == 0);
-			ScopedLockType lock(mutex);
-			for (const auto& v : parent) {
-				if (!isSuitable(v)) {
-					continue;
-				}
-
-				T* item = createItem(v);
-				if (item != nullptr) {
-					items.add(item);
-				}
-			}
-		}
-
-		void freeItems() {
-			ScopedLockType lock(mutex);
-			while (items.size() > 0) {
-				deleteItem(items.removeAndReturn(items.size() - 1));
-			}
-		}
 
 		bool isChildTree(juce::ValueTree& v) const {
 			return isSuitable(v) && (v.getParent() == parent);

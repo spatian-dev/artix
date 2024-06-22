@@ -20,6 +20,10 @@
               file="Source/Midi/ChannelMapperList.h"/>
       </GROUP>
       <GROUP id="{B3570C42-37A6-0A2E-A0F4-5AA1417D0391}" name="Ui">
+        <FILE id="r7kXo3" name="ChannelMapperGroup.cpp" compile="1" resource="0"
+              file="Source/Ui/ChannelMapperGroup.cpp"/>
+        <FILE id="qrilAL" name="ChannelMapperGroup.h" compile="0" resource="0"
+              file="Source/Ui/ChannelMapperGroup.h"/>
         <FILE id="FnJH5a" name="PluginEditor.cpp" compile="1" resource="0"
               file="Source/Ui/PluginEditor.cpp"/>
         <FILE id="K4mXZx" name="PluginEditor.h" compile="0" resource="0" file="Source/Ui/PluginEditor.h"/>
@@ -58,10 +62,10 @@
         <MODULEPATH id="juce_audio_processors" path="C:/devtools/JUCE/modules"/>
         <MODULEPATH id="juce_gui_basics" path="C:/devtools/JUCE/modules"/>
         <MODULEPATH id="juce_core" path="C:/devtools/JUCE/modules"/>
-        <MODULEPATH id="juce_gui_extra" path="C:/devtools/JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="C:/devtools/JUCE/modules"/>
         <MODULEPATH id="juce_graphics" path="C:/devtools/JUCE/modules"/>
         <MODULEPATH id="juce_events" path="C:/devtools/JUCE/modules"/>
-        <MODULEPATH id="juce_data_structures" path="C:/devtools/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="C:/devtools/JUCE/modules"/>
         <MODULEPATH id="juce_audio_plugin_client" path="C:/devtools/JUCE/modules"/>
       </MODULEPATHS>
     </VS2022>
