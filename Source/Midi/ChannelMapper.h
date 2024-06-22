@@ -11,7 +11,7 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include "Identifiers.h"
+#include "../Identifiers.h"
 
 namespace Artix::Midi {
 	class ChannelMapper : public juce::ReferenceCountedObject {

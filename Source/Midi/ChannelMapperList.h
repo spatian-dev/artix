@@ -11,9 +11,9 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include "Identifiers.h"
-#include "ChannelMapper.h"
-#include "ValueTreeList.h"
+#include "../Identifiers.h"
+#include "../Midi/ChannelMapper.h"
+#include "../Util/ValueTreeList.h"
 
 namespace Artix::Midi {
 	using ChannelMapperValueTreeList = Artix::Util::ValueTreeList<ChannelMapper>;

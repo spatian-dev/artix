@@ -9,7 +9,7 @@
 */
 
 #include "PluginProcessor.h"
-#include "PluginEditor.h"
+#include "Ui/PluginEditor.h"
 
 ArtixAudioProcessor::ArtixAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations

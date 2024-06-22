@@ -10,7 +10,7 @@
 
 #pragma once
 #include <JuceHeader.h>
-#include "ChannelMapperList.h"
+#include "Midi/ChannelMapperList.h"
 
 using MidiChannelMapperListRCPtr = juce::ReferenceCountedObjectPtr<Artix::Midi::ChannelMapperList>;
 
