@@ -4,10 +4,10 @@
               addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" version="0.1.0"
               companyName="Spatian" companyWebsite="https://spatian.dev" companyEmail="contact@spatian.dev"
               pluginFormats="buildAU,buildVST3" pluginCharacteristicsValue="pluginProducesMidiOut,pluginWantsMidiIn"
-              pluginDesc="A Keyswitch Helper Plugin" pluginManufacturerCode="Sptn"
-              pluginCode="Artx" pluginAUMainType="'aumi'" pluginAUIsSandboxSafe="1"
-              pluginVST3Category="Instrument,Tools" pluginVSTCategory="kPlugCategGenerator"
-              cppLanguageStandard="20">
+              pluginDesc="A simple Plugin that maps MIDI channel to note, to simplify your keyswitches and more."
+              pluginManufacturerCode="Sptn" pluginCode="Artx" pluginAUMainType="'aumi'"
+              pluginAUIsSandboxSafe="1" pluginVST3Category="Instrument,Tools"
+              pluginVSTCategory="kPlugCategGenerator" cppLanguageStandard="20">
   <MAINGROUP id="yQGg9i" name="Artix">
     <GROUP id="{E4CDCF34-6001-3176-7943-C773D7A49196}" name="Source">
       <GROUP id="{C353F243-1932-80A2-E7A2-B6E0C8804BDB}" name="Util">
