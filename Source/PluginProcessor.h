@@ -48,8 +48,12 @@ class ArtixAudioProcessor : public juce::AudioProcessor {
 	void getStateInformation(juce::MemoryBlock& destData) override;
 	void setStateInformation(const void* data, int sizeInBytes) override;
 
+	juce::UndoManager* getUndoManager() noexcept;
+	juce::ValueTree getAppState() noexcept;
+
 	private:
-	juce::ValueTree state;
+	juce::UndoManager undoManager = juce::UndoManager();
+	juce::ValueTree appState = juce::ValueTree(Artix::ID::AppState);
 	MidiChannelMapperListRCPtr channelMappers;
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ArtixAudioProcessor)
 };

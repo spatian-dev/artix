@@ -10,22 +10,24 @@
 
 #include "PluginProcessor.h"
 #include "Ui/PluginEditor.h"
+#include "Midi/ChannelMapper.h"
 
 ArtixAudioProcessor::ArtixAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
 	: AudioProcessor(BusesProperties()
 	#if ! JucePlugin_IsMidiEffect
-	#if ! JucePlugin_IsSynth
-		.withInput("Input", juce::AudioChannelSet::stereo(), true)
-	#endif
+		#if ! JucePlugin_IsSynth
+			.withInput("Input", juce::AudioChannelSet::stereo(), true)
+		#endif
 		.withOutput("Output", juce::AudioChannelSet::stereo(), true)
 	#endif
 	)
 #endif
 {
-	state = juce::ValueTree(Artix::ID::AppState);
-	channelMappers = new Artix::Midi::ChannelMapperList(state);
-	state.addChild(juce::ValueTree(Artix::ID::MidiChannelMapper), -1, nullptr);
+	channelMappers = new Artix::Midi::ChannelMapperList(appState, &undoManager);
+	for (int i = 1; i <= 16; i++) {
+		appState.addChild(Artix::Midi::ChannelMapper::makeState(i, 1), -1, nullptr);
+	}
 }
 
 ArtixAudioProcessor::~ArtixAudioProcessor() {}
@@ -114,35 +116,50 @@ bool ArtixAudioProcessor::isBusesLayoutSupported(const BusesLayout& layouts) con
 }
 #endif
 
-void ArtixAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages) {
+void ArtixAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiIn) {
 	juce::ScopedNoDenormals noDenormals;
-	auto totalNumInputChannels = getTotalNumInputChannels();
-	auto totalNumOutputChannels = getTotalNumOutputChannels();
+	buffer.clear();
 
-	// In case we have more outputs than inputs, this code clears any output
-	// channels that didn't contain input data, (because these aren't
-	// guaranteed to be empty - they may contain garbage).
-	// This is here to avoid people getting screaming feedback
-	// when they first compile a plugin, but obviously you don't need to keep
-	// this code if your algorithm always overwrites all the output channels.
-	for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
-		buffer.clear(i, 0, buffer.getNumSamples());
+	juce::MidiBuffer midiOut;
 
-	// This is the place where you'd normally do the guts of your plugin's
-	// audio processing...
-	// Make sure to reset the state if your inner loop is processing
-	// the samples and the outer loop is handling the channels.
-	// Alternatively, you can process the samples with the channels
-	// interleaved by keeping the same state.
-	for (int channel = 0; channel < totalNumInputChannels; ++channel) {
-		auto* channelData = buffer.getWritePointer(channel);
+	for (const auto metadata : midiIn) {
+		auto message = metadata.getMessage();
 
-		// ..do something to the data...
+		const auto timestamp = metadata.samplePosition;
+		const auto inChannel = message.getChannel();
+
+		if (inChannel < 1)
+			continue;
+
+		const auto mapper = channelMappers->getItems()[inChannel - 1];
+
+		message.setChannel(mapper->getOutputChannel());
+		if (mapper->isActive() && message.isNoteOn()) {
+			midiOut.addEvent(
+				juce::MidiMessage::noteOn(
+					mapper->getOutputChannel(), mapper->getOutputNote(), message.getVelocity()
+				),
+				timestamp
+			);
+		}
+
+		midiOut.addEvent(message, timestamp);
+
+		if (mapper->isActive() && message.isNoteOff()) {
+			midiOut.addEvent(
+				juce::MidiMessage::noteOff(
+					mapper->getOutputChannel(), mapper->getOutputNote(), message.getVelocity()
+				),
+				timestamp
+			);
+		}
 	}
+
+	midiIn.swapWith(midiOut);
 }
 
 bool ArtixAudioProcessor::hasEditor() const {
-	return true; // (change this to false if you choose to not supply an editor)
+	return true;
 }
 
 juce::AudioProcessorEditor* ArtixAudioProcessor::createEditor() {
@@ -158,6 +175,14 @@ void ArtixAudioProcessor::getStateInformation(juce::MemoryBlock& destData) {
 void ArtixAudioProcessor::setStateInformation(const void* data, int sizeInBytes) {
 	// You should use this method to restore your parameters from this memory block,
 	// whose contents will have been created by the getStateInformation() call.
+}
+
+juce::UndoManager* ArtixAudioProcessor::getUndoManager() noexcept {
+	return &undoManager;
+}
+
+juce::ValueTree ArtixAudioProcessor::getAppState() noexcept {
+	return appState;
 }
 
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter() {

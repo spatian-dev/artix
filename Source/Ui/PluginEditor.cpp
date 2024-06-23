@@ -15,7 +15,9 @@ namespace Artix::UI {
 		: AudioProcessorEditor(&p), audioProcessor(p) {
 		// Make sure that before the constructor has finished, you've set the
 		// editor's size to whatever you need it to be.
+		setResizeLimits(640, 480, 1024, 768);
 		setSize(800, 600);
+		setResizable(true, true);
 	}
 
 	PluginEditor::~PluginEditor() {}

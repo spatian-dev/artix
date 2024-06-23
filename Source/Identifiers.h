@@ -19,6 +19,7 @@ namespace Artix::ID {
 	DECLARE_ID(MidiChannelMapper)
 	DECLARE_ID(MidiChannelMapperList)
 	DECLARE_ID(InputChannelNumber)
+	DECLARE_ID(OutputChannelNumber)
 	DECLARE_ID(OutputNoteNumber)
 
 #undef DECLARE_ID

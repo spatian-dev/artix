@@ -15,7 +15,7 @@
 //==============================================================================
 /*
 */
-class ChannelMapperGroup  : public juce::Component
+class ChannelMapperGroup : public juce::Component
 {
 public:
     ChannelMapperGroup();

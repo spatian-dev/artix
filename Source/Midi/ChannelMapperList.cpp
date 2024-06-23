@@ -11,7 +11,9 @@
 #include "ChannelMapperList.h"
 
 namespace Artix::Midi {
-    ChannelMapperList::ChannelMapperList(const juce::ValueTree& v) : ChannelMapperValueTreeList(v) {
+    ChannelMapperList::ChannelMapperList(
+        const juce::ValueTree& v, juce::UndoManager* undoManager
+    ) : ChannelMapperValueTreeList(v), undoManager(undoManager) {
         buildItems();
     }
 
@@ -28,7 +30,7 @@ namespace Artix::Midi {
     }
 
     ChannelMapper* ChannelMapperList::createItem(const juce::ValueTree& v) {
-        auto item = new ChannelMapper(v);
+        auto item = new ChannelMapper(v, undoManager);
         items.add(item);
         return item;
     }
@@ -38,18 +40,18 @@ namespace Artix::Midi {
     }
 
     void ChannelMapperList::onItemAdded(ChannelMapper* item) {
-        DBG("Added " << item->getState().toXmlString());
+        //DBG("Added " << item->getState().toXmlString());
     }
 
     void ChannelMapperList::onItemRemoved(ChannelMapper* item) {
-        DBG("Removed " << item->getState().toXmlString());
+        //DBG("Removed " << item->getState().toXmlString());
     }
 
     void ChannelMapperList::onItemsOrderChanged() {
-        DBG("Items Order Changed");
+        //DBG("Items Order Changed");
     }
 
     void ChannelMapperList::onListRedirected() {
-        DBG("List Redirected");
+        //DBG("List Redirected");
     }
 }

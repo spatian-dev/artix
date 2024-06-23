@@ -22,7 +22,7 @@ namespace Artix::Midi {
 		private ChannelMapperValueTreeList, public juce::ReferenceCountedObject {
 
 		public:
-		ChannelMapperList(const juce::ValueTree& v);
+		ChannelMapperList(const juce::ValueTree& v, juce::UndoManager* undoManager = nullptr);
 		~ChannelMapperList();
 
 		juce::ReferenceCountedArray<ChannelMapper> getItems() const;
@@ -38,6 +38,7 @@ namespace Artix::Midi {
 		void onListRedirected();
 
 		juce::ReferenceCountedArray<ChannelMapper, juce::CriticalSection> items;
+		juce::UndoManager* undoManager;
 		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ChannelMapperList)
 	};
 }
