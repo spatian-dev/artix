@@ -10,24 +10,19 @@
 
 #include "PluginProcessor.h"
 #include "Ui/PluginEditor.h"
-#include "Midi/ChannelMapper.h"
 
-ArtixAudioProcessor::ArtixAudioProcessor()
-#ifndef JucePlugin_PreferredChannelConfigurations
-	: AudioProcessor(BusesProperties()
-	#if ! JucePlugin_IsMidiEffect
-		#if ! JucePlugin_IsSynth
-			.withInput("Input", juce::AudioChannelSet::stereo(), true)
-		#endif
-		.withOutput("Output", juce::AudioChannelSet::stereo(), true)
-	#endif
-	)
+ArtixAudioProcessor::ArtixAudioProcessor() : AudioProcessor(BusesProperties()
+#if ! JucePlugin_IsMidiEffect
+#if ! JucePlugin_IsSynth
+	.withInput("Input", juce::AudioChannelSet::stereo(), true)
 #endif
-{
-	channelMappers = new Artix::Midi::ChannelMapperList(appState, &undoManager);
+	.withOutput("Output", juce::AudioChannelSet::stereo(), true)
+#endif
+), state(*this, &undoManager, Artix::ID::AppState, createParameterLayout()) {
+	/*channelMappers = new Artix::Midi::ChannelMapperList(appState, &undoManager);
 	for (int i = 1; i <= 16; i++) {
 		appState.addChild(Artix::Midi::ChannelMapper::makeState(i, 1), -1, nullptr);
-	}
+	}*/
 }
 
 ArtixAudioProcessor::~ArtixAudioProcessor() {}
@@ -91,7 +86,6 @@ void ArtixAudioProcessor::releaseResources() {
 	// spare memory, etc.
 }
 
-#ifndef JucePlugin_PreferredChannelConfigurations
 bool ArtixAudioProcessor::isBusesLayoutSupported(const BusesLayout& layouts) const {
 #if JucePlugin_IsMidiEffect
 	juce::ignoreUnused(layouts);
@@ -114,7 +108,6 @@ bool ArtixAudioProcessor::isBusesLayoutSupported(const BusesLayout& layouts) con
 	return true;
 #endif
 }
-#endif
 
 void ArtixAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiIn) {
 	juce::ScopedNoDenormals noDenormals;
@@ -131,25 +124,26 @@ void ArtixAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::M
 		if (inChannel < 1)
 			continue;
 
-		const auto mapper = channelMappers->getItems()[inChannel - 1];
+		const auto outputChannel = static_cast<juce::AudioParameterInt*>
+			(state.getParameter(Artix::ID::OutputChannel))->get();
+		message.setChannel(outputChannel);
 
-		message.setChannel(mapper->getOutputChannel());
-		if (mapper->isActive() && message.isNoteOn()) {
+		const auto keyswitch = static_cast<juce::AudioParameterInt*>
+			(state.getParameter(Artix::ID::Keyswitch + juce::String(inChannel)))->get();
+		const auto isKeyswitchActive = (keyswitch != Artix::Midi::Notes::NONE);
+
+		if (isKeyswitchActive && message.isNoteOn()) {
 			midiOut.addEvent(
-				juce::MidiMessage::noteOn(
-					mapper->getOutputChannel(), mapper->getOutputNote(), message.getVelocity()
-				),
+				juce::MidiMessage::noteOn(outputChannel, keyswitch, message.getVelocity()),
 				timestamp
 			);
 		}
 
 		midiOut.addEvent(message, timestamp);
 
-		if (mapper->isActive() && message.isNoteOff()) {
+		if (isKeyswitchActive && message.isNoteOff()) {
 			midiOut.addEvent(
-				juce::MidiMessage::noteOff(
-					mapper->getOutputChannel(), mapper->getOutputNote(), message.getVelocity()
-				),
+				juce::MidiMessage::noteOff(outputChannel, keyswitch, message.getVelocity()),
 				timestamp
 			);
 		}
@@ -167,22 +161,43 @@ juce::AudioProcessorEditor* ArtixAudioProcessor::createEditor() {
 }
 
 void ArtixAudioProcessor::getStateInformation(juce::MemoryBlock& destData) {
-	// You should use this method to store your parameters in the memory block.
-	// You could do that either as raw data, or use the XML or ValueTree classes
-	// as intermediaries to make it easy to save and load complex data.
+	if (auto xmlState = state.copyState().createXml()) {
+		copyXmlToBinary(*xmlState, destData);
+	}
 }
 
 void ArtixAudioProcessor::setStateInformation(const void* data, int sizeInBytes) {
-	// You should use this method to restore your parameters from this memory block,
-	// whose contents will have been created by the getStateInformation() call.
+	if (auto xmlState = getXmlFromBinary(data, sizeInBytes)) {
+		state.replaceState(juce::ValueTree::fromXml(*xmlState));
+	}
 }
 
-juce::UndoManager* ArtixAudioProcessor::getUndoManager() noexcept {
-	return &undoManager;
+juce::UndoManager& ArtixAudioProcessor::getUndoManager() noexcept {
+	return undoManager;
 }
 
-juce::ValueTree ArtixAudioProcessor::getAppState() noexcept {
-	return appState;
+juce::AudioProcessorValueTreeState& ArtixAudioProcessor::getState() noexcept {
+	return state;
+}
+
+juce::AudioProcessorValueTreeState::ParameterLayout ArtixAudioProcessor::createParameterLayout() {
+	juce::AudioProcessorValueTreeState::ParameterLayout layout;
+
+	layout.add(std::make_unique<juce::AudioParameterInt>(
+		juce::ParameterID{Artix::ID::OutputChannel, 1},
+		"Output Channel",
+		1, 16, 1
+	));
+
+	for (int i = 1; i <= 16; i++) {
+		layout.add(std::make_unique<juce::AudioParameterInt>(
+			juce::ParameterID{Artix::ID::Keyswitch + juce::String(i), 1},
+			juce::String("Channel ") + juce::String(i) + juce::String(" Keyswitch"),
+			Artix::Midi::Notes::NONE, 127, 0
+		));
+	}
+
+	return layout;
 }
 
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter() {

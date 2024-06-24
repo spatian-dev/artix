@@ -10,27 +10,12 @@
               pluginVSTCategory="kPlugCategGenerator" cppLanguageStandard="20">
   <MAINGROUP id="yQGg9i" name="Artix">
     <GROUP id="{E4CDCF34-6001-3176-7943-C773D7A49196}" name="Source">
-      <GROUP id="{6870D61C-919D-8C8E-4D4D-FC2E1760C209}" name="Midi">
-        <FILE id="hqgZBR" name="ChannelMapper.cpp" compile="1" resource="0"
-              file="Source/Midi/ChannelMapper.cpp"/>
-        <FILE id="m5EKBh" name="ChannelMapper.h" compile="0" resource="0" file="Source/Midi/ChannelMapper.h"/>
-        <FILE id="AjmjeZ" name="ChannelMapperList.cpp" compile="1" resource="0"
-              file="Source/Midi/ChannelMapperList.cpp"/>
-        <FILE id="yoHsRs" name="ChannelMapperList.h" compile="0" resource="0"
-              file="Source/Midi/ChannelMapperList.h"/>
-      </GROUP>
       <GROUP id="{B3570C42-37A6-0A2E-A0F4-5AA1417D0391}" name="Ui">
-        <FILE id="r7kXo3" name="ChannelMapperGroup.cpp" compile="1" resource="0"
-              file="Source/Ui/ChannelMapperGroup.cpp"/>
-        <FILE id="qrilAL" name="ChannelMapperGroup.h" compile="0" resource="0"
-              file="Source/Ui/ChannelMapperGroup.h"/>
         <FILE id="FnJH5a" name="PluginEditor.cpp" compile="1" resource="0"
               file="Source/Ui/PluginEditor.cpp"/>
         <FILE id="K4mXZx" name="PluginEditor.h" compile="0" resource="0" file="Source/Ui/PluginEditor.h"/>
       </GROUP>
-      <GROUP id="{C353F243-1932-80A2-E7A2-B6E0C8804BDB}" name="Util">
-        <FILE id="W2uLWY" name="ValueTreeList.h" compile="0" resource="0" file="Source/Util/ValueTreeList.h"/>
-      </GROUP>
+      <FILE id="Tm1hYZ" name="Constants.h" compile="0" resource="0" file="Source/Constants.h"/>
       <FILE id="OO7JuG" name="Identifiers.h" compile="0" resource="0" file="Source/Identifiers.h"/>
       <FILE id="gjmnA2" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
