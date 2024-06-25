@@ -12,13 +12,18 @@
 
 #include <JuceHeader.h>
 
-namespace Artix::ID {
-//#define DECLARE_ID(name) const juce::Identifier name (#name);
-#define DECLARE_ID(name) const auto name  = juce::String(#name);
+namespace Artix::Id {
+#define DECLARE_ID(name)\
+	const juce::Identifier name(#name);\
+	namespace Str { const auto name = #name;}
 
 	DECLARE_ID(AppState)
 
-	DECLARE_ID(Keyswitch)
+	DECLARE_ID(Name)
+	DECLARE_ID(MidiChannelMapper)
+	DECLARE_ID(MidiChannelMapperBank)
+
+	DECLARE_ID(Note)
 	DECLARE_ID(InputChannel)
 	DECLARE_ID(OutputChannel)
 
