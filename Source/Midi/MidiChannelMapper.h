@@ -14,19 +14,18 @@
 #include <cstdint>
 #include <atomic>
 #include "../Identifiers.h"
+#include "../Errors.h"
+#include "../Utils/UTF8.h"
 #include "Midi.h"
-
-static_assert(std::atomic<int8_t>::is_always_lock_free);
 
 namespace Artix::Midi {
     class MidiChannelMapper {
         public:
-        MidiChannelMapper(
-            int8_t note = -1, juce::String name = juce::CharPointer_UTF8("\xe2\x80\x94")
-        );
+        MidiChannelMapper(Note note = Note::None, juce::String name = Utils::UTF8::EmDash);
 
-        int8_t getNote() const noexcept;
-        void setNote(int8_t v) noexcept;
+        Note getNote() const noexcept;
+        void setNote(Note v) noexcept;
+        void setNote(int v) noexcept;
 
         const juce::String getName() const noexcept;
         void setName(juce::String v) noexcept;
@@ -36,9 +35,13 @@ namespace Artix::Midi {
         juce::ValueTree toValueTree() const noexcept;
         void fromValueTree(const juce::ValueTree& vt) noexcept;
 
+        std::function<void(const juce::String&)> onNameChanged;
+        std::function<void(Note)> onNoteChanged;
+        std::function<void(const juce::String&, Error::Code, Error::Code)> onError;
+
         private:
-        std::atomic<int8_t> note;
         juce::ReadWriteLock mutex;
+        std::atomic<Note> note;
         juce::String name;
         
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MidiChannelMapper)

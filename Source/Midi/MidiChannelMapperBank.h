@@ -13,36 +13,57 @@
 #include <JuceHeader.h>
 #include <cstdint>
 #include <atomic>
-#include <span>
 #include "../Identifiers.h"
 #include "Midi.h"
 #include "MidiChannelMapper.h"
 
-static_assert(std::atomic<uint8_t>::is_always_lock_free);
-
 namespace Artix::Midi {
     class MidiChannelMapperBank {
-        public:
-        MidiChannelMapperBank(
-            uint8_t outCh = 1, juce::String name = "untitled"
-        );
+        private:
+        using Mappers = std::array<MidiChannelMapper, CHANNEL_COUNT>;
 
-        uint8_t getOutputChannel() const noexcept;
-        void setOutputChannel(uint8_t v) noexcept;
+        public:
+        MidiChannelMapperBank(Channel outputChannel = Channel::First, juce::String name = "untitled");
+
+        Channel getOutputChannel() const noexcept;
+        void setOutputChannel(Channel v) noexcept;
+        void setOutputChannel(int v) noexcept;
 
         const juce::String getName() const noexcept;
         void setName(juce::String v) noexcept;
 
-        MidiChannelMapper& getMapper(int channel) noexcept;
-        std::span<MidiChannelMapper> getMappers() noexcept;
-
         juce::ValueTree toValueTree() const noexcept;
         void fromValueTree(const juce::ValueTree& vt) noexcept;
 
+        std::function<void(const juce::String&)> onNameChanged;
+        std::function<void(Channel)> onOutputChannelChanged;
+        std::function<void(const juce::String&, Error::Code, Error::Code)> onError;
+
+        //======================================================================
+        /** Mirroring std::array container functions */
+        Mappers::reference at(Mappers::size_type pos);
+        Mappers::const_reference at(Mappers::size_type pos) const;
+
+        Mappers::reference operator[](Mappers::size_type pos);
+        Mappers::const_reference operator[](Mappers::size_type pos) const;
+
+        Mappers::iterator begin() noexcept;
+        Mappers::const_iterator begin() const noexcept;
+        Mappers::const_iterator cbegin() const noexcept;
+
+        Mappers::iterator end() noexcept;
+        Mappers::const_iterator end() const noexcept;
+        Mappers::const_iterator cend() const noexcept;
+
+        constexpr bool empty() const noexcept;
+        constexpr Mappers::size_type size() const noexcept;
+        //======================================================================
+
         private:
-        MidiChannelMapper mappers[16];
-        std::atomic<uint8_t> outCh;
+        Mappers mappers;
+        
         juce::ReadWriteLock mutex;
+        std::atomic<Channel> outputChannel;        
         juce::String name;
 
        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MidiChannelMapperBank)

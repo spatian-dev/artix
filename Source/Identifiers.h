@@ -18,11 +18,11 @@ namespace Artix::Id {
 	namespace Str { const auto name = #name;}
 
 	DECLARE_ID(AppState)
-
-	DECLARE_ID(Name)
+	
 	DECLARE_ID(MidiChannelMapper)
 	DECLARE_ID(MidiChannelMapperBank)
 
+	DECLARE_ID(Name)
 	DECLARE_ID(Note)
 	DECLARE_ID(InputChannel)
 	DECLARE_ID(OutputChannel)

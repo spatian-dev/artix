@@ -11,6 +11,7 @@
   <MAINGROUP id="yQGg9i" name="Artix">
     <GROUP id="{E4CDCF34-6001-3176-7943-C773D7A49196}" name="Source">
       <GROUP id="{949308FE-C49E-3179-66BD-498AE345ED3D}" name="Midi">
+        <FILE id="jYxZYk" name="Midi.cpp" compile="1" resource="0" file="Source/Midi/Midi.cpp"/>
         <FILE id="ylU9Yt" name="Midi.h" compile="0" resource="0" file="Source/Midi/Midi.h"/>
         <FILE id="GG94Pb" name="MidiChannelMapper.cpp" compile="1" resource="0"
               file="Source/Midi/MidiChannelMapper.cpp"/>
@@ -26,6 +27,11 @@
               file="Source/Ui/PluginEditor.cpp"/>
         <FILE id="K4mXZx" name="PluginEditor.h" compile="0" resource="0" file="Source/Ui/PluginEditor.h"/>
       </GROUP>
+      <GROUP id="{AFA4D82E-6943-C96F-10BD-F36FE64AAF0D}" name="Utils">
+        <FILE id="wGqRos" name="UTF8.cpp" compile="1" resource="0" file="Source/Utils/UTF8.cpp"/>
+        <FILE id="TSReBV" name="UTF8.h" compile="0" resource="0" file="Source/Utils/UTF8.h"/>
+      </GROUP>
+      <FILE id="waXy1j" name="Errors.h" compile="0" resource="0" file="Source/Errors.h"/>
       <FILE id="OO7JuG" name="Identifiers.h" compile="0" resource="0" file="Source/Identifiers.h"/>
       <FILE id="gjmnA2" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>

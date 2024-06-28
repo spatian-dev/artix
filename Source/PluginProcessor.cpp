@@ -18,7 +18,11 @@ ArtixAudioProcessor::ArtixAudioProcessor() : AudioProcessor(BusesProperties()
 #endif
 	.withOutput("Output", juce::AudioChannelSet::stereo(), true)
 #endif
-) {}
+) {
+	mapperBank.onError = [](const juce::String& msg, Artix::Error::Code code1, Artix::Error::Code code2) {
+		DBG("[Error " << (int) code1 << ", " << (int) code2 << "] : " << msg);
+	};
+}
 
 ArtixAudioProcessor::~ArtixAudioProcessor() {}
 
@@ -119,15 +123,14 @@ void ArtixAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::M
 		if (inputChannel < 1)
 			continue;
 
-		message.setChannel(mapperBank.getOutputChannel());
+		const int outCh = (int) mapperBank.getOutputChannel();
+		message.setChannel(outCh);
 
-		const auto& mapper = mapperBank.getMapper(inputChannel);
+		auto& mapper = mapperBank[inputChannel];
 
 		if (mapper.isActive() && message.isNoteOn()) {
 			midiOut.addEvent(
-				juce::MidiMessage::noteOn(
-					mapperBank.getOutputChannel(), mapper.getNote(), message.getVelocity()
-				),
+				juce::MidiMessage::noteOn(outCh, (int) mapper.getNote(), message.getVelocity()),
 				timestamp
 			);
 		}
@@ -136,9 +139,7 @@ void ArtixAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::M
 
 		if (mapper.isActive() && message.isNoteOff()) {
 			midiOut.addEvent(
-				juce::MidiMessage::noteOff(
-					mapperBank.getOutputChannel(), mapper.getNote(), message.getVelocity()
-				),
+				juce::MidiMessage::noteOff(outCh, (int) mapper.getNote(), message.getVelocity()),
 				timestamp
 			);
 		}
@@ -172,10 +173,6 @@ void ArtixAudioProcessor::setStateInformation(const void* data, int sizeInBytes)
 Artix::Midi::MidiChannelMapperBank& ArtixAudioProcessor::getMapperBank() noexcept {
 	return mapperBank;
 }
-
-//juce::UndoManager& ArtixAudioProcessor::getUndoManager() noexcept {
-//	return undoManager;
-//}
 
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter() {
 	return new ArtixAudioProcessor();
