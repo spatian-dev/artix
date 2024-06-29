@@ -18,11 +18,7 @@ ArtixAudioProcessor::ArtixAudioProcessor() : AudioProcessor(BusesProperties()
 #endif
 	.withOutput("Output", juce::AudioChannelSet::stereo(), true)
 #endif
-) {
-	mapperBank.onError = [](const juce::String& msg, Artix::Error::Code code1, Artix::Error::Code code2) {
-		DBG("[Error " << (int) code1 << ", " << (int) code2 << "] : " << msg);
-	};
-}
+) {}
 
 ArtixAudioProcessor::~ArtixAudioProcessor() {}
 
@@ -123,10 +119,10 @@ void ArtixAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::M
 		if (inputChannel < 1)
 			continue;
 
-		const int outCh = (int) mapperBank.getOutputChannel();
+		const int outCh = (int) state.getMapperBank().getOutputChannel();
 		message.setChannel(outCh);
 
-		auto& mapper = mapperBank[inputChannel];
+		auto& mapper = state.getMapperBank()[inputChannel];
 
 		if (mapper.isActive() && message.isNoteOn()) {
 			midiOut.addEvent(
@@ -153,25 +149,25 @@ bool ArtixAudioProcessor::hasEditor() const {
 }
 
 juce::AudioProcessorEditor* ArtixAudioProcessor::createEditor() {
-	return new Artix::UI::PluginEditor(*this);
+	return new Artix::Ui::PluginEditor(*this, state);
 }
 
 void ArtixAudioProcessor::getStateInformation(juce::MemoryBlock& destData) {
-	if (auto xmlState = mapperBank.toValueTree().createXml()) {
+	if (auto xmlState = state.toValueTree().createXml()) {
 		copyXmlToBinary(*xmlState, destData);
 	}
 }
 
 void ArtixAudioProcessor::setStateInformation(const void* data, int sizeInBytes) {
 	if (auto xmlState = getXmlFromBinary(data, sizeInBytes)) {
-		mapperBank.fromValueTree(juce::ValueTree::fromXml(*xmlState));
+		state.fromValueTree(juce::ValueTree::fromXml(*xmlState));
 	}
 
-	DBG(mapperBank.toValueTree().toXmlString());
+	DBG(state.toValueTree().toXmlString());
 }
 
-Artix::Midi::MidiChannelMapperBank& ArtixAudioProcessor::getMapperBank() noexcept {
-	return mapperBank;
+Artix::AppState& ArtixAudioProcessor::getAppState() noexcept {
+	return state;
 }
 
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter() {

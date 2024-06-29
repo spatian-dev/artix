@@ -24,11 +24,11 @@ namespace Artix::Midi {
         MidiChannelMapper(Note note = Note::None, juce::String name = Utils::UTF8::EmDash);
 
         Note getNote() const noexcept;
-        void setNote(Note v) noexcept;
-        void setNote(int v) noexcept;
+        void setNote(Note v, bool muteCallbacks = false) noexcept;
+        void setNote(int v, bool muteCallbacks = false) noexcept;
 
         const juce::String getName() const noexcept;
-        void setName(juce::String v) noexcept;
+        void setName(juce::String v, bool muteCallbacks = false) noexcept;
 
         bool isActive() const noexcept;
 
@@ -37,7 +37,7 @@ namespace Artix::Midi {
 
         std::function<void(const juce::String&)> onNameChanged;
         std::function<void(Note)> onNoteChanged;
-        std::function<void(const juce::String&, Error::Code, Error::Code)> onError;
+        Error::ErrorCallback onError;
 
         private:
         juce::ReadWriteLock mutex;

@@ -23,6 +23,13 @@
               file="Source/Midi/MidiChannelMapperBank.h"/>
       </GROUP>
       <GROUP id="{B3570C42-37A6-0A2E-A0F4-5AA1417D0391}" name="Ui">
+        <FILE id="MLze5s" name="Colors.cpp" compile="1" resource="0" file="Source/Ui/Colors.cpp"/>
+        <FILE id="tQBW6z" name="Colors.h" compile="0" resource="0" file="Source/Ui/Colors.h"/>
+        <FILE id="l1swMz" name="Metrics.h" compile="0" resource="0" file="Source/Ui/Metrics.h"/>
+        <FILE id="sZL6Ca" name="MidiChannelMapperBankComponent.cpp" compile="1"
+              resource="0" file="Source/Ui/MidiChannelMapperBankComponent.cpp"/>
+        <FILE id="gUIxQK" name="MidiChannelMapperBankComponent.h" compile="0"
+              resource="0" file="Source/Ui/MidiChannelMapperBankComponent.h"/>
         <FILE id="FnJH5a" name="PluginEditor.cpp" compile="1" resource="0"
               file="Source/Ui/PluginEditor.cpp"/>
         <FILE id="K4mXZx" name="PluginEditor.h" compile="0" resource="0" file="Source/Ui/PluginEditor.h"/>
@@ -31,7 +38,10 @@
         <FILE id="wGqRos" name="UTF8.cpp" compile="1" resource="0" file="Source/Utils/UTF8.cpp"/>
         <FILE id="TSReBV" name="UTF8.h" compile="0" resource="0" file="Source/Utils/UTF8.h"/>
       </GROUP>
+      <FILE id="Spd37b" name="AppState.cpp" compile="1" resource="0" file="Source/AppState.cpp"/>
+      <FILE id="QmpfQT" name="AppState.h" compile="0" resource="0" file="Source/AppState.h"/>
       <FILE id="waXy1j" name="Errors.h" compile="0" resource="0" file="Source/Errors.h"/>
+      <FILE id="ebvzgn" name="Identifiers.cpp" compile="1" resource="0" file="Source/Identifiers.cpp"/>
       <FILE id="OO7JuG" name="Identifiers.h" compile="0" resource="0" file="Source/Identifiers.h"/>
       <FILE id="gjmnA2" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>

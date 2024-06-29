@@ -13,19 +13,21 @@
 #include <JuceHeader.h>
 
 namespace Artix::Id {
-#define DECLARE_ID(name)\
-	const juce::Identifier name(#name);\
-	namespace Str { const auto name = #name;}
+#define DEFINE_JUCE_ID(name)\
+	extern const juce::Identifier name;\
+	namespace Str { constexpr auto name = #name;}
 
-	DECLARE_ID(AppState)
-	
-	DECLARE_ID(MidiChannelMapper)
-	DECLARE_ID(MidiChannelMapperBank)
+	DEFINE_JUCE_ID(AppState)
+	DEFINE_JUCE_ID(Width)
+	DEFINE_JUCE_ID(Height)
 
-	DECLARE_ID(Name)
-	DECLARE_ID(Note)
-	DECLARE_ID(InputChannel)
-	DECLARE_ID(OutputChannel)
+	DEFINE_JUCE_ID(MidiChannelMapper)
+	DEFINE_JUCE_ID(MidiChannelMapperBank)
 
-#undef DECLARE_ID
+	DEFINE_JUCE_ID(Name)
+	DEFINE_JUCE_ID(Note)
+	DEFINE_JUCE_ID(InputChannel)
+	DEFINE_JUCE_ID(OutputChannel)
+
+#undef DEFINE_JUCE_ID
 }

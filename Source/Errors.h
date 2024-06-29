@@ -13,8 +13,10 @@
 namespace Artix::Error {
 	enum class Code : int {
 		None = 0,
-		BadPreset = 1000,
+		BadState = 1000,
 		InvalidValueTree = 1001,
 		MissingChildren = 1002
 	};
+
+	using ErrorCallback = std::function<void(const juce::String&, Error::Code, Error::Code)>;
 }

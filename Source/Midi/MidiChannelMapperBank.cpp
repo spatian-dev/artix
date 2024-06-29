@@ -18,16 +18,20 @@ namespace Artix::Midi {
 		return outputChannel;
 	}
 
-	void MidiChannelMapperBank::setOutputChannel(Channel v) noexcept {
+	void MidiChannelMapperBank::setOutputChannel(Channel v, bool muteCallbacks) noexcept {
 		jassertValidMidiChannel(v);
-		outputChannel = clampChannel(v);
+		const Channel newChannel = clampChannel(v);
+		const bool hasChanged = (outputChannel != newChannel);
+		outputChannel = newChannel;
+
+		if (!hasChanged || muteCallbacks) return;
 		juce::MessageManager::callAsync([this]() {
 			if (onOutputChannelChanged) onOutputChannelChanged(outputChannel);
 		});
 	}
 
-	void MidiChannelMapperBank::setOutputChannel(int v) noexcept {
-		setOutputChannel(clampChannel(v));
+	void MidiChannelMapperBank::setOutputChannel(int v, bool muteCallbacks) noexcept {
+		setOutputChannel(clampChannel(v), muteCallbacks);
 	}
 
 	const juce::String MidiChannelMapperBank::getName() const noexcept {
@@ -35,9 +39,12 @@ namespace Artix::Midi {
 		return name;
 	}
 
-	void MidiChannelMapperBank::setName(juce::String v) noexcept {
+	void MidiChannelMapperBank::setName(juce::String v, bool muteCallbacks) noexcept {
 		const juce::ScopedWriteLock lock(mutex);
+		const bool hasChanged = (name != v);
 		name = v;
+
+		if (!hasChanged || muteCallbacks) return;
 		juce::MessageManager::callAsync([this]() {
 			if (onNameChanged) onNameChanged(name);
 		});
@@ -61,7 +68,7 @@ namespace Artix::Midi {
 		if (!vt.hasType(Id::MidiChannelMapperBank)) {
 			juce::MessageManager::callAsync([this]() {
 				if (onError) {
-					onError("Invalid ValueTree type", Error::Code::BadPreset, Error::Code::InvalidValueTree);
+					onError("Invalid ValueTree type", Error::Code::BadState, Error::Code::InvalidValueTree);
 				}
 			});
 			return;
@@ -83,7 +90,7 @@ namespace Artix::Midi {
 			juce::MessageManager::callAsync([this]() {
 				if (onError) {
 					onError(
-						"ValueTree is missing children", Error::Code::BadPreset, Error::Code::MissingChildren
+						"ValueTree is missing children", Error::Code::BadState, Error::Code::MissingChildren
 					);
 				}
 			});

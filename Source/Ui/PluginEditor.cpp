@@ -10,29 +10,36 @@
 
 #include "PluginEditor.h"
 
-namespace Artix::UI {
-	PluginEditor::PluginEditor(ArtixAudioProcessor& p)
-		: AudioProcessorEditor(&p), audioProcessor(p) {
-		// Make sure that before the constructor has finished, you've set the
-		// editor's size to whatever you need it to be.
-		setResizeLimits(640, 480, 1024, 768);
-		setSize(800, 600);
-		setResizable(true, true);
+namespace Artix::Ui {
+	PluginEditor::PluginEditor(ArtixAudioProcessor& audioProcessor, AppState& state)
+		: AudioProcessorEditor(&audioProcessor), audioProcessor(audioProcessor),
+		state(state), mapperBank(state.getMapperBank()) {
+
+		stateSizeChanged(state.getWidth(), state.getHeight());
+		state.onSizeChanged = [this](int w, int h) { stateSizeChanged(w, h); };
+		setResizable(true, false);
+
+		addAndMakeVisible(mapperBank);
 	}
 
 	PluginEditor::~PluginEditor() {}
 
 	void PluginEditor::paint(juce::Graphics& g) {
-		// (Our component is opaque, so we must completely fill the background with a solid colour)
-		g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));
-
-		g.setColour(juce::Colours::white);
-		g.setFont(juce::FontOptions(15.0f));
-		g.drawFittedText("Hello World!", getLocalBounds(), juce::Justification::centred, 1);
+		g.fillAll(Color::ControlBackground);
 	}
 
 	void PluginEditor::resized() {
-		// This is generally where you'll want to lay out the positions of any
-		// subcomponents in your editor..
+		state.setSize(getWidth(), getHeight());
+		
+		mapperBank.setSize(
+			getWidth() - (2 * Spacing::Small),
+			getHeight() - (2 * Spacing::Small)
+		);
+		mapperBank.setTopLeftPosition(Spacing::Small, Spacing::Small);
+	}
+
+	void PluginEditor::stateSizeChanged(int width, int height) {
+		setSize(width, height);
+		setResizeLimits(640, 480, 1024, 768);
 	}
 }

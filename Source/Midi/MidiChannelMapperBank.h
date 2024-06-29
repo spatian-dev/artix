@@ -26,18 +26,18 @@ namespace Artix::Midi {
         MidiChannelMapperBank(Channel outputChannel = Channel::First, juce::String name = "untitled");
 
         Channel getOutputChannel() const noexcept;
-        void setOutputChannel(Channel v) noexcept;
-        void setOutputChannel(int v) noexcept;
+        void setOutputChannel(Channel v, bool muteCallbacks = false) noexcept;
+        void setOutputChannel(int v, bool muteCallbacks = false) noexcept;
 
         const juce::String getName() const noexcept;
-        void setName(juce::String v) noexcept;
+        void setName(juce::String v, bool muteCallbacks = false) noexcept;
 
         juce::ValueTree toValueTree() const noexcept;
         void fromValueTree(const juce::ValueTree& vt) noexcept;
 
         std::function<void(const juce::String&)> onNameChanged;
         std::function<void(Channel)> onOutputChannelChanged;
-        std::function<void(const juce::String&, Error::Code, Error::Code)> onError;
+        Error::ErrorCallback onError;
 
         //======================================================================
         /** Mirroring std::array container functions */

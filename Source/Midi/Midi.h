@@ -225,7 +225,7 @@ namespace Artix::Midi {
 		First = One,
 		Last = Sixteen
 	};
-	constexpr const uint8_t CHANNEL_COUNT = 1 + (uint8_t) Channel::Last - (uint8_t) Channel::First;
+	constexpr uint8_t CHANNEL_COUNT = 1 + (uint8_t) Channel::Last - (uint8_t) Channel::First;
 
 	Note clampNote(Note v, bool withNone = false);
 	Note clampNote(int v, bool withNone = false);
