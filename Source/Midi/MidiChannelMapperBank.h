@@ -41,22 +41,46 @@ namespace Artix::Midi {
 
         //======================================================================
         /** Mirroring std::array container functions */
-        Mappers::reference at(Mappers::size_type pos);
-        Mappers::const_reference at(Mappers::size_type pos) const;
+        inline Mappers::reference at(Mappers::size_type pos) {
+            return mappers.at(pos);
+        }
+        inline Mappers::const_reference at(Mappers::size_type pos) const {
+            return mappers.at(pos);
+        }
 
-        Mappers::reference operator[](Mappers::size_type pos);
-        Mappers::const_reference operator[](Mappers::size_type pos) const;
+        inline Mappers::reference operator[](Mappers::size_type pos) {
+            return mappers.operator[](pos);
+        }
+        inline Mappers::const_reference operator[](Mappers::size_type pos) const {
+            return mappers.operator[](pos);
+        }
 
-        Mappers::iterator begin() noexcept;
-        Mappers::const_iterator begin() const noexcept;
-        Mappers::const_iterator cbegin() const noexcept;
+        inline Mappers::iterator begin() noexcept {
+            return mappers.begin();
+        }
+        inline Mappers::const_iterator begin() const noexcept {
+            return mappers.begin();
+        }
+        inline Mappers::const_iterator cbegin() const noexcept {
+            return mappers.cbegin();
+        }
 
-        Mappers::iterator end() noexcept;
-        Mappers::const_iterator end() const noexcept;
-        Mappers::const_iterator cend() const noexcept;
+        inline Mappers::iterator end() noexcept {
+            return mappers.end();
+        }
+        inline Mappers::const_iterator end() const noexcept {
+            return mappers.end();
+        }
+        inline Mappers::const_iterator cend() const noexcept {
+            return mappers.cend();
+        }
 
-        constexpr bool empty() const noexcept;
-        constexpr Mappers::size_type size() const noexcept;
+        constexpr bool empty() const noexcept {
+            return mappers.empty();
+        }
+        constexpr Mappers::size_type size() const noexcept {
+            return mappers.size();
+        }
         //======================================================================
 
         private:

@@ -15,13 +15,12 @@
 #include <atomic>
 #include "../Identifiers.h"
 #include "../Errors.h"
-#include "../Utils/UTF8.h"
 #include "Midi.h"
 
 namespace Artix::Midi {
     class MidiChannelMapper {
         public:
-        MidiChannelMapper(Note note = Note::None, juce::String name = Utils::UTF8::EmDash);
+        MidiChannelMapper(Note note = Note::None, juce::String name = juce::String());
 
         Note getNote() const noexcept;
         void setNote(Note v, bool muteCallbacks = false) noexcept;

@@ -96,48 +96,4 @@ namespace Artix::Midi {
 			});
 		}
 	}
-
-	//======================================================================
-	/** Mirroring std::array container functions */
-	MidiChannelMapperBank::Mappers::reference MidiChannelMapperBank::at(Mappers::size_type pos) {
-		return mappers.at(pos);
-	}
-	MidiChannelMapperBank::Mappers::const_reference MidiChannelMapperBank::at(Mappers::size_type pos) const {
-		return mappers.at(pos);
-	}
-
-	MidiChannelMapperBank::Mappers::reference MidiChannelMapperBank::operator[](Mappers::size_type pos) {
-		return mappers.operator[](pos);
-	}
-	MidiChannelMapperBank::Mappers::const_reference MidiChannelMapperBank::operator[](Mappers::size_type pos) const {
-		return mappers.operator[](pos);
-	}
-
-	MidiChannelMapperBank::Mappers::iterator MidiChannelMapperBank::begin() noexcept {
-		return mappers.begin();
-	}
-	MidiChannelMapperBank::Mappers::const_iterator MidiChannelMapperBank::begin() const noexcept {
-		return mappers.begin();
-	}
-	MidiChannelMapperBank::Mappers::const_iterator MidiChannelMapperBank::cbegin() const noexcept {
-		return mappers.cbegin();
-	}
-
-	MidiChannelMapperBank::Mappers::iterator MidiChannelMapperBank::end() noexcept {
-		return mappers.end();
-	}
-	MidiChannelMapperBank::Mappers::const_iterator MidiChannelMapperBank::end() const noexcept {
-		return mappers.end();
-	}
-	MidiChannelMapperBank::Mappers::const_iterator MidiChannelMapperBank::cend() const noexcept {
-		return mappers.cend();
-	}
-
-	constexpr bool MidiChannelMapperBank::empty() const noexcept {
-		return mappers.empty();
-	}
-	constexpr MidiChannelMapperBank::Mappers::size_type MidiChannelMapperBank::size() const noexcept {
-		return mappers.size();
-	}
-	//======================================================================
 }

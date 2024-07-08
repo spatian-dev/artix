@@ -139,6 +139,8 @@ void ArtixAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::M
 				timestamp
 			);
 		}
+
+		DBG("");
 	}
 
 	midiIn.swapWith(midiOut);

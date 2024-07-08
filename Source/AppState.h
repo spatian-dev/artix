@@ -19,7 +19,7 @@
 namespace Artix {
     class AppState {
         public:
-        AppState(int width = 800, int height = 600);
+        AppState(int width = 660, int height = 880);
         
         int getWidth() const noexcept;
         void setWidth(int v, bool muteCallbacks = false) noexcept;

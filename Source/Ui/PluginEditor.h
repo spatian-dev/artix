@@ -11,10 +11,15 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include <memory>
+
 #include "../AppState.h"
 #include "../PluginProcessor.h"
-#include "Colors.h"
-#include "MidiChannelMapperBankComponent.h"
+#include "Theme/PicoDark.h"
+#include "Theme/PicoLight.h"
+#include "Header.h"
+#include "MidiChannelMapperBankPanel.h"
+#include "Footer.h"
 
 namespace Artix::Ui {
 	class PluginEditor : public juce::AudioProcessorEditor {
@@ -26,14 +31,21 @@ namespace Artix::Ui {
 		void resized() override;
 
 		private:
+		constexpr static inline float MIN_SIZE = 600;
+		constexpr static inline float ASPEC_RATIO = 0.75;
+		constexpr static inline float MAX_SIZE = 900;
 
 		void stateSizeChanged(int width, int height);
 
 		ArtixAudioProcessor& audioProcessor;
 		AppState& state;
+		
+		//Theme::BaseTheme theme = Theme::PicoLight();
+		Theme::BaseTheme theme = Theme::PicoDark();
+		juce::Rectangle<float> innerArea;
 
-		MidiChannelMapperBankComponent mapperBank;
-
-		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PluginEditor)
+		MidiChannelMapperBankPanel mapperBank;
+		Header header;
+		Footer footer;
 	};
 }

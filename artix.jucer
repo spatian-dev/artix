@@ -2,13 +2,20 @@
 
 <JUCERPROJECT id="aHB0Uo" name="Artix" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" version="0.1.0"
-              companyName="Spatian" companyWebsite="https://spatian.dev" companyEmail="contact@spatian.dev"
-              pluginFormats="buildAU,buildVST3" pluginCharacteristicsValue="pluginProducesMidiOut,pluginWantsMidiIn"
-              pluginDesc="A simple Plugin that maps MIDI channel to note, to simplify your keyswitches and more."
+              companyName="Spatian" companyWebsite="https://artix.spatian.dev"
+              companyEmail="contact@spatian.dev" pluginFormats="buildVST3"
+              pluginCharacteristicsValue="pluginProducesMidiOut,pluginWantsMidiIn"
+              pluginDesc="A simple Plugin that maps MIDI channel to notes, to simplify your keyswitches and more."
               pluginManufacturerCode="Sptn" pluginCode="Artx" pluginAUMainType="'aumi'"
               pluginAUIsSandboxSafe="1" pluginVST3Category="Instrument,Tools"
               pluginVSTCategory="kPlugCategGenerator" cppLanguageStandard="20">
   <MAINGROUP id="yQGg9i" name="Artix">
+    <GROUP id="{B7552C95-2974-41BE-7512-E7606E4CB352}" name="Fonts">
+      <FILE id="QSwZAJ" name="RobotoCondensed-Regular.ttf" compile="0" resource="1"
+            file="Fonts/Roboto_Condensed/RobotoCondensed-Regular.ttf"/>
+      <FILE id="eDTbiF" name="Share_Tech_Mono.ttf" compile="0" resource="1"
+            file="Fonts/Share_Tech_Mono/Share_Tech_Mono.ttf"/>
+    </GROUP>
     <GROUP id="{E4CDCF34-6001-3176-7943-C773D7A49196}" name="Source">
       <GROUP id="{949308FE-C49E-3179-66BD-498AE345ED3D}" name="Midi">
         <FILE id="jYxZYk" name="Midi.cpp" compile="1" resource="0" file="Source/Midi/Midi.cpp"/>
@@ -23,13 +30,32 @@
               file="Source/Midi/MidiChannelMapperBank.h"/>
       </GROUP>
       <GROUP id="{B3570C42-37A6-0A2E-A0F4-5AA1417D0391}" name="Ui">
-        <FILE id="MLze5s" name="Colors.cpp" compile="1" resource="0" file="Source/Ui/Colors.cpp"/>
-        <FILE id="tQBW6z" name="Colors.h" compile="0" resource="0" file="Source/Ui/Colors.h"/>
-        <FILE id="l1swMz" name="Metrics.h" compile="0" resource="0" file="Source/Ui/Metrics.h"/>
-        <FILE id="sZL6Ca" name="MidiChannelMapperBankComponent.cpp" compile="1"
-              resource="0" file="Source/Ui/MidiChannelMapperBankComponent.cpp"/>
-        <FILE id="gUIxQK" name="MidiChannelMapperBankComponent.h" compile="0"
-              resource="0" file="Source/Ui/MidiChannelMapperBankComponent.h"/>
+        <GROUP id="{E4344965-C2BD-7F53-8766-45C74232DB2C}" name="Font">
+          <FILE id="zFA7jF" name="Fonts.cpp" compile="1" resource="0" file="Source/Ui/Font/Fonts.cpp"/>
+          <FILE id="cBrVhX" name="Fonts.h" compile="0" resource="0" file="Source/Ui/Font/Fonts.h"/>
+        </GROUP>
+        <GROUP id="{39774851-CB80-45ED-91C1-15C85F3B35B0}" name="Component">
+          <FILE id="Re3KAu" name="DigitalSelectorPanel.h" compile="0" resource="0"
+                file="Source/Ui/Component/DigitalSelectorPanel.h"/>
+          <FILE id="vptIKa" name="DigitalSelector.h" compile="0" resource="0"
+                file="Source/Ui/Component/DigitalSelector.h"/>
+          <FILE id="ty0qCa" name="Link.cpp" compile="1" resource="0" file="Source/Ui/Component/Link.cpp"/>
+          <FILE id="UrCbjC" name="Link.h" compile="0" resource="0" file="Source/Ui/Component/Link.h"/>
+        </GROUP>
+        <GROUP id="{7B98EE6C-2908-DBAB-C5BC-B4973C3ACDCA}" name="Theme">
+          <FILE id="L0UYCl" name="BaseTheme.cpp" compile="1" resource="0" file="Source/Ui/Theme/BaseTheme.cpp"/>
+          <FILE id="IrILM7" name="BaseTheme.h" compile="0" resource="0" file="Source/Ui/Theme/BaseTheme.h"/>
+          <FILE id="CoKJHr" name="PicoDark.h" compile="0" resource="0" file="Source/Ui/Theme/PicoDark.h"/>
+          <FILE id="iqXFV7" name="PicoLight.h" compile="0" resource="0" file="Source/Ui/Theme/PicoLight.h"/>
+        </GROUP>
+        <FILE id="LE6dmX" name="Footer.cpp" compile="1" resource="0" file="Source/Ui/Footer.cpp"/>
+        <FILE id="FoBls7" name="Footer.h" compile="0" resource="0" file="Source/Ui/Footer.h"/>
+        <FILE id="iwltqJ" name="Header.cpp" compile="1" resource="0" file="Source/Ui/Header.cpp"/>
+        <FILE id="toIbjx" name="Header.h" compile="0" resource="0" file="Source/Ui/Header.h"/>
+        <FILE id="sZL6Ca" name="MidiChannelMapperBankPanel.cpp" compile="1"
+              resource="0" file="Source/Ui/MidiChannelMapperBankPanel.cpp"/>
+        <FILE id="gUIxQK" name="MidiChannelMapperBankPanel.h" compile="0" resource="0"
+              file="Source/Ui/MidiChannelMapperBankPanel.h"/>
         <FILE id="FnJH5a" name="PluginEditor.cpp" compile="1" resource="0"
               file="Source/Ui/PluginEditor.cpp"/>
         <FILE id="K4mXZx" name="PluginEditor.h" compile="0" resource="0" file="Source/Ui/PluginEditor.h"/>
