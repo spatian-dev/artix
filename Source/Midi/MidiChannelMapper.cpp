@@ -20,7 +20,7 @@ namespace Artix::Midi {
 
 	void MidiChannelMapper::setNote(Note v, bool muteCallbacks) noexcept {
 		jassertValidMidiNoteOrNone(v);
-		const Note newNote = clampNote(v);
+		const Note newNote = clampNote(v, true);
 		const bool hasChanged = (note != newNote);
 		note = newNote;
 
@@ -31,7 +31,7 @@ namespace Artix::Midi {
 	}
 
 	void MidiChannelMapper::setNote(int v, bool muteCallbacks) noexcept {
-		setNote(clampNote(v), muteCallbacks);
+		setNote(clampNote(v, true), muteCallbacks);
 	}
 
 	const juce::String MidiChannelMapper::getName() const noexcept {

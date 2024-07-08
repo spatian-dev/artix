@@ -114,15 +114,15 @@ void ArtixAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::M
 		auto message = metadata.getMessage();
 
 		const auto timestamp = metadata.samplePosition;
-		const auto inputChannel = message.getChannel();
 
+		const auto inputChannel = message.getChannel();
 		if (inputChannel < 1)
 			continue;
 
 		const int outCh = (int) state.getMapperBank().getOutputChannel();
 		message.setChannel(outCh);
 
-		auto& mapper = state.getMapperBank()[inputChannel];
+		auto& mapper = state.getMapperBank()[inputChannel - 1];
 
 		if (mapper.isActive() && message.isNoteOn()) {
 			midiOut.addEvent(

@@ -14,7 +14,7 @@ namespace Artix::Ui {
 	MidiChannelMapperBankPanel::MidiChannelMapperBankPanel(
 		Midi::MidiChannelMapperBank& mapperBank, Theme::BaseTheme& theme
 	) : theme(theme), mapperBank(mapperBank), outputChannel(theme) {
-		
+
 		outputChannel.setLabel("MIDI Output Channel");
 		outputChannel.setBaseColor(theme.getUIColor(UIColor::BACKGROUND_SECONDARY));
 		outputChannel.setLayoutDirection(Ui::Component::DigitalSelectorPanelDirection::HORIZONTAL);
@@ -44,15 +44,12 @@ namespace Artix::Ui {
 			mapperSelector->setMinMax(
 				static_cast<int8_t>(Midi::Note::None), static_cast<int8_t>(Midi::Note::Last)
 			);
-			
+
 			mapperSelector->setCustomFormatter([](int8_t v, int8_t maxChars, int8_t maxDigits) -> juce::String {
 				if (v == static_cast<int8_t>(Midi::Note::None)) {
 					return std::string(maxChars, '-');
-				} else if (v < 0) {
-					return '-' + juce::String(-v).paddedLeft('0', maxDigits);
-				} else {
-					return juce::String(v).paddedLeft('0', maxChars);
 				}
+				return juce::MidiMessage::getMidiNoteName(v, true, true, 3);
 			});
 
 			mapper.onNameChanged = [mapperSelector](const juce::String& v) {
@@ -71,7 +68,7 @@ namespace Artix::Ui {
 			};
 			mapper.onNoteChanged(mapper.getNote());
 
-			
+
 			addAndMakeVisible(*mapperSelector);
 		}
 
@@ -93,7 +90,7 @@ namespace Artix::Ui {
 		outputChannel.setBounds(innerArea.getX(), innerArea.getY(), innerArea.getWidth(), theme.scale(48));
 
 		constexpr float columns = 4.0f;
-		
+
 		const auto padding = theme.getSpacing(Metric::SMALL);
 		float top = outputChannel.getHeight() + padding;
 		float left;

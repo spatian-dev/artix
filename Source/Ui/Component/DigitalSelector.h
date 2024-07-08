@@ -23,22 +23,22 @@
 namespace Artix::Ui::Component {
 
     template <typename T> requires std::is_integral_v<T>
-    class DigitalSelector : public juce::Component, private juce::Timer {
-        public:
+	class DigitalSelector : public juce::Component, private juce::Timer {
+		public:
 		using CustomFormatterCallback = std::function<const juce::String(T, T, T)>;
 		using ValueChangedCallback = std::function<void(T)>;
 
-        DigitalSelector(Theme::BaseTheme& theme, juce::Colour baseColor)
-            : theme(theme) {
+		DigitalSelector(Theme::BaseTheme& theme, juce::Colour baseColor)
+			: theme(theme) {
 			placeholder = std::string(maxChars, '-');
 			setBaseColor(baseColor);
-			setValue(getValue());
+			setValue(getValue(), true);
 			resized();
 		}
 
-        DigitalSelector(Theme::BaseTheme& theme)
-            : DigitalSelector(theme, theme.getUIColor(UIColor::BACKGROUND_PRIMARY)) {}
-        ~DigitalSelector() override = default;
+		DigitalSelector(Theme::BaseTheme& theme)
+			: DigitalSelector(theme, theme.getUIColor(UIColor::BACKGROUND_PRIMARY)) {}
+		~DigitalSelector() override = default;
 
 		CustomFormatterCallback customFormatter;
 		ValueChangedCallback onValueChanged;
@@ -74,13 +74,13 @@ namespace Artix::Ui::Component {
 			return value;
 		}
 
-		void setValue(T v) noexcept {
+		void setValue(T v, bool muteCallbacks = false) noexcept {
 			const auto oldValue = value;
 			value = std::clamp(v, min, max);
 			dragValue = value;
 			updateText();
 
-			if (oldValue != value && onValueChanged) {
+			if (!muteCallbacks && (oldValue != value) && onValueChanged) {
 				onValueChanged(v);
 			}
 		}
@@ -130,7 +130,7 @@ namespace Artix::Ui::Component {
 				theme.getThickness(borderThickness), theme.getRounding(rounding),
 				borderColor, isMouseOver() ? backgroundHoverColor : backgroundColor
 			);
-			
+
 			g.setFont(theme.getMonospaceFont(fontSize));
 			g.setColour(textColor);
 			g.drawFittedText(
@@ -203,10 +203,17 @@ namespace Artix::Ui::Component {
 			);
 		}
 
+		void mouseWheelMove(const juce::MouseEvent& event, const juce::MouseWheelDetails& wheel) override {
+			if (isBeingDragged || (wheel.deltaY == 0))
+				return;
+
+			const int sign = ((wheel.deltaY > 0) ? 1 : -1) * (wheel.isReversed ? -1 : 1);
+			setValue(value + sign);
+		}
+
 		void timerCallback() override {
 			dragValue = std::clamp(dragValue + dragVelocity, (float) min, (float) max);
 			updateText();
-			repaint();
 		}
 
 		void updateText() noexcept {
@@ -214,14 +221,12 @@ namespace Artix::Ui::Component {
 
 			if (customFormatter) {
 				text = customFormatter(base, maxChars, maxDigits);
-				return;
-			}
-
-			if (base < 0) {
+			} else if (base < 0) {
 				text = '-' + juce::String(-base).paddedLeft('0', maxDigits);
 			} else {
 				text = juce::String(base).paddedLeft('0', maxChars);
 			}
+			repaint();
 		}
 
 		void updateFont() {
