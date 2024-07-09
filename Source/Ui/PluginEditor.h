@@ -11,6 +11,7 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include <cmath>
 #include <memory>
 
 #include "../AppState.h"
@@ -33,7 +34,7 @@ namespace Artix::Ui {
 
 		private:
 		constexpr static inline float MIN_SIZE = 600;
-		constexpr static inline float ASPEC_RATIO = 0.75;
+		constexpr static inline float ASPECT_RATIO = 0.75;
 		constexpr static inline float MAX_SIZE = 900;
 
 		void stateSizeChanged(int width, int height);

@@ -16,13 +16,11 @@ namespace Artix::Ui {
 		state(state), Themable(state.getTheme()), header(theme),
 		mapperBank(state.getMapperBank(), theme), footer(theme) {
 		
-		getLookAndFeel().setDefaultSansSerifTypeface(theme->getSansSerifTypeface());
-
 		setBufferedToImage(true);
 		setTheme(theme);
 		state.onThemeChanged = [this](Theme::ThemePtr v) { setTheme(v); };
 
-		getConstrainer()->setFixedAspectRatio(ASPEC_RATIO);
+		getConstrainer()->setFixedAspectRatio(ASPECT_RATIO);
 		setResizable(true, false);
 		stateSizeChanged(state.getWidth(), state.getHeight());
 		state.onSizeChanged = [this](int w, int h) { stateSizeChanged(w, h); };
@@ -65,6 +63,7 @@ namespace Artix::Ui {
 
 	void PluginEditor::setTheme(Theme::ThemePtr v) noexcept {
 		Themable::setTheme(v);
+		getLookAndFeel().setDefaultSansSerifTypeface(theme->getSansSerifTypeface());
 		theme->setScaledFontSize(true);
 		header.setTheme(v);
 		mapperBank.setTheme(v);
@@ -75,6 +74,9 @@ namespace Artix::Ui {
 
 	void PluginEditor::stateSizeChanged(int width, int height) {
 		setSize(width, height);
-		setResizeLimits(MIN_SIZE, MIN_SIZE / ASPEC_RATIO, MAX_SIZE, MAX_SIZE / ASPEC_RATIO);
+		setResizeLimits(
+			MIN_SIZE, std::floor(MIN_SIZE / ASPECT_RATIO),
+			MAX_SIZE, std::ceil(MAX_SIZE / ASPECT_RATIO)
+		);
 	}
 }

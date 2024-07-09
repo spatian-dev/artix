@@ -12,8 +12,8 @@
 
 #include <JuceHeader.h>
 #include <cstdint>
+#include <cmath>
 #include <memory>
-#include <cmath>;
 
 #include "Theme/Themes.h"
 #include "Component/DigitalSelectorPanel.h"
