@@ -12,13 +12,13 @@
 
 #include <JuceHeader.h>
 
-#include "../Theme/BaseTheme.h"
+#include "../Theme/Themes.h"
 
 namespace Artix::Ui::Component {
-    class Link : public juce::Component {
+    class Link : public juce::Component, private Theme::Themable {
         public:
-        Link(Theme::BaseTheme& theme, const juce::String link, const juce::String text);
-        Link(Theme::BaseTheme& theme, const juce::String link);
+        Link(Theme::ThemePtr theme, const juce::String link, const juce::String text);
+        Link(Theme::ThemePtr theme, const juce::String link);
         virtual ~Link() override = default;
 
         virtual Metric getFontSize() const noexcept;
@@ -45,9 +45,9 @@ namespace Artix::Ui::Component {
 
         void paint(juce::Graphics&) override;
 
-        private:
-        Theme::BaseTheme& theme;
+        void setTheme(Theme::ThemePtr v) noexcept override;
 
+        private:
         Metric fontSize = Metric::MEDIUM;
         juce::Justification justification = juce::Justification::centredLeft;
         juce::Colour textColor;

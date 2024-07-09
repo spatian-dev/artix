@@ -12,11 +12,10 @@
 
 namespace Artix::Ui {
 	MidiChannelMapperBankPanel::MidiChannelMapperBankPanel(
-		Midi::MidiChannelMapperBank& mapperBank, Theme::BaseTheme& theme
-	) : theme(theme), mapperBank(mapperBank), outputChannel(theme) {
+		Midi::MidiChannelMapperBank& mapperBank, Theme::ThemePtr theme
+	) : Themable(theme), mapperBank(mapperBank), outputChannel(theme) {
 
 		outputChannel.setLabel("MIDI Output Channel");
-		outputChannel.setBaseColor(theme.getUIColor(UIColor::BACKGROUND_SECONDARY));
 		outputChannel.setLayoutDirection(Ui::Component::DigitalSelectorPanelDirection::HORIZONTAL);
 		outputChannel.setMinMax(
 			static_cast<uint8_t>(Midi::Channel::First), static_cast<uint8_t>(Midi::Channel::Last)
@@ -38,7 +37,7 @@ namespace Artix::Ui {
 			);
 			mappers.push_back(mapperSelector);
 
-			mapperSelector->setBaseColor(theme.getUIColor(UIColor::BACKGROUND_PRIMARY));
+			mapperSelector->setBaseColor(theme->getUIColor(UIColor::BACKGROUND_PRIMARY));
 			mapperSelector->setNameJustification(juce::Justification::centredRight);
 			mapperSelector->setLabelJustification(juce::Justification::centred);
 			mapperSelector->setMinMax(
@@ -71,27 +70,27 @@ namespace Artix::Ui {
 
 			addAndMakeVisible(*mapperSelector);
 		}
-
+		setTheme(theme);
 		resized();
 	}
 
 	MidiChannelMapperBankPanel::~MidiChannelMapperBankPanel() {}
 
 	void MidiChannelMapperBankPanel::paint(juce::Graphics& g) {
-		theme.drawRounderContainer(
+		theme->drawRounderContainer(
 			this, g, getLocalBounds().toFloat(), false, Metric::SMALL, Metric::TINY,
 			UIColor::BORDER_ELEMENT, UIColor::BACKGROUND
 		);
 	}
 
 	void MidiChannelMapperBankPanel::resized() {
-		innerArea = theme.getInnerArea(this, Metric::SMALL, Metric::SMALL);
+		innerArea = theme->getInnerArea(this, Metric::SMALL, Metric::SMALL);
 
-		outputChannel.setBounds(innerArea.getX(), innerArea.getY(), innerArea.getWidth(), theme.scale(48));
+		outputChannel.setBounds(innerArea.getX(), innerArea.getY(), innerArea.getWidth(), theme->scale(48));
 
 		constexpr float columns = 4.0f;
 
-		const auto padding = theme.getSpacing(Metric::SMALL);
+		const auto padding = theme->getSpacing(Metric::SMALL);
 		float top = outputChannel.getHeight() + padding;
 		float left;
 
@@ -113,5 +112,16 @@ namespace Artix::Ui {
 			}
 			top += rowHeightWithPadding;
 		}
+	}
+	void MidiChannelMapperBankPanel::setTheme(Theme::ThemePtr v) noexcept {
+		Themable::setTheme(v);
+		outputChannel.setTheme(v);
+		outputChannel.setBaseColor(theme->getUIColor(UIColor::BACKGROUND_SECONDARY));
+		for (auto& mapperSelector : mappers) {
+			mapperSelector->setTheme(v);
+			mapperSelector->setBaseColor(theme->getUIColor(UIColor::BACKGROUND_PRIMARY));
+		}
+		resized();
+		repaint();
 	}
 }

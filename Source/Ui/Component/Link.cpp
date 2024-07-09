@@ -11,13 +11,12 @@
 #include "Link.h"
 
 namespace Artix::Ui::Component {
-	Link::Link(Theme::BaseTheme& theme, const juce::String link, const juce::String text)
-		: theme(theme), link(link), text(text) {
-		//setRepaintsOnMouseActivity(true);
-		setTextColor(theme.getUIColor(UIColor::TEXT_PRIMARY));
+	Link::Link(Theme::ThemePtr theme, const juce::String link, const juce::String text)
+		: Themable(theme), link(link), text(text) {
+		setTheme(theme);
 	}
 
-	Link::Link(Theme::BaseTheme& theme, const juce::String link) : Link(theme, link, link) {}
+	Link::Link(Theme::ThemePtr theme, const juce::String link) : Link(theme, link, link) {}
 
 	Metric Link::getFontSize() const noexcept {
 		return fontSize;
@@ -43,7 +42,7 @@ namespace Artix::Ui::Component {
 		textColor = v;
 
 		if (deriveScheme) {
-			hoverColor = theme.isDark() ? textColor.brighter(0.6) : textColor.darker(0.6);
+			hoverColor = theme->isDark() ? textColor.brighter(0.6) : textColor.darker(0.6);
 		}
 	}
 
@@ -91,8 +90,14 @@ namespace Artix::Ui::Component {
 	}
 
 	void Link::paint(juce::Graphics& g) {
-		g.setFont(juce::FontOptions(theme.getFontSize(fontSize), juce::Font::underlined));
+		g.setFont(juce::FontOptions(theme->getFontSize(fontSize), juce::Font::underlined));
 		g.setColour(isMouseOver() ? hoverColor : textColor);
 		g.drawFittedText(text, getLocalBounds(), justification, 1);
+	}
+	void Link::setTheme(Theme::ThemePtr v) noexcept {
+		Themable::setTheme(v);
+		setTextColor(theme->getUIColor(UIColor::TEXT_PRIMARY));
+		resized();
+		repaint();
 	}
 }

@@ -12,21 +12,21 @@
 
 #include <JuceHeader.h>
 #include <sstream>
-#include "Theme/BaseTheme.h"
+#include "Theme/Themes.h"
 #include "Component/Link.h"
 
 namespace Artix::Ui {
-    class Footer : public juce::Component {
+    class Footer : public juce::Component, private Theme::Themable {
         public:
-        Footer(Theme::BaseTheme& theme);
+        Footer(Theme::ThemePtr theme);
         ~Footer() override;
 
         void paint(juce::Graphics&) override;
         void resized() override;
 
-        private:
-        Theme::BaseTheme& theme;
-        
+        void setTheme(Theme::ThemePtr v) noexcept override;
+
+        private:        
         juce::Label versionLabel;
         Ui::Component::Link websiteLink{theme, JucePlugin_ManufacturerWebsite};
 

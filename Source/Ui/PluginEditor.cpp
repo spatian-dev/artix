@@ -13,12 +13,14 @@
 namespace Artix::Ui {
 	PluginEditor::PluginEditor(ArtixAudioProcessor& audioProcessor, AppState& state)
 		: AudioProcessorEditor(&audioProcessor), audioProcessor(audioProcessor),
-		state(state), header(theme), mapperBank(state.getMapperBank(), theme), footer(theme) {
+		state(state), Themable(state.getTheme()), header(theme),
+		mapperBank(state.getMapperBank(), theme), footer(theme) {
 		
-		getLookAndFeel().setDefaultSansSerifTypeface(theme.getSansSerifTypeface());
+		getLookAndFeel().setDefaultSansSerifTypeface(theme->getSansSerifTypeface());
 
 		setBufferedToImage(true);
-		theme.setScaledFontSize(true);
+		setTheme(theme);
+		state.onThemeChanged = [this](Theme::ThemePtr v) { setTheme(v); };
 
 		getConstrainer()->setFixedAspectRatio(ASPEC_RATIO);
 		setResizable(true, false);
@@ -34,20 +36,20 @@ namespace Artix::Ui {
 	PluginEditor::~PluginEditor() {}
 
 	void PluginEditor::paint(juce::Graphics& g) {
-		const auto margin = theme.getSpacing(Metric::SMALL);
-		theme.fillBackground(this, g);
+		const auto margin = theme->getSpacing(Metric::SMALL);
+		theme->fillBackground(this, g);
 	}
 
 	void PluginEditor::resized() {
 		state.setSize(getWidth(), getHeight());
 		
 		const auto scaler = 1 + (getWidth() - MIN_SIZE) / (4 * (MAX_SIZE - MIN_SIZE));
-		theme.setScaler(scaler);
+		theme->setScaler(scaler);
 
-		innerArea = theme.getInnerArea(this, Metric::SMALL, Metric::SMALL);
+		innerArea = theme->getInnerArea(this, Metric::SMALL, Metric::SMALL);
 
-		const auto padding = theme.getSpacing(Metric::SMALL);
-		const float panelHeight = theme.scale(36);
+		const auto padding = theme->getSpacing(Metric::SMALL);
+		const float panelHeight = theme->scale(36);
 
 		header.setBounds(innerArea.getX(), innerArea.getY(), innerArea.getWidth(), panelHeight);
 		footer.setBounds(
@@ -59,6 +61,16 @@ namespace Artix::Ui {
 			innerArea.getX(), header.getBottom() + padding,
 			innerArea.getWidth(), innerArea.getHeight() - (2 * (padding + panelHeight))
 		);
+	}
+
+	void PluginEditor::setTheme(Theme::ThemePtr v) noexcept {
+		Themable::setTheme(v);
+		theme->setScaledFontSize(true);
+		header.setTheme(v);
+		mapperBank.setTheme(v);
+		footer.setTheme(v);
+		resized();
+		repaint();
 	}
 
 	void PluginEditor::stateSizeChanged(int width, int height) {

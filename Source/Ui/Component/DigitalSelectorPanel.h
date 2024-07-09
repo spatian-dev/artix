@@ -12,7 +12,7 @@
 
 #include <JuceHeader.h>
 
-#include "../Theme/BaseTheme.h"
+#include "../Theme/Themes.h"
 #include "DigitalSelector.h"
 
 namespace Artix::Ui::Component {
@@ -22,24 +22,20 @@ namespace Artix::Ui::Component {
 	};
 
 	template <typename T> requires std::is_integral_v<T>
-	class DigitalSelectorPanel : public juce::Component {
+	class DigitalSelectorPanel : public juce::Component, private Theme::Themable {
 		public:
 		using LabelTextChangedCallback = std::function<void(const juce::String)>;
 		using ValueChangedCallback = DigitalSelector<T>::ValueChangedCallback;
 		using CustomFormatterCallback = DigitalSelector<T>::CustomFormatterCallback;
 
 		DigitalSelectorPanel(
-			Theme::BaseTheme& theme, juce::String nameText = juce::String(),
+			Theme::ThemePtr theme, juce::String nameText = juce::String(),
 			juce::String labelText = juce::String(), bool editableLabel = false
-		)
-			: theme(theme) {
+		) : Themable(theme) {
 			
-			name.setColour(juce::Label::textColourId, theme.getUIColor(UIColor::TEXT_ELEMENT_MUTED));
 			name.setBorderSize(juce::BorderSize<int>(name.getBorderSize().getTop(), 0, 0, 0));
 			setName(nameText);
 
-			label.setColour(juce::Label::textColourId, theme.getUIColor(UIColor::TEXT_ELEMENT));
-			label.setColour(juce::Label::textWhenEditingColourId, theme.getUIColor(UIColor::TEXT_ELEMENT));
 			label.setBorderSize(juce::BorderSize<int>(label.getBorderSize().getTop(), 0, 0, 0));
 			setLabel(labelText);
 			setEditableLabel(editableLabel);
@@ -156,15 +152,15 @@ namespace Artix::Ui::Component {
 		}
 
 		void paint(juce::Graphics& g) override {
-			theme.drawRounderContainer(
+			theme->drawRounderContainer(
 				this, g, getLocalBounds().toFloat(), true, Metric::TINY, Metric::TINY,
 				UIColor::BORDER_ELEMENT, UIColor::BACKGROUND_ELEMENT
 			);
 
 			if (label.getText().isEmpty() && !label.isBeingEdited()) {
-				const auto placeholderTextColor = theme.isDark() ?
-					theme.getUIColor(UIColor::BACKGROUND_ELEMENT).brighter(0.15f) :
-					theme.getUIColor(UIColor::BACKGROUND_ELEMENT).darker(0.15f);
+				const auto placeholderTextColor = theme->isDark() ?
+					theme->getUIColor(UIColor::BACKGROUND_ELEMENT).brighter(0.15f) :
+					theme->getUIColor(UIColor::BACKGROUND_ELEMENT).darker(0.15f);
 				g.setFont(label.getFont());
 				g.setColour(placeholderTextColor);
 				g.drawText("(Unnamed)", label.getBounds(), getLabelJustification());
@@ -175,12 +171,23 @@ namespace Artix::Ui::Component {
 			adaptLayout();
 		};
 
+		void setTheme(Theme::ThemePtr v) noexcept override {
+			Themable::setTheme(v);
+			name.setColour(juce::Label::textColourId, theme->getUIColor(UIColor::TEXT_ELEMENT_MUTED));
+
+			label.setColour(juce::Label::textColourId, theme->getUIColor(UIColor::TEXT_ELEMENT));
+			label.setColour(juce::Label::textWhenEditingColourId, theme->getUIColor(UIColor::TEXT_ELEMENT));
+
+			selector.setTheme(v);
+
+			resized();
+			repaint();
+		}
+
 		LabelTextChangedCallback onLabelTextChanged;
 		ValueChangedCallback onValueChanged;
 
 		private:
-		Theme::BaseTheme& theme;
-
 		juce::Rectangle<float> innerArea;
 
 		DigitalSelectorPanelDirection layoutDirection = DigitalSelectorPanelDirection::VERTICAL;
@@ -191,11 +198,11 @@ namespace Artix::Ui::Component {
 		juce::Label label;
 
 		void adaptLayout() noexcept {
-			const auto padding = theme.getSpacing(Metric::SMALL);
-			innerArea = theme.getInnerArea(this, Metric::TINY, Metric::SMALL);
+			const auto padding = theme->getSpacing(Metric::SMALL);
+			innerArea = theme->getInnerArea(this, Metric::TINY, Metric::SMALL);
 
-			name.setFont(theme.getFontSize(Metric::TINY));
-			label.setFont(theme.getFontSize(Metric::MEDIUM));
+			name.setFont(theme->getFontSize(Metric::TINY));
+			label.setFont(theme->getFontSize(Metric::MEDIUM));
 
 			if (layoutDirection == DigitalSelectorPanelDirection::HORIZONTAL) {
 				auto displayWidth = selector.getMinimumSafeWidth();
@@ -207,7 +214,7 @@ namespace Artix::Ui::Component {
 				const auto labelsWidth = selector.getX() - innerArea.getX() - padding;
 				name.setBounds(
 					innerArea.getX(), innerArea.getY(),
-					labelsWidth, theme.scale(getName().isEmpty() ? 0 : 16)
+					labelsWidth, theme->scale(getName().isEmpty() ? 0 : 16)
 				);
 
 				label.setBounds(
@@ -224,7 +231,7 @@ namespace Artix::Ui::Component {
 
 				name.setBounds(
 					innerArea.getX(), innerArea.getY(),
-					innerArea.getWidth(), theme.scale(getName().isEmpty() ? 0 : 16)
+					innerArea.getWidth(), theme->scale(getName().isEmpty() ? 0 : 16)
 				);
 
 				label.setBounds(

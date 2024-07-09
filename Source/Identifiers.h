@@ -13,11 +13,12 @@
 #include <JuceHeader.h>
 
 namespace Artix::Id {
-#define DEFINE_JUCE_ID(name)\
+	#define DEFINE_JUCE_ID(name)\
 	extern const juce::Identifier name;\
 	namespace Str { constexpr auto name = #name;}
 
 	DEFINE_JUCE_ID(AppState)
+	DEFINE_JUCE_ID(Theme)
 	DEFINE_JUCE_ID(Width)
 	DEFINE_JUCE_ID(Height)
 
@@ -29,5 +30,5 @@ namespace Artix::Id {
 	DEFINE_JUCE_ID(InputChannel)
 	DEFINE_JUCE_ID(OutputChannel)
 
-#undef DEFINE_JUCE_ID
+	#undef DEFINE_JUCE_ID
 }

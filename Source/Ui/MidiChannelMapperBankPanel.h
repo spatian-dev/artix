@@ -15,22 +15,23 @@
 #include <memory>
 #include <cmath>;
 
-#include "Theme/BaseTheme.h"
+#include "Theme/Themes.h"
 #include "Component/DigitalSelectorPanel.h"
 #include "../Midi/MidiChannelMapperBank.h"
 #include "../Utils/UTF8.h"
 
 namespace Artix::Ui {
-	class MidiChannelMapperBankPanel : public juce::Component {
+	class MidiChannelMapperBankPanel : public juce::Component, private Theme::Themable {
 		public:
-		MidiChannelMapperBankPanel(Midi::MidiChannelMapperBank& mapperBank, Theme::BaseTheme& theme);
+		MidiChannelMapperBankPanel(Midi::MidiChannelMapperBank& mapperBank, Theme::ThemePtr theme);
 		~MidiChannelMapperBankPanel() override;
 
 		void paint(juce::Graphics&) override;
 		void resized() override;
 
+		void setTheme(Theme::ThemePtr v) noexcept override;
+
 		private:
-		Theme::BaseTheme& theme;
 		juce::Rectangle<float> innerArea;
 
 		Midi::MidiChannelMapperBank& mapperBank;

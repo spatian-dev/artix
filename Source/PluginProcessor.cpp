@@ -164,8 +164,6 @@ void ArtixAudioProcessor::setStateInformation(const void* data, int sizeInBytes)
 	if (auto xmlState = getXmlFromBinary(data, sizeInBytes)) {
 		state.fromValueTree(juce::ValueTree::fromXml(*xmlState));
 	}
-
-	DBG(state.toValueTree().toXmlString());
 }
 
 Artix::AppState& ArtixAudioProcessor::getAppState() noexcept {

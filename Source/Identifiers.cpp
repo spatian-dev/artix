@@ -14,6 +14,7 @@ namespace Artix::Id {
 #define DECLARE_JUCE_ID(name) const juce::Identifier name(#name);
 
     DECLARE_JUCE_ID(AppState)
+    DECLARE_JUCE_ID(Theme)
     DECLARE_JUCE_ID(Width)
     DECLARE_JUCE_ID(Height)
 

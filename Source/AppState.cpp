@@ -11,7 +11,12 @@
 #include "AppState.h"
 
 namespace Artix {
-	AppState::AppState(int width, int height) : width(width), height(height) {}
+	AppState::AppState(int width, int height) : width(width), height(height) {
+		{
+			juce::ScopedWriteLock lock(themeMutex);
+			theme = Ui::Theme::Themes::getInstance().begin()->second;
+		}
+	}
 
 	int AppState::getWidth() const noexcept {
 		return width;
@@ -41,6 +46,22 @@ namespace Artix {
 		});
 	}
 
+	Ui::Theme::ThemePtr AppState::getTheme() const noexcept {
+		juce::ScopedReadLock lock(themeMutex);
+		return theme;
+	}
+
+	void AppState::setTheme(Ui::Theme::ThemePtr v, bool muteCallbacks) noexcept {
+		juce::ScopedWriteLock lock(themeMutex);
+		const auto oldPtr = theme.get();
+		theme = v;
+		if ((theme.get() == oldPtr) || muteCallbacks) return;
+
+		juce::MessageManager::callAsync([this]() {
+			if (onThemeChanged) onThemeChanged(theme);
+		});
+	}
+
 	void AppState::setSize(int width, int height, bool muteCallbacks) noexcept {
 		const bool hasChanged = (this->width != width) || (this->height != height);
 		this->width = width;
@@ -60,6 +81,7 @@ namespace Artix {
 		auto vt = juce::ValueTree(Id::AppState);
 		vt.setProperty(Id::Width, width.load(), nullptr);
 		vt.setProperty(Id::Height, height.load(), nullptr);
+		vt.setProperty(Id::Theme, getTheme()->getName(), nullptr);
 		vt.addChild(mapperBank.toValueTree(), -1, nullptr);
 
 		return vt;
@@ -80,6 +102,11 @@ namespace Artix {
 			vt.getProperty(Id::Width, (int) this->width),
 			vt.getProperty(Id::Height, (int) this->height)
 		);
+
+		auto localTheme = getTheme();
+		setTheme(Ui::Theme::Themes::getInstance().tryFind(
+			vt.getProperty(Id::Theme, localTheme->getName()), localTheme
+		));
 
 		int i = 0;
 		for (auto child : vt) {

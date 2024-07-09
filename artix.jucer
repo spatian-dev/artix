@@ -47,6 +47,7 @@
           <FILE id="IrILM7" name="BaseTheme.h" compile="0" resource="0" file="Source/Ui/Theme/BaseTheme.h"/>
           <FILE id="CoKJHr" name="PicoDark.h" compile="0" resource="0" file="Source/Ui/Theme/PicoDark.h"/>
           <FILE id="iqXFV7" name="PicoLight.h" compile="0" resource="0" file="Source/Ui/Theme/PicoLight.h"/>
+          <FILE id="I7LpGx" name="Themes.h" compile="0" resource="0" file="Source/Ui/Theme/Themes.h"/>
         </GROUP>
         <FILE id="LE6dmX" name="Footer.cpp" compile="1" resource="0" file="Source/Ui/Footer.cpp"/>
         <FILE id="FoBls7" name="Footer.h" compile="0" resource="0" file="Source/Ui/Footer.h"/>
@@ -91,8 +92,8 @@
   <EXPORTFORMATS>
     <VS2022 targetFolder="Builds/VisualStudio2022">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug" targetName="artix" enablePluginBinaryCopyStep="1"/>
-        <CONFIGURATION isDebug="0" name="Release" targetName="artix"/>
+        <CONFIGURATION isDebug="1" name="Debug" targetName="Artix" enablePluginBinaryCopyStep="1"/>
+        <CONFIGURATION isDebug="0" name="Release" targetName="Artix"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_audio_basics" path="C:/devtools/JUCE/modules"/>

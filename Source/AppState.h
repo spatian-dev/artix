@@ -14,6 +14,7 @@
 #include <atomic>
 #include "Identifiers.h"
 #include "Errors.h"
+#include "Ui/Theme/Themes.h"
 #include "Midi/MidiChannelMapperBank.h"
 
 namespace Artix {
@@ -27,6 +28,9 @@ namespace Artix {
         int getHeight() const noexcept;
         void setHeight(int v, bool muteCallbacks = false) noexcept;
 
+        Ui::Theme::ThemePtr getTheme() const noexcept;
+        void setTheme(Ui::Theme::ThemePtr v, bool muteCallbacks = false) noexcept;
+
         void setSize(int width, int height, bool muteCallbacks = false) noexcept;
 
         Midi::MidiChannelMapperBank& getMapperBank() noexcept;
@@ -35,12 +39,16 @@ namespace Artix {
         void fromValueTree(const juce::ValueTree& vt) noexcept;
 
         std::function<void(int, int)> onSizeChanged;
+        std::function<void(Ui::Theme::ThemePtr)> onThemeChanged;
         Error::ErrorCallback onError;
 
         private:
         std::atomic<int> width;
         std::atomic<int> height;
         Midi::MidiChannelMapperBank mapperBank;
+
+        juce::ReadWriteLock themeMutex;
+        Ui::Theme::ThemePtr theme;
 
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AppState)
     };
