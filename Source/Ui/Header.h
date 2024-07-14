@@ -12,20 +12,20 @@
 
 #include <JuceHeader.h>
 
-#include "Theme/BaseTheme.h"
+#include "Theme/Themes.h"
 
 namespace Artix::Ui {
-    class Header : public juce::Component {
+    class Header : public juce::Component, private Theme::Themable {
         public:
-        Header(Theme::BaseTheme& theme);
+        Header(Theme::ThemePtr theme);
         ~Header() override;
 
         void paint(juce::Graphics&) override;
         void resized() override;
 
-        private:
-        Theme::BaseTheme& theme;
+        void setTheme(Theme::ThemePtr v) noexcept override;
 
+        private:
         juce::Rectangle<float> innerArea;
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Header)
     };

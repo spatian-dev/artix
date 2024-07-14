@@ -1,14 +1,19 @@
 /*
   ==============================================================================
 
-	Errors.h
-	Created: 28 Jun 2024 12:25:25am
-	Author:  Saad Sidqui
+    Error.h
+    Created: 13 Jul 2024 3:32:31pm
+    Author:  Saad Sidqui
 
   ==============================================================================
 */
 
 #pragma once
+
+#include <JuceHeader.h>
+#include <functional>
+
+#include "../Utils/CallbackList.h"
 
 namespace Artix::Error {
 	enum class Code : int {
@@ -18,5 +23,11 @@ namespace Artix::Error {
 		MissingChildren = 1002
 	};
 
-	using ErrorCallback = std::function<void(const juce::String&, Error::Code, Error::Code)>;
+	struct ErrorDetails {
+		const juce::String msg;
+		const Code code;
+		const Code subCode;
+	};
+
+	using ErrorCallbacks = Utils::CallbackList<ErrorDetails>;
 }

@@ -1,9 +1,7 @@
 /*
   ==============================================================================
 
-	ChannelMapperList.cpp
-	Created: 20 Jun 2024 02:55:24pm
-	Author:  Saad Sidqui
+	This file contains the basic framework code for a JUCE plugin editor.
 
   ==============================================================================
 */
@@ -11,18 +9,18 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include <memory>
+#include <cmath>
+#include <optional>
 
 #include "../AppState.h"
 #include "../PluginProcessor.h"
-#include "Theme/PicoDark.h"
-#include "Theme/PicoLight.h"
+#include "Theme/Themes.h"
 #include "Header.h"
 #include "MidiChannelMapperBankPanel.h"
 #include "Footer.h"
 
 namespace Artix::Ui {
-	class PluginEditor : public juce::AudioProcessorEditor {
+	class PluginEditor : public juce::AudioProcessorEditor, private Theme::Themable {
 		public:
 		PluginEditor(ArtixAudioProcessor&, AppState&);
 		~PluginEditor() override;
@@ -30,22 +28,27 @@ namespace Artix::Ui {
 		void paint(juce::Graphics&) override;
 		void resized() override;
 
-		private:
-		constexpr static inline float MIN_SIZE = 600;
-		constexpr static inline float ASPEC_RATIO = 0.75;
-		constexpr static inline float MAX_SIZE = 900;
+		void setTheme(Theme::ThemePtr v) noexcept override;
 
-		void stateSizeChanged(int width, int height);
+		private:
+		constexpr static inline float MIN_HEIGHT = 800;
+		constexpr static inline float MAX_HEIGHT = 1200;
+		constexpr static inline float ASPECT_RATIO = 0.75;
 
 		ArtixAudioProcessor& audioProcessor;
 		AppState& state;
-		
-		//Theme::BaseTheme theme = Theme::PicoLight();
-		Theme::BaseTheme theme = Theme::PicoDark();
+
+		AppState::HeightChangedCallbacks::Identifier heightChangedCallbackId;
+		AppState::ThemeChangedCallbacks::Identifier themeChangedCallbackId;
+
 		juce::Rectangle<float> innerArea;
 
 		MidiChannelMapperBankPanel mapperBank;
 		Header header;
 		Footer footer;
+
+		void stateHeightChanged(int v);
+
+		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PluginEditor)
 	};
 }

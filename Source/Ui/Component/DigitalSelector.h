@@ -12,32 +12,39 @@
 
 #include <JuceHeader.h>
 #include <algorithm>
+#include <cmath>
 #include <functional>
 #include <limits>
 #include <string>
 #include <type_traits>
 #include <utility>
 
-#include "../Theme/BaseTheme.h"
+#include "../Theme/Themes.h"
+#include "../../Utils/CallbackList.h"
 
 namespace Artix::Ui::Component {
 
     template <typename T> requires std::is_integral_v<T>
-	class DigitalSelector : public juce::Component, private juce::Timer {
+	class DigitalSelector :
+		public juce::Component,
+		private juce::Timer,
+		private Theme::Themable
+	{
 		public:
 		using CustomFormatterCallback = std::function<const juce::String(T, T, T)>;
-		using ValueChangedCallback = std::function<void(T)>;
+		using ValueChangedCallback = Utils::CallbackList<T>;
 
-		DigitalSelector(Theme::BaseTheme& theme, juce::Colour baseColor)
-			: theme(theme) {
+		DigitalSelector(Theme::ThemePtr theme, juce::Colour baseColor)
+			: Themable(theme) {
 			placeholder = std::string(maxChars, '-');
+			setTheme(theme);
 			setBaseColor(baseColor);
 			setValue(getValue(), true);
 			resized();
 		}
 
-		DigitalSelector(Theme::BaseTheme& theme)
-			: DigitalSelector(theme, theme.getUIColor(UIColor::BACKGROUND_PRIMARY)) {}
+		DigitalSelector(Theme::ThemePtr theme)
+			: DigitalSelector(theme, theme->getUIColor(UIColor::BACKGROUND_PRIMARY)) {}
 		~DigitalSelector() override = default;
 
 		CustomFormatterCallback customFormatter;
@@ -77,12 +84,14 @@ namespace Artix::Ui::Component {
 		void setValue(T v, bool muteCallbacks = false) noexcept {
 			const auto oldValue = value;
 			value = std::clamp(v, min, max);
+			
+			if (oldValue == value) return;
 			dragValue = value;
-			updateText();
 
-			if (!muteCallbacks && (oldValue != value) && onValueChanged) {
-				onValueChanged(v);
-			}
+			updateText();
+			
+			if (muteCallbacks) return;
+			onValueChanged.callSafely(v);
 		}
 
 		void setMinMax(T vMin, T vMax) noexcept {
@@ -97,8 +106,8 @@ namespace Artix::Ui::Component {
 		}
 		void setBaseColor(juce::Colour v) {
 			backgroundColor = v;
-			backgroundHoverColor = theme.isDark() ? v.brighter(0.1f) : v.darker(0.625f);
-			borderColor = theme.isDark() ? v.darker(0.25f) : v.brighter(0.25f);
+			backgroundHoverColor = theme->isDark() ? v.brighter(0.125f) : v.darker(0.125f);
+			borderColor = theme->isDark() ? v.darker(0.25f) : v.brighter(0.25f);
 			textColor = v.contrasting(0.6f);
 		};
 
@@ -125,13 +134,16 @@ namespace Artix::Ui::Component {
 		}
 
 		void paint(juce::Graphics& g) override {
-			theme.drawContainer(
+			const auto bgColor = (isMouseOver() || isBeingDragged) ?
+				backgroundHoverColor : backgroundColor;
+
+			theme->drawContainer(
 				this, g, getLocalBounds().toFloat(), true,
-				theme.getThickness(borderThickness), theme.getRounding(rounding),
-				borderColor, isMouseOver() ? backgroundHoverColor : backgroundColor
+				theme->getThickness(borderThickness), theme->getRounding(rounding),
+				borderColor, bgColor
 			);
 
-			g.setFont(theme.getMonospaceFont(fontSize));
+			g.setFont(theme->getMonospaceFont(fontSize));
 			g.setColour(textColor);
 			g.drawFittedText(
 				text, innerArea.toNearestIntEdges(), justification, 1
@@ -139,14 +151,19 @@ namespace Artix::Ui::Component {
 		}
 
 		void resized() override {
-			innerArea = theme.getInnerArea(this, borderThickness, padding);
+			innerArea = theme->getInnerArea(this, borderThickness, padding);
 			updateFont();
+		}
+
+		void setTheme(Theme::ThemePtr v) noexcept override {
+			Themable::setTheme(v);
+			resized();
+			repaint();
 		}
 
 		private:
 		using TLimits = std::numeric_limits<T>;
 
-		Theme::BaseTheme& theme;
 		const T maxChars = TLimits::digits10 + (TLimits::is_signed ? 2 : 1);
 		const T maxDigits = maxChars - (TLimits::is_signed ? 1 : 0);
 		float minimumSafeWidth, minimumSafeHeight;
@@ -230,7 +247,7 @@ namespace Artix::Ui::Component {
 		}
 
 		void updateFont() {
-			font = theme.getMonospaceFont(fontSize);
+			font = theme->getMonospaceFont(fontSize);
 			minimumSafeHeight = std::ceil(font.getHeight() + (2 * innerArea.getY()));
 			minimumSafeWidth = std::ceil(font.getStringWidthFloat(placeholder) + (2 * innerArea.getX()));
 		}

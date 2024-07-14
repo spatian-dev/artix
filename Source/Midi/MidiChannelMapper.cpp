@@ -21,13 +21,11 @@ namespace Artix::Midi {
 	void MidiChannelMapper::setNote(Note v, bool muteCallbacks) noexcept {
 		jassertValidMidiNoteOrNone(v);
 		const Note newNote = clampNote(v, true);
-		const bool hasChanged = (note != newNote);
+		if (note == newNote) return;
 		note = newNote;
 
-		if (!hasChanged || muteCallbacks) return;
-		juce::MessageManager::callAsync([this]() {
-			if (onNoteChanged) onNoteChanged(note);
-		});
+		if (muteCallbacks) return;
+		onNoteChanged.callSafely(note);
 	}
 
 	void MidiChannelMapper::setNote(int v, bool muteCallbacks) noexcept {
@@ -41,13 +39,11 @@ namespace Artix::Midi {
 
 	void MidiChannelMapper::setName(juce::String v, bool muteCallbacks) noexcept {
 		const juce::ScopedWriteLock lock(mutex);
-		const bool hasChanged = (name != v);
+		if (name == v) return;
 		name = v;
 
-		if (!hasChanged || muteCallbacks) return;
-		juce::MessageManager::callAsync([this]() {
-			if (onNameChanged) onNameChanged(name);
-		});
+		if (muteCallbacks) return;
+		onNameChanged.callSafely(name);
 	}
 
 	bool MidiChannelMapper::isActive() const noexcept {
@@ -65,10 +61,8 @@ namespace Artix::Midi {
 	void MidiChannelMapper::fromValueTree(const juce::ValueTree& vt) noexcept {
 		jassert(vt.hasType(Id::MidiChannelMapper));
 		if (!vt.hasType(Id::MidiChannelMapper)) {
-			juce::MessageManager::callAsync([this]() {
-				if (onError) {
-					onError("Invalid ValueTree type", Error::Code::BadState, Error::Code::InvalidValueTree);
-				}
+			onError.callOnMessageThread({
+				"Invalid ValueTree type", Error::Code::BadState, Error::Code::InvalidValueTree
 			});
 			return;
 		}

@@ -12,22 +12,22 @@
 
 namespace Artix::Ui {
 	MidiChannelMapperBankPanel::MidiChannelMapperBankPanel(
-		Midi::MidiChannelMapperBank& mapperBank, Theme::BaseTheme& theme
-	) : theme(theme), mapperBank(mapperBank), outputChannel(theme) {
+		Midi::MidiChannelMapperBank& mapperBank, Theme::ThemePtr theme
+	) : Themable(theme), mapperBank(mapperBank), outputChannel(theme) {
 
 		outputChannel.setLabel("MIDI Output Channel");
-		outputChannel.setBaseColor(theme.getUIColor(UIColor::BACKGROUND_SECONDARY));
 		outputChannel.setLayoutDirection(Ui::Component::DigitalSelectorPanelDirection::HORIZONTAL);
 		outputChannel.setMinMax(
 			static_cast<uint8_t>(Midi::Channel::First), static_cast<uint8_t>(Midi::Channel::Last)
 		);
-		mapperBank.onOutputChannelChanged = [this](Midi::Channel ch) {
-			outputChannel.setValue(static_cast<uint8_t>(ch));
-		};
-		outputChannel.onValueChanged = [&mapperBank](uint8_t v) {
+
+		mapperBankOutputChannelChangedCallbackId = mapperBank.onOutputChannelChanged.add(
+			[this](Midi::Channel ch) { outputChannel.setValue(static_cast<uint8_t>(ch)); }
+		);
+		outputChannelValueChangedCallbackId = outputChannel.onValueChanged.add([&mapperBank](uint8_t v) {
 			mapperBank.setOutputChannel(v);
-		};
-		mapperBank.onOutputChannelChanged(mapperBank.getOutputChannel());
+		});
+		mapperBank.onOutputChannelChanged.callSafely(mapperBank.getOutputChannel());
 
 		addAndMakeVisible(outputChannel);
 
@@ -38,7 +38,7 @@ namespace Artix::Ui {
 			);
 			mappers.push_back(mapperSelector);
 
-			mapperSelector->setBaseColor(theme.getUIColor(UIColor::BACKGROUND_PRIMARY));
+			mapperSelector->setBaseColor(theme->getUIColor(UIColor::BACKGROUND_PRIMARY));
 			mapperSelector->setNameJustification(juce::Justification::centredRight);
 			mapperSelector->setLabelJustification(juce::Justification::centred);
 			mapperSelector->setMinMax(
@@ -52,46 +52,74 @@ namespace Artix::Ui {
 				return juce::MidiMessage::getMidiNoteName(v, true, true, 3);
 			});
 
-			mapper.onNameChanged = [mapperSelector](const juce::String& v) {
-				mapperSelector->setLabel(v);
-			};
-			mapperSelector->onLabelTextChanged = [&mapper](const juce::String v) {
-				mapper.setName(v);
-			};
-			mapper.onNameChanged(mapper.getName());
+			mapperBankInputNameChangedCallbackId.push_back(
+				mapper.onNameChanged.add([mapperSelector](const juce::String& v) {
+					mapperSelector->setLabel(v);
+				})
+			);
+			mapperLabelTextChangedCallbackIds.push_back(
+				mapperSelector->onLabelTextChanged.add([&mapper](const juce::String v) {
+					mapper.setName(v);
+				})
+			);
+			mapper.onNameChanged.callSafely(mapper.getName());
 
-			mapper.onNoteChanged = [mapperSelector](Midi::Note note) {
-				mapperSelector->setValue(static_cast<int8_t>(note));
-			};
-			mapperSelector->onValueChanged = [&mapper](int8_t v) {
-				mapper.setNote(v);
-			};
-			mapper.onNoteChanged(mapper.getNote());
+			mapperBankInputNoteChangedCallbackId.push_back(
+				mapper.onNoteChanged.add([mapperSelector](Midi::Note note) {
+					mapperSelector->setValue(static_cast<int8_t>(note));
+				})
+			);
+			mapperNoteChangedCallbackIds.push_back(
+				mapperSelector->onValueChanged.add([&mapper](int8_t v) {
+					mapper.setNote(v);
+				})
+			);
+			mapper.onNoteChanged.callSafely(mapper.getNote());
 
 
 			addAndMakeVisible(*mapperSelector);
 		}
-
+		setTheme(theme);
 		resized();
 	}
 
-	MidiChannelMapperBankPanel::~MidiChannelMapperBankPanel() {}
+	MidiChannelMapperBankPanel::~MidiChannelMapperBankPanel() {
+		if (outputChannelValueChangedCallbackId)
+			outputChannel.onValueChanged.remove(outputChannelValueChangedCallbackId.value());
+
+		if (mapperBankOutputChannelChangedCallbackId)
+			mapperBank.onOutputChannelChanged.remove(mapperBankOutputChannelChangedCallbackId.value());
+
+		for (size_t i = 0; i < mapperBank.size(); i++) {
+			if (mapperNoteChangedCallbackIds[i])
+				mappers[i]->onValueChanged.remove(mapperNoteChangedCallbackIds[i].value());
+
+			if (mapperLabelTextChangedCallbackIds[i])
+				mappers[i]->onLabelTextChanged.remove(mapperLabelTextChangedCallbackIds[i].value());
+
+			if (mapperBankInputNameChangedCallbackId[i])
+				mapperBank[i].onNameChanged.remove(mapperBankInputNameChangedCallbackId[i].value());
+
+			if (mapperBankInputNoteChangedCallbackId[i])
+				mapperBank[i].onNoteChanged.remove(mapperBankInputNoteChangedCallbackId[i].value());
+		}
+	}
 
 	void MidiChannelMapperBankPanel::paint(juce::Graphics& g) {
-		theme.drawRounderContainer(
+		theme->drawRounderContainer(
 			this, g, getLocalBounds().toFloat(), false, Metric::SMALL, Metric::TINY,
 			UIColor::BORDER_ELEMENT, UIColor::BACKGROUND
 		);
 	}
 
 	void MidiChannelMapperBankPanel::resized() {
-		innerArea = theme.getInnerArea(this, Metric::SMALL, Metric::SMALL);
+		innerArea = theme->getInnerArea(this, Metric::SMALL, Metric::SMALL);
 
-		outputChannel.setBounds(innerArea.getX(), innerArea.getY(), innerArea.getWidth(), theme.scale(48));
+		outputChannel.setBounds(innerArea.getX(), innerArea.getY(), innerArea.getWidth(), theme->scale(48));
 
 		constexpr float columns = 4.0f;
 
-		const auto padding = theme.getSpacing(Metric::SMALL);
+		const auto padding = theme->getSpacing(Metric::SMALL);
 		float top = outputChannel.getHeight() + padding;
 		float left;
 
@@ -113,5 +141,16 @@ namespace Artix::Ui {
 			}
 			top += rowHeightWithPadding;
 		}
+	}
+	void MidiChannelMapperBankPanel::setTheme(Theme::ThemePtr v) noexcept {
+		Themable::setTheme(v);
+		outputChannel.setTheme(v);
+		outputChannel.setBaseColor(theme->getUIColor(UIColor::BACKGROUND_SECONDARY));
+		for (auto& mapperSelector : mappers) {
+			mapperSelector->setTheme(v);
+			mapperSelector->setBaseColor(theme->getUIColor(UIColor::BACKGROUND_PRIMARY));
+		}
+		resized();
+		repaint();
 	}
 }

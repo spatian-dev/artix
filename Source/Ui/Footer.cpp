@@ -11,12 +11,11 @@
 #include "Footer.h"
 
 namespace Artix::Ui {
-	Footer::Footer(Theme::BaseTheme& theme) : theme(theme) {
+	Footer::Footer(Theme::ThemePtr theme) : Themable(theme) {
 		std::stringstream ss;
 		ss << JucePlugin_Manufacturer << " " << JucePlugin_Name << " v" << JucePlugin_VersionString;
 		versionLabel.setText(ss.str(), juce::NotificationType::dontSendNotification);
 		versionLabel.setJustificationType(juce::Justification::centredLeft);
-		versionLabel.setColour(juce::Label::textColourId, theme.getUIColor(UIColor::TEXT));
 		versionLabel.setBorderSize(juce::BorderSize<int>(0));
 		addAndMakeVisible(versionLabel);
 
@@ -29,16 +28,16 @@ namespace Artix::Ui {
 	Footer::~Footer() {}
 
 	void Footer::paint(juce::Graphics& g) {
-		theme.drawRounderContainer(
+		theme->drawRounderContainer(
 			this, g, getLocalBounds().toFloat(), true, Metric::SMALL, Metric::TINY, UIColor::BORDER_MUTED,
 			isMouseButtonDown() ? UIColor::BACKGROUND : UIColor::BACKGROUND_MUTED
 		);
 	}
 
 	void Footer::resized() {
-		innerArea = theme.getInnerArea(this, Metric::SMALL, Metric::SMALL);
+		innerArea = theme->getInnerArea(this, Metric::SMALL, Metric::SMALL);
 
-		versionLabel.setFont(juce::FontOptions(theme.getFontSize(Metric::MEDIUM), juce::Font::bold));
+		versionLabel.setFont(juce::FontOptions(theme->getFontSize(Metric::MEDIUM), juce::Font::bold));
 
 		juce::FlexBox fb;
 		fb.flexWrap = juce::FlexBox::Wrap::noWrap;
@@ -46,5 +45,12 @@ namespace Artix::Ui {
 		fb.items.add(juce::FlexItem(versionLabel).withFlex(1));
 		fb.items.add(juce::FlexItem(websiteLink).withFlex(1));
 		fb.performLayout(innerArea);
+	}
+	void Footer::setTheme(Theme::ThemePtr v) noexcept {
+		Themable::setTheme(v);
+		versionLabel.setColour(juce::Label::textColourId, theme->getUIColor(UIColor::TEXT));
+		websiteLink.setTheme(v);
+		resized();
+		repaint();
 	}
 }

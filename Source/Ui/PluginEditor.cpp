@@ -1,9 +1,7 @@
 /*
   ==============================================================================
 
-	ChannelMapperList.cpp
-	Created: 20 Jun 2024 02:55:24pm
-	Author:  Saad Sidqui
+	This file contains the basic framework code for a JUCE plugin editor.
 
   ==============================================================================
 */
@@ -11,43 +9,60 @@
 #include "PluginEditor.h"
 
 namespace Artix::Ui {
-	PluginEditor::PluginEditor(ArtixAudioProcessor& audioProcessor, AppState& state)
-		: AudioProcessorEditor(&audioProcessor), audioProcessor(audioProcessor),
-		state(state), header(theme), mapperBank(state.getMapperBank(), theme), footer(theme) {
+	PluginEditor::PluginEditor(ArtixAudioProcessor& p, AppState& s)
+		: AudioProcessorEditor(&p), audioProcessor(p), state(s),
+		Themable(s.getTheme()), header(theme),
+		mapperBank(state.getMapperBank(), theme), footer(theme) {
 		
-		getLookAndFeel().setDefaultSansSerifTypeface(theme.getSansSerifTypeface());
-
-		setBufferedToImage(true);
-		theme.setScaledFontSize(true);
-
-		getConstrainer()->setFixedAspectRatio(ASPEC_RATIO);
-		setResizable(true, false);
-		stateSizeChanged(state.getWidth(), state.getHeight());
-		state.onSizeChanged = [this](int w, int h) { stateSizeChanged(w, h); };
+		setName("ArtixPluginEditor");
+		setDescription("Artix Plugin Editor");
 
 		addAndMakeVisible(header);
 		addAndMakeVisible(mapperBank);
 		addAndMakeVisible(footer);
-		resized();
+
+		const auto constrainer = getConstrainer();
+		constrainer->setFixedAspectRatio(ASPECT_RATIO);
+		constrainer->setSizeLimits(
+			std::floor(MIN_HEIGHT * ASPECT_RATIO), MIN_HEIGHT,
+			std::ceil(MAX_HEIGHT * ASPECT_RATIO), MAX_HEIGHT
+		);
+
+		stateHeightChanged(state.getHeight());
+		heightChangedCallbackId = state.onHeightChanged.add(
+			[this](int v) { stateHeightChanged(v); }
+		);
+
+		setBufferedToImage(true);
+		setTheme(theme);
+		themeChangedCallbackId = state.onThemeChanged.add([this](Theme::ThemePtr v) { setTheme(v); });
+
+		setResizable(true, false);
 	}
 
-	PluginEditor::~PluginEditor() {}
+	PluginEditor::~PluginEditor() {
+		if (heightChangedCallbackId)
+			state.onHeightChanged.remove(heightChangedCallbackId.value());
+
+		if (themeChangedCallbackId)
+			state.onThemeChanged.remove(themeChangedCallbackId.value());
+	}
 
 	void PluginEditor::paint(juce::Graphics& g) {
-		const auto margin = theme.getSpacing(Metric::SMALL);
-		theme.fillBackground(this, g);
+		const auto margin = theme->getSpacing(Metric::SMALL);
+		theme->fillBackground(this, g);
 	}
 
 	void PluginEditor::resized() {
-		state.setSize(getWidth(), getHeight());
-		
-		const auto scaler = 1 + (getWidth() - MIN_SIZE) / (4 * (MAX_SIZE - MIN_SIZE));
-		theme.setScaler(scaler);
+		state.setHeight(getHeight());
 
-		innerArea = theme.getInnerArea(this, Metric::SMALL, Metric::SMALL);
+		const auto scaler = 1 + (getWidth() - MIN_HEIGHT) / (4 * (MAX_HEIGHT - MIN_HEIGHT));
+		theme->setScaler(scaler);
 
-		const auto padding = theme.getSpacing(Metric::SMALL);
-		const float panelHeight = theme.scale(36);
+		innerArea = theme->getInnerArea(this, Metric::SMALL, Metric::SMALL);
+
+		const auto padding = theme->getSpacing(Metric::SMALL);
+		const float panelHeight = theme->scale(36);
 
 		header.setBounds(innerArea.getX(), innerArea.getY(), innerArea.getWidth(), panelHeight);
 		footer.setBounds(
@@ -61,8 +76,23 @@ namespace Artix::Ui {
 		);
 	}
 
-	void PluginEditor::stateSizeChanged(int width, int height) {
-		setSize(width, height);
-		setResizeLimits(MIN_SIZE, MIN_SIZE / ASPEC_RATIO, MAX_SIZE, MAX_SIZE / ASPEC_RATIO);
+	void PluginEditor::stateHeightChanged(int v) {
+		const auto size = juce::Point(getWidth(), getHeight());
+		
+		if (v == getHeight())
+			return;
+
+		setSize(std::floor(v * ASPECT_RATIO), v);
+	}
+
+	void PluginEditor::setTheme(Theme::ThemePtr v) noexcept {
+		Themable::setTheme(v);
+		getLookAndFeel().setDefaultSansSerifTypeface(theme->getSansSerifTypeface());
+		theme->setScaledFontSize(true);
+		header.setTheme(v);
+		mapperBank.setTheme(v);
+		footer.setTheme(v);
+		resized();
+		repaint();
 	}
 }
