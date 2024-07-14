@@ -1,9 +1,7 @@
 /*
   ==============================================================================
 
-	ChannelMapperList.cpp
-	Created: 20 Jun 2024 02:55:24pm
-	Author:  Saad Sidqui
+	This file contains the basic framework code for a JUCE plugin processor.
 
   ==============================================================================
 */
@@ -11,11 +9,10 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include "Identifiers.h"
+
 #include "AppState.h"
 
-class ArtixAudioProcessor final : public juce::AudioProcessor {
-
+class ArtixAudioProcessor : public juce::AudioProcessor {
 	public:
 	ArtixAudioProcessor();
 	~ArtixAudioProcessor() override;
@@ -48,10 +45,7 @@ class ArtixAudioProcessor final : public juce::AudioProcessor {
 	void getStateInformation(juce::MemoryBlock& destData) override;
 	void setStateInformation(const void* data, int sizeInBytes) override;
 
-	Artix::AppState& getAppState() noexcept;
-
 	private:
 	Artix::AppState state;
-
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ArtixAudioProcessor)
 };

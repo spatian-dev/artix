@@ -13,13 +13,17 @@
 #include <JuceHeader.h>
 #include <cstdint>
 #include <atomic>
-#include "../Identifiers.h"
-#include "../Errors.h"
+#include "../Id/Identifiers.h"
+#include "../Error/Error.h"
+#include "../Utils/CallbackList.h"
 #include "Midi.h"
 
 namespace Artix::Midi {
     class MidiChannelMapper {
         public:
+        using NameChangedCallback = Utils::CallbackList<juce::String>;
+        using NoteChangedCallback = Utils::CallbackList<Note>;
+
         MidiChannelMapper(Note note = Note::None, juce::String name = juce::String());
 
         Note getNote() const noexcept;
@@ -34,9 +38,9 @@ namespace Artix::Midi {
         juce::ValueTree toValueTree() const noexcept;
         void fromValueTree(const juce::ValueTree& vt) noexcept;
 
-        std::function<void(const juce::String&)> onNameChanged;
-        std::function<void(Note)> onNoteChanged;
-        Error::ErrorCallback onError;
+        NameChangedCallback onNameChanged;
+        NoteChangedCallback onNoteChanged;
+        Error::ErrorCallbacks onError;
 
         private:
         juce::ReadWriteLock mutex;

@@ -35,13 +35,25 @@ namespace Artix::Ui {
 		juce::Rectangle<float> innerArea;
 
 		Midi::MidiChannelMapperBank& mapperBank;
+		Midi::MidiChannelMapperBank::ChannelChangedCallback::Identifier
+			mapperBankOutputChannelChangedCallbackId;
+		std::vector<Midi::MidiChannelMapper::NameChangedCallback::Identifier>
+			mapperBankInputNameChangedCallbackId;
+		std::vector<Midi::MidiChannelMapper::NoteChangedCallback::Identifier>
+			mapperBankInputNoteChangedCallbackId;
 
 		using OutputChannelDigitalSelector = Ui::Component::DigitalSelectorPanel<uint8_t>;
 		using MapperDigitalSelector = Ui::Component::DigitalSelectorPanel<int8_t>;
 
 		OutputChannelDigitalSelector outputChannel;
+		OutputChannelDigitalSelector::ValueChangedCallback::Identifier outputChannelValueChangedCallbackId;
+
 		std::vector<std::shared_ptr<MapperDigitalSelector>> mappers;
-		
+		std::vector<MapperDigitalSelector::ValueChangedCallback::Identifier>
+			mapperNoteChangedCallbackIds;
+		std::vector<MapperDigitalSelector::LabelTextChangedCallback::Identifier>
+			mapperLabelTextChangedCallbackIds;
+
 		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MidiChannelMapperBankPanel)
 	};
 }

@@ -13,7 +13,9 @@
 #include <JuceHeader.h>
 #include <cstdint>
 #include <atomic>
-#include "../Identifiers.h"
+#include "../Id/Identifiers.h"
+#include "../Error/Error.h"
+#include "../Utils/CallbackList.h"
 #include "Midi.h"
 #include "MidiChannelMapper.h"
 
@@ -23,6 +25,9 @@ namespace Artix::Midi {
         using Mappers = std::array<MidiChannelMapper, CHANNEL_COUNT>;
 
         public:
+        using NameChangedCallback = Utils::CallbackList<juce::String>;
+        using ChannelChangedCallback = Utils::CallbackList<Channel>;
+
         MidiChannelMapperBank(Channel outputChannel = Channel::First, juce::String name = "untitled");
 
         Channel getOutputChannel() const noexcept;
@@ -35,9 +40,9 @@ namespace Artix::Midi {
         juce::ValueTree toValueTree() const noexcept;
         void fromValueTree(const juce::ValueTree& vt) noexcept;
 
-        std::function<void(const juce::String&)> onNameChanged;
-        std::function<void(Channel)> onOutputChannelChanged;
-        Error::ErrorCallback onError;
+        NameChangedCallback onNameChanged;
+        ChannelChangedCallback onOutputChannelChanged;
+        Error::ErrorCallbacks onError;
 
         //======================================================================
         /** Mirroring std::array container functions */

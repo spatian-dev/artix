@@ -20,6 +20,7 @@
 #include <utility>
 
 #include "../Theme/Themes.h"
+#include "../../Utils/CallbackList.h"
 
 namespace Artix::Ui::Component {
 
@@ -31,7 +32,7 @@ namespace Artix::Ui::Component {
 	{
 		public:
 		using CustomFormatterCallback = std::function<const juce::String(T, T, T)>;
-		using ValueChangedCallback = std::function<void(T)>;
+		using ValueChangedCallback = Utils::CallbackList<T>;
 
 		DigitalSelector(Theme::ThemePtr theme, juce::Colour baseColor)
 			: Themable(theme) {
@@ -83,12 +84,14 @@ namespace Artix::Ui::Component {
 		void setValue(T v, bool muteCallbacks = false) noexcept {
 			const auto oldValue = value;
 			value = std::clamp(v, min, max);
+			
+			if (oldValue == value) return;
 			dragValue = value;
-			updateText();
 
-			if (!muteCallbacks && (oldValue != value) && onValueChanged) {
-				onValueChanged(v);
-			}
+			updateText();
+			
+			if (muteCallbacks) return;
+			onValueChanged.callSafely(v);
 		}
 
 		void setMinMax(T vMin, T vMax) noexcept {

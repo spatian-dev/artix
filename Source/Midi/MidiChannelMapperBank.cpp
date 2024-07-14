@@ -21,13 +21,11 @@ namespace Artix::Midi {
 	void MidiChannelMapperBank::setOutputChannel(Channel v, bool muteCallbacks) noexcept {
 		jassertValidMidiChannel(v);
 		const Channel newChannel = clampChannel(v);
-		const bool hasChanged = (outputChannel != newChannel);
+		if (outputChannel == newChannel) return;
 		outputChannel = newChannel;
 
-		if (!hasChanged || muteCallbacks) return;
-		juce::MessageManager::callAsync([this]() {
-			if (onOutputChannelChanged) onOutputChannelChanged(outputChannel);
-		});
+		if (muteCallbacks) return;
+		onOutputChannelChanged.callSafely(outputChannel);
 	}
 
 	void MidiChannelMapperBank::setOutputChannel(int v, bool muteCallbacks) noexcept {
@@ -41,13 +39,11 @@ namespace Artix::Midi {
 
 	void MidiChannelMapperBank::setName(juce::String v, bool muteCallbacks) noexcept {
 		const juce::ScopedWriteLock lock(mutex);
-		const bool hasChanged = (name != v);
+		if (name == v) return;
 		name = v;
 
-		if (!hasChanged || muteCallbacks) return;
-		juce::MessageManager::callAsync([this]() {
-			if (onNameChanged) onNameChanged(name);
-		});
+		if (muteCallbacks) return;
+		onNameChanged.callSafely(name);
 	}
 
 	juce::ValueTree MidiChannelMapperBank::toValueTree() const noexcept {
@@ -66,10 +62,8 @@ namespace Artix::Midi {
 	void MidiChannelMapperBank::fromValueTree(const juce::ValueTree& vt) noexcept {
 		jassert(vt.hasType(Id::MidiChannelMapperBank));
 		if (!vt.hasType(Id::MidiChannelMapperBank)) {
-			juce::MessageManager::callAsync([this]() {
-				if (onError) {
-					onError("Invalid ValueTree type", Error::Code::BadState, Error::Code::InvalidValueTree);
-				}
+			onError.callOnMessageThread({
+				"Invalid ValueTree type", Error::Code::BadState, Error::Code::InvalidValueTree
 			});
 			return;
 		}
@@ -88,11 +82,9 @@ namespace Artix::Midi {
 
 		if (i != CHANNEL_COUNT) {
 			juce::MessageManager::callAsync([this]() {
-				if (onError) {
-					onError(
-						"ValueTree is missing children", Error::Code::BadState, Error::Code::MissingChildren
-					);
-				}
+				onError.callOnMessageThread({
+					"ValueTree is missing children", Error::Code::BadState, Error::Code::MissingChildren
+				});
 			});
 		}
 	}

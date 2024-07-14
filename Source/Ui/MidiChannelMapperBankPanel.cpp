@@ -20,13 +20,14 @@ namespace Artix::Ui {
 		outputChannel.setMinMax(
 			static_cast<uint8_t>(Midi::Channel::First), static_cast<uint8_t>(Midi::Channel::Last)
 		);
-		mapperBank.onOutputChannelChanged = [this](Midi::Channel ch) {
-			outputChannel.setValue(static_cast<uint8_t>(ch));
-		};
-		outputChannel.onValueChanged = [&mapperBank](uint8_t v) {
+
+		mapperBankOutputChannelChangedCallbackId = mapperBank.onOutputChannelChanged.add(
+			[this](Midi::Channel ch) { outputChannel.setValue(static_cast<uint8_t>(ch)); }
+		);
+		outputChannelValueChangedCallbackId = outputChannel.onValueChanged.add([&mapperBank](uint8_t v) {
 			mapperBank.setOutputChannel(v);
-		};
-		mapperBank.onOutputChannelChanged(mapperBank.getOutputChannel());
+		});
+		mapperBank.onOutputChannelChanged.callSafely(mapperBank.getOutputChannel());
 
 		addAndMakeVisible(outputChannel);
 
@@ -51,21 +52,29 @@ namespace Artix::Ui {
 				return juce::MidiMessage::getMidiNoteName(v, true, true, 3);
 			});
 
-			mapper.onNameChanged = [mapperSelector](const juce::String& v) {
-				mapperSelector->setLabel(v);
-			};
-			mapperSelector->onLabelTextChanged = [&mapper](const juce::String v) {
-				mapper.setName(v);
-			};
-			mapper.onNameChanged(mapper.getName());
+			mapperBankInputNameChangedCallbackId.push_back(
+				mapper.onNameChanged.add([mapperSelector](const juce::String& v) {
+					mapperSelector->setLabel(v);
+				})
+			);
+			mapperLabelTextChangedCallbackIds.push_back(
+				mapperSelector->onLabelTextChanged.add([&mapper](const juce::String v) {
+					mapper.setName(v);
+				})
+			);
+			mapper.onNameChanged.callSafely(mapper.getName());
 
-			mapper.onNoteChanged = [mapperSelector](Midi::Note note) {
-				mapperSelector->setValue(static_cast<int8_t>(note));
-			};
-			mapperSelector->onValueChanged = [&mapper](int8_t v) {
-				mapper.setNote(v);
-			};
-			mapper.onNoteChanged(mapper.getNote());
+			mapperBankInputNoteChangedCallbackId.push_back(
+				mapper.onNoteChanged.add([mapperSelector](Midi::Note note) {
+					mapperSelector->setValue(static_cast<int8_t>(note));
+				})
+			);
+			mapperNoteChangedCallbackIds.push_back(
+				mapperSelector->onValueChanged.add([&mapper](int8_t v) {
+					mapper.setNote(v);
+				})
+			);
+			mapper.onNoteChanged.callSafely(mapper.getNote());
 
 
 			addAndMakeVisible(*mapperSelector);
@@ -74,7 +83,27 @@ namespace Artix::Ui {
 		resized();
 	}
 
-	MidiChannelMapperBankPanel::~MidiChannelMapperBankPanel() {}
+	MidiChannelMapperBankPanel::~MidiChannelMapperBankPanel() {
+		if (outputChannelValueChangedCallbackId)
+			outputChannel.onValueChanged.remove(outputChannelValueChangedCallbackId.value());
+
+		if (mapperBankOutputChannelChangedCallbackId)
+			mapperBank.onOutputChannelChanged.remove(mapperBankOutputChannelChangedCallbackId.value());
+
+		for (size_t i = 0; i < mapperBank.size(); i++) {
+			if (mapperNoteChangedCallbackIds[i])
+				mappers[i]->onValueChanged.remove(mapperNoteChangedCallbackIds[i].value());
+
+			if (mapperLabelTextChangedCallbackIds[i])
+				mappers[i]->onLabelTextChanged.remove(mapperLabelTextChangedCallbackIds[i].value());
+
+			if (mapperBankInputNameChangedCallbackId[i])
+				mapperBank[i].onNameChanged.remove(mapperBankInputNameChangedCallbackId[i].value());
+
+			if (mapperBankInputNoteChangedCallbackId[i])
+				mapperBank[i].onNoteChanged.remove(mapperBankInputNoteChangedCallbackId[i].value());
+		}
+	}
 
 	void MidiChannelMapperBankPanel::paint(juce::Graphics& g) {
 		theme->drawRounderContainer(

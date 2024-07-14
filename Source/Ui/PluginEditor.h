@@ -1,9 +1,7 @@
 /*
   ==============================================================================
 
-	ChannelMapperList.cpp
-	Created: 20 Jun 2024 02:55:24pm
-	Author:  Saad Sidqui
+	This file contains the basic framework code for a JUCE plugin editor.
 
   ==============================================================================
 */
@@ -12,7 +10,7 @@
 
 #include <JuceHeader.h>
 #include <cmath>
-#include <memory>
+#include <optional>
 
 #include "../AppState.h"
 #include "../PluginProcessor.h"
@@ -33,20 +31,23 @@ namespace Artix::Ui {
 		void setTheme(Theme::ThemePtr v) noexcept override;
 
 		private:
-		constexpr static inline float MIN_SIZE = 600;
+		constexpr static inline float MIN_HEIGHT = 800;
+		constexpr static inline float MAX_HEIGHT = 1200;
 		constexpr static inline float ASPECT_RATIO = 0.75;
-		constexpr static inline float MAX_SIZE = 900;
-
-		void stateSizeChanged(int width, int height);
 
 		ArtixAudioProcessor& audioProcessor;
 		AppState& state;
-		
+
+		AppState::HeightChangedCallbacks::Identifier heightChangedCallbackId;
+		AppState::ThemeChangedCallbacks::Identifier themeChangedCallbackId;
+
 		juce::Rectangle<float> innerArea;
 
 		MidiChannelMapperBankPanel mapperBank;
 		Header header;
 		Footer footer;
+
+		void stateHeightChanged(int v);
 
 		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PluginEditor)
 	};

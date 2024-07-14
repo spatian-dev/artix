@@ -13,6 +13,7 @@
 #include <JuceHeader.h>
 
 #include "../Theme/Themes.h"
+#include "../../Utils/CallbackList.h"
 #include "DigitalSelector.h"
 
 namespace Artix::Ui::Component {
@@ -24,7 +25,7 @@ namespace Artix::Ui::Component {
 	template <typename T> requires std::is_integral_v<T>
 	class DigitalSelectorPanel : public juce::Component, private Theme::Themable {
 		public:
-		using LabelTextChangedCallback = std::function<void(const juce::String)>;
+		using LabelTextChangedCallback = Utils::CallbackList<juce::String>;
 		using ValueChangedCallback = DigitalSelector<T>::ValueChangedCallback;
 		using CustomFormatterCallback = DigitalSelector<T>::CustomFormatterCallback;
 
@@ -39,10 +40,12 @@ namespace Artix::Ui::Component {
 			label.setBorderSize(juce::BorderSize<int>(label.getBorderSize().getTop(), 0, 0, 0));
 			setLabel(labelText);
 			setEditableLabel(editableLabel);
-			label.onTextChange = [this]() { if (onLabelTextChanged) onLabelTextChanged(label.getText()); };
+			label.onTextChange = [this]() { onLabelTextChanged.callSafely(label.getText()); };
 
 			selector.setFontSize(Metric::LARGE);
-			selector.onValueChanged = [this](T v) { if (onValueChanged) onValueChanged(v); };
+			onValueChangedCallbackId = selector.onValueChanged.add(
+				[this](T v) { onValueChanged.callSafely(v); }
+			);
 
 			addAndMakeVisible(name);
 			addAndMakeVisible(label);
@@ -50,7 +53,10 @@ namespace Artix::Ui::Component {
 
 			resized();
 		};
-		~DigitalSelectorPanel() override {};
+		~DigitalSelectorPanel() override {
+			if (onValueChangedCallbackId)
+				selector.onValueChanged.remove(onValueChangedCallbackId.value());
+		};
 
 		DigitalSelectorPanelDirection getLayoutDirection() const noexcept {
 			return layoutDirection;
@@ -196,6 +202,8 @@ namespace Artix::Ui::Component {
 		DigitalSelector<T> selector{theme};
 		juce::Label name;
 		juce::Label label;
+
+		ValueChangedCallback::Identifier onValueChangedCallbackId;
 
 		void adaptLayout() noexcept {
 			const auto padding = theme->getSpacing(Metric::SMALL);
