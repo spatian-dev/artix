@@ -21,11 +21,11 @@ namespace Artix::Ui {
 		addAndMakeVisible(mapperBank);
 		addAndMakeVisible(footer);
 
-		const auto constrainer = getConstrainer();
-		constrainer->setFixedAspectRatio(ASPECT_RATIO);
-		constrainer->setSizeLimits(
-			std::floor(MIN_HEIGHT * ASPECT_RATIO), MIN_HEIGHT,
-			std::ceil(MAX_HEIGHT * ASPECT_RATIO), MAX_HEIGHT
+		const auto localConstrainer = getConstrainer();
+		localConstrainer->setFixedAspectRatio(ASPECT_RATIO);
+		localConstrainer->setSizeLimits(
+			(int) std::floor(MIN_HEIGHT * ASPECT_RATIO), (int) MIN_HEIGHT,
+			(int) std::ceil(MAX_HEIGHT * ASPECT_RATIO), (int) MAX_HEIGHT
 		);
 
 		stateHeightChanged(state.getHeight());
@@ -49,7 +49,6 @@ namespace Artix::Ui {
 	}
 
 	void PluginEditor::paint(juce::Graphics& g) {
-		const auto margin = theme->getSpacing(Metric::SMALL);
 		theme->fillBackground(this, g);
 	}
 
@@ -62,27 +61,28 @@ namespace Artix::Ui {
 		innerArea = theme->getInnerArea(this, Metric::SMALL, Metric::SMALL);
 
 		const auto padding = theme->getSpacing(Metric::SMALL);
-		const float panelHeight = theme->scale(36);
+		const float panelHeight = theme->scale(36.0f);
 
-		header.setBounds(innerArea.getX(), innerArea.getY(), innerArea.getWidth(), panelHeight);
+		header.setBounds(
+			(int) innerArea.getX(), (int) innerArea.getY(),
+			(int) innerArea.getWidth(), (int) panelHeight
+		);
 		footer.setBounds(
-			innerArea.getX(), innerArea.getBottom() - panelHeight,
-			innerArea.getWidth(), panelHeight
+			(int) innerArea.getX(), (int) (innerArea.getBottom() - panelHeight),
+			(int) innerArea.getWidth(), (int) panelHeight
 		);
 
 		mapperBank.setBounds(
-			innerArea.getX(), header.getBottom() + padding,
-			innerArea.getWidth(), innerArea.getHeight() - (2 * (padding + panelHeight))
+			(int) innerArea.getX(), (int) (header.getBottom() + padding),
+			(int) innerArea.getWidth(), (int) (innerArea.getHeight() - (2 * (padding + panelHeight)))
 		);
 	}
 
 	void PluginEditor::stateHeightChanged(int v) {
-		const auto size = juce::Point(getWidth(), getHeight());
-		
-		if (v == getHeight())
+		if (v == (int) getHeight())
 			return;
 
-		setSize(std::floor(v * ASPECT_RATIO), v);
+		setSize((int) std::floor(v * ASPECT_RATIO), v);
 	}
 
 	void PluginEditor::setTheme(Theme::ThemePtr v) noexcept {

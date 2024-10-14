@@ -15,7 +15,7 @@ namespace Artix::Ui::Theme {
 
 	juce::Rectangle<float> BaseTheme::getInnerArea(juce::Component* component, Metric borderThickness, Metric padding) const noexcept {
 		auto area = component->getLocalBounds();
-		auto const offset = (getThickness(borderThickness) / 2) + getSpacing(padding);
+		auto const offset = (int) ((getThickness(borderThickness) / 2) + getSpacing(padding));
 		return area.reduced(offset, offset).toFloat();
 	}
 

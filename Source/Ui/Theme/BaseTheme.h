@@ -64,7 +64,7 @@ namespace Artix::Ui {
 			struct Rounding : MetricValues {};
 			struct Thickness : MetricValues {};
 			struct ColorScheme {
-				bool isDark;
+				bool isDark = false;
 				std::array<juce::Colour, 20> colors;
 			};
 

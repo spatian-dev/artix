@@ -75,7 +75,6 @@ namespace Artix {
 			vt.getProperty(Id::Theme, localTheme->getName()), localTheme
 		));
 
-		int i = 0;
 		for (auto child : vt) {
 			if (child.hasType(Id::MidiChannelMapperBank)) {
 				mapperBank.fromValueTree(child);

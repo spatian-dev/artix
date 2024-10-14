@@ -213,38 +213,38 @@ namespace Artix::Ui::Component {
 			label.setFont(theme->getFontSize(Metric::MEDIUM));
 
 			if (layoutDirection == DigitalSelectorPanelDirection::HORIZONTAL) {
-				auto displayWidth = selector.getMinimumSafeWidth();
+				auto displayWidth = (int) selector.getMinimumSafeWidth();
 
 				selector.setBounds(
-					innerArea.getRight() - displayWidth, innerArea.getY(), displayWidth, innerArea.getHeight()
+					(int) innerArea.getRight() - displayWidth, (int) innerArea.getY(), displayWidth, (int) innerArea.getHeight()
 				);
 
-				const auto labelsWidth = selector.getX() - innerArea.getX() - padding;
+				const auto labelsWidth = (int) (selector.getX() - innerArea.getX() - padding);
 				name.setBounds(
-					innerArea.getX(), innerArea.getY(),
-					labelsWidth, theme->scale(getName().isEmpty() ? 0 : 16)
+					(int) innerArea.getX(), (int) innerArea.getY(),
+					labelsWidth, (int) theme->scale(getName().isEmpty() ? 0.0f : 16.0f)
 				);
 
 				label.setBounds(
-					innerArea.getX(), name.getBottom(),
-					labelsWidth, innerArea.getBottom() - name.getBottom()
+					(int) innerArea.getX(), (int) name.getBottom(),
+					labelsWidth, (int) (innerArea.getBottom() - name.getBottom())
 				);
 			} else {
-				auto const displayHeight = selector.getMinimumSafeHeight();
+				auto const displayHeight = (int) selector.getMinimumSafeHeight();
 
 				selector.setBounds(
-					innerArea.getX(), innerArea.getBottom() - displayHeight,
-					innerArea.getWidth(), displayHeight
+					(int) innerArea.getX(), (int) innerArea.getBottom() - displayHeight,
+					(int) innerArea.getWidth(), displayHeight
 				);
 
 				name.setBounds(
-					innerArea.getX(), innerArea.getY(),
-					innerArea.getWidth(), theme->scale(getName().isEmpty() ? 0 : 16)
+					(int) innerArea.getX(), (int) innerArea.getY(),
+					(int) innerArea.getWidth(), (int) theme->scale(getName().isEmpty() ? 0.0f : 16.0f)
 				);
 
 				label.setBounds(
-					innerArea.getX(), name.getBottom(),
-					innerArea.getWidth(), selector.getY() - name.getBottom() - padding
+					(int) innerArea.getX(), (int) name.getBottom(),
+					(int) innerArea.getWidth(), (int) (selector.getY() - name.getBottom() - padding)
 				);
 			}
 		}

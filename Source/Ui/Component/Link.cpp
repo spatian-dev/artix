@@ -42,7 +42,7 @@ namespace Artix::Ui::Component {
 		textColor = v;
 
 		if (deriveScheme) {
-			hoverColor = theme->isDark() ? textColor.brighter(0.6) : textColor.darker(0.6);
+			hoverColor = theme->isDark() ? textColor.brighter(0.6f) : textColor.darker(0.6f);
 		}
 	}
 

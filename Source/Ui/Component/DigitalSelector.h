@@ -210,7 +210,7 @@ namespace Artix::Ui::Component {
 		void mouseUp(const juce::MouseEvent& event) override {
 			stopTimer();
 			isBeingDragged = false;
-			setValue(dragValue);
+			setValue(static_cast<T>(std::clamp(dragValue, (float) TLimits::min(), (float) TLimits::max())));
 		}
 
 		void mouseDrag(const juce::MouseEvent& event) override {
@@ -225,7 +225,15 @@ namespace Artix::Ui::Component {
 				return;
 
 			const int sign = ((wheel.deltaY > 0) ? 1 : -1) * (wheel.isReversed ? -1 : 1);
-			setValue(value + sign);
+			
+			T localValue = value;
+			if ((localValue < TLimits::max()) && (sign > 0)) {
+				localValue++;
+			} else if ((localValue > TLimits::min()) && (sign < 0)) {
+				localValue--;
+			}
+
+			setValue(localValue);
 		}
 
 		void timerCallback() override {

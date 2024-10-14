@@ -115,7 +115,10 @@ namespace Artix::Ui {
 	void MidiChannelMapperBankPanel::resized() {
 		innerArea = theme->getInnerArea(this, Metric::SMALL, Metric::SMALL);
 
-		outputChannel.setBounds(innerArea.getX(), innerArea.getY(), innerArea.getWidth(), theme->scale(48));
+		outputChannel.setBounds(
+			(int) innerArea.getX(), (int) innerArea.getY(),
+			(int) innerArea.getWidth(), (int) theme->scale(48.0f)
+		);
 
 		constexpr float columns = 4.0f;
 
@@ -136,7 +139,8 @@ namespace Artix::Ui {
 		for (auto y = 0; y < rows; y++) {
 			left = innerArea.getX();
 			for (auto x = 0; x < columns; x++) {
-				mappers[x + (y * columns)]->setBounds(left, top, columnWidth, rowHeight);
+				const auto i = x + (y * (int) columns);
+				mappers[i]->setBounds((int) left, (int) top, (int) columnWidth, (int) rowHeight);
 				left += columnWidthWithPadding;
 			}
 			top += rowHeightWithPadding;
