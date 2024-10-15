@@ -13,7 +13,7 @@
 namespace Artix::Ui {
 	MidiChannelMapperBankPanel::MidiChannelMapperBankPanel(
 		Midi::MidiChannelMapperBank& mapperBank, Theme::ThemePtr theme
-	) : Themable(theme), mapperBank(mapperBank), outputChannel(theme) {
+	) : Themable(theme), mapperBank(mapperBank), outputChannel(theme, (uint8_t) mapperBank.getOutputChannel()) {
 
 		outputChannel.setLabel("MIDI Output Channel");
 		outputChannel.setLayoutDirection(Ui::Component::DigitalSelectorPanelDirection::HORIZONTAL);
@@ -34,7 +34,7 @@ namespace Artix::Ui {
 		int i = 0;
 		for (auto& mapper : mapperBank) {
 			auto mapperSelector = std::make_shared<MapperDigitalSelector>(
-				theme, juce::String(++i), "", true
+				theme, (int8_t) mapper.getNote(), juce::String(++i), "", true
 			);
 			mappers.push_back(mapperSelector);
 

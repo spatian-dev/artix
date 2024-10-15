@@ -34,20 +34,19 @@ namespace Artix::Ui::Component {
 		using CustomFormatterCallback = std::function<const juce::String(T, T, T)>;
 		using ValueChangedCallback = Utils::CallbackList<T>;
 
-		DigitalSelector(Theme::ThemePtr theme, juce::Colour baseColor)
-			: Themable(theme) {
+		DigitalSelector(Theme::ThemePtr theme, T initialValue, juce::Colour baseColor)
+			: Themable(theme), value(initialValue) {
 			placeholder = std::string(maxChars, '-');
 			setTheme(theme);
 			setBaseColor(baseColor);
-			setValue(getValue(), true);
+			setValue(initialValue, true);
 			resized();
 		}
 
-		DigitalSelector(Theme::ThemePtr theme)
-			: DigitalSelector(theme, theme->getUIColor(UIColor::BACKGROUND_PRIMARY)) {}
+		DigitalSelector(Theme::ThemePtr theme, T initialValue = 0)
+			: DigitalSelector(theme, initialValue, theme->getUIColor(UIColor::BACKGROUND_PRIMARY)) {}
 		~DigitalSelector() override = default;
 
-		CustomFormatterCallback customFormatter;
 		ValueChangedCallback onValueChanged;
 
 		inline T getMaxChars() const noexcept {
@@ -83,14 +82,13 @@ namespace Artix::Ui::Component {
 
 		void setValue(T v, bool muteCallbacks = false) noexcept {
 			const auto oldValue = value;
+
 			value = std::clamp(v, min, max);
-			
-			if (oldValue == value) return;
 			dragValue = value;
 
 			updateText();
 			
-			if (muteCallbacks) return;
+			if ((oldValue == value) || muteCallbacks) return;
 			onValueChanged.callSafely(v);
 		}
 
@@ -131,6 +129,14 @@ namespace Artix::Ui::Component {
 		}
 		float getMinimumSafeHeight() const noexcept {
 			return minimumSafeHeight;
+		}
+
+		CustomFormatterCallback getCustomFormatter() const {
+			return customFormatter;
+		}
+		void setCustomFormatter(CustomFormatterCallback v) {
+			customFormatter = v;
+			updateText();
 		}
 
 		void paint(juce::Graphics& g) override {
@@ -186,12 +192,14 @@ namespace Artix::Ui::Component {
 		const Metric padding = Metric::SMALL;
 		const Metric rounding = Metric::TINY;
 
+		CustomFormatterCallback customFormatter;
+
 		T value{0};
 		T min{TLimits::min()};
 		T max{TLimits::max()};
 
 		const float dragVelocityLimit = 10.0;
-		float dragVelocity, dragValue, dragScale = 96;
+		float dragVelocity = 0, dragValue = 0, dragScale = 96;
 		bool isBeingDragged = false;
 
 		void mouseEnter(const juce::MouseEvent& event) override {
@@ -204,6 +212,7 @@ namespace Artix::Ui::Component {
 		}
 
 		void mouseDown(const juce::MouseEvent& event) override {
+			dragVelocity = 0;
 			isBeingDragged = true;
 			startTimer(50);
 		}
@@ -257,7 +266,9 @@ namespace Artix::Ui::Component {
 		void updateFont() {
 			font = theme->getMonospaceFont(fontSize);
 			minimumSafeHeight = std::ceil(font.getHeight() + (2 * innerArea.getY()));
-			minimumSafeWidth = std::ceil(font.getStringWidthFloat(placeholder) + (2 * innerArea.getX()));
+			minimumSafeWidth = std::ceil(
+				juce::GlyphArrangement::getStringWidth(font, placeholder) + (2 * innerArea.getX())
+			);
 		}
 
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(DigitalSelector)

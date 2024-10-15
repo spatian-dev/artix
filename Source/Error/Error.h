@@ -29,5 +29,5 @@ namespace Artix::Error {
 		const Code subCode;
 	};
 
-	using ErrorCallbacks = Utils::CallbackList<ErrorDetails>;
+	using ErrorCallback = Utils::CallbackList<ErrorDetails>;
 }

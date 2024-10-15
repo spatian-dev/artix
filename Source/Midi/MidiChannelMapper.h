@@ -13,6 +13,7 @@
 #include <JuceHeader.h>
 #include <cstdint>
 #include <atomic>
+#include <sstream>
 #include "../Id/Identifiers.h"
 #include "../Error/Error.h"
 #include "../Utils/CallbackList.h"
@@ -35,12 +36,14 @@ namespace Artix::Midi {
 
         bool isActive() const noexcept;
 
+        const juce::String getDescription() const;
+
         juce::ValueTree toValueTree() const noexcept;
         void fromValueTree(const juce::ValueTree& vt) noexcept;
 
         NameChangedCallback onNameChanged;
         NoteChangedCallback onNoteChanged;
-        Error::ErrorCallbacks onError;
+        Error::ErrorCallback onError;
 
         private:
         juce::ReadWriteLock mutex;

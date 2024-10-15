@@ -39,7 +39,7 @@ namespace Artix {
 
         HeightChangedCallbacks onHeightChanged;
         ThemeChangedCallbacks onThemeChanged;
-        Error::ErrorCallbacks onError;
+        Error::ErrorCallback onError;
 
         private:
         std::atomic<int> height = 0;

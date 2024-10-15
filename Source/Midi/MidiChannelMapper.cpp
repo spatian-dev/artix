@@ -50,6 +50,12 @@ namespace Artix::Midi {
 		return note != Note::None;
 	}
 
+	const juce::String MidiChannelMapper::getDescription() const {
+		std::stringstream ss;
+		ss << "Mapper: \"" << name << "\", note: " << (int) note.load() << "\n";
+		return ss.str();
+	}
+
 	juce::ValueTree MidiChannelMapper::toValueTree() const noexcept {
 		const juce::ScopedReadLock lock(mutex);
 		auto vt = juce::ValueTree(Id::MidiChannelMapper);

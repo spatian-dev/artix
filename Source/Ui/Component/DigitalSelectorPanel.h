@@ -30,9 +30,9 @@ namespace Artix::Ui::Component {
 		using CustomFormatterCallback = DigitalSelector<T>::CustomFormatterCallback;
 
 		DigitalSelectorPanel(
-			Theme::ThemePtr theme, juce::String nameText = juce::String(),
+			Theme::ThemePtr theme, T initialValue = 0, juce::String nameText = juce::String(),
 			juce::String labelText = juce::String(), bool editableLabel = false
-		) : Themable(theme) {
+		) : Themable(theme), initialValue(initialValue) {
 			
 			name.setBorderSize(juce::BorderSize<int>(name.getBorderSize().getTop(), 0, 0, 0));
 			setName(nameText);
@@ -151,10 +151,10 @@ namespace Artix::Ui::Component {
 		}
 		
 		CustomFormatterCallback getCustomFormatter() const {
-			return selector.customFormatter;
+			return selector.getCustomFormatter();
 		}
 		void setCustomFormatter(CustomFormatterCallback v) {
-			selector.customFormatter = v;
+			selector.setCustomFormatter(v);
 		}
 
 		void paint(juce::Graphics& g) override {
@@ -164,7 +164,7 @@ namespace Artix::Ui::Component {
 			);
 
 			if (label.getText().isEmpty() && !label.isBeingEdited()) {
-				const auto placeholderTextColor = theme->isDark() ?
+				juce::Colour placeholderTextColor = theme->isDark() ?
 					theme->getUIColor(UIColor::BACKGROUND_ELEMENT).brighter(0.15f) :
 					theme->getUIColor(UIColor::BACKGROUND_ELEMENT).darker(0.15f);
 				g.setFont(label.getFont());
@@ -195,11 +195,11 @@ namespace Artix::Ui::Component {
 
 		private:
 		juce::Rectangle<float> innerArea;
-
+		T initialValue;
 		DigitalSelectorPanelDirection layoutDirection = DigitalSelectorPanelDirection::VERTICAL;
 		bool editableLabel = false;
 
-		DigitalSelector<T> selector{theme};
+		DigitalSelector<T> selector{theme, initialValue};
 		juce::Label name;
 		juce::Label label;
 

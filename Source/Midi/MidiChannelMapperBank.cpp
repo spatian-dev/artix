@@ -88,4 +88,12 @@ namespace Artix::Midi {
 			});
 		}
 	}
+	const juce::String MidiChannelMapperBank::getDescription() const {
+		std::stringstream ss;
+		ss << "Output Bank: \"" << name << "\", output channel: " << (int) outputChannel.load() << "\n";
+		for (auto& m : mappers) {
+			ss << "\t" << m.getDescription();
+		}
+		return ss.str();
+	}
 }

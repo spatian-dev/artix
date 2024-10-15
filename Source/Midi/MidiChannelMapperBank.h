@@ -13,6 +13,7 @@
 #include <JuceHeader.h>
 #include <cstdint>
 #include <atomic>
+#include <sstream>
 #include "../Id/Identifiers.h"
 #include "../Error/Error.h"
 #include "../Utils/CallbackList.h"
@@ -40,9 +41,11 @@ namespace Artix::Midi {
         juce::ValueTree toValueTree() const noexcept;
         void fromValueTree(const juce::ValueTree& vt) noexcept;
 
+        const juce::String getDescription() const;
+
         NameChangedCallback onNameChanged;
         ChannelChangedCallback onOutputChannelChanged;
-        Error::ErrorCallbacks onError;
+        Error::ErrorCallback onError;
 
         //======================================================================
         /** Mirroring std::array container functions */

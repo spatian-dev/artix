@@ -73,7 +73,7 @@ namespace Artix::Ui::Theme {
 		return getSansSerifFont(getFontSize(size), styleFlags);
 	}
 	const juce::Font BaseTheme::getSansSerifFont() {
-		return Font::sansSerifTypeface;
+		return juce::FontOptions(Font::sansSerifTypeface);
 	}
 
 	const juce::Typeface::Ptr BaseTheme::getMonospaceTypeface() {
@@ -86,7 +86,7 @@ namespace Artix::Ui::Theme {
 		return getMonospaceFont(getFontSize(size), styleFlags);
 	}
 	const juce::Font BaseTheme::getMonospaceFont() {
-		return Font::monospacedTypeface;
+		return juce::FontOptions(Font::monospacedTypeface);
 	}
 
 	float BaseTheme::getFontSize(Metric size) const noexcept {
