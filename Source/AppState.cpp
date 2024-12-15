@@ -16,6 +16,14 @@ namespace Artix {
 			juce::ScopedWriteLock lock(themeMutex);
 			theme = Ui::Theme::Themes::getInstance().begin()->second;
 		}
+
+		mapperBank.onError.add([this](const Artix::Error::ErrorDetails err) {
+			juce::NativeMessageBox::showMessageBox(
+				juce::MessageBoxIconType::WarningIcon,
+				"Something went wrong",
+				"Failed to load preset: " + err.msg
+			);
+		});
 	}
 
 	int AppState::getHeight() const noexcept {
@@ -44,8 +52,6 @@ namespace Artix {
 		onThemeChanged.callSafely(theme);
 	}
 
-	
-
 	Midi::MidiChannelMapperBank& AppState::getMapperBank() noexcept {
 		return mapperBank;
 	}
@@ -60,7 +66,6 @@ namespace Artix {
 	}
 
 	void AppState::fromValueTree(const juce::ValueTree& vt) noexcept {
-		jassert(vt.hasType(Id::AppState));
 		if (!vt.hasType(Id::AppState)) {
 			onError.callOnMessageThread({
 				"Invalid ValueTree type", Error::Code::BadState, Error::Code::InvalidValueTree
@@ -81,5 +86,41 @@ namespace Artix {
 				break;
 			}
 		}
+	}
+
+	juce::var AppState::toVar() const noexcept {
+		juce::DynamicObject::Ptr obj = new juce::DynamicObject();
+		obj->setProperty("height", getHeight());
+		obj->setProperty("theme", getTheme()->getName());
+		obj->setProperty("bank", mapperBank.toVar());
+		return obj.get();
+	}
+
+	juce::ValueTree AppState::fromVar(const juce::var& data) noexcept {
+		auto vt = juce::ValueTree(Id::AppState);
+		vt.setProperty(Id::Height, data.getProperty("height", getHeight()), nullptr);
+		vt.setProperty(Id::Theme, data.getProperty("theme", getTheme()->getName()), nullptr);
+
+		vt.addChild(mapperBank.fromVar(data.getProperty("bank", juce::var())), -1, nullptr);
+
+		return vt;
+	}
+
+	juce::String AppState::toJson() const noexcept {
+		return juce::JSON::toString(toVar());
+	}
+
+	void AppState::fromJson(const juce::String json) noexcept {
+		juce::var data;
+		const juce::Result result= juce::JSON::parse(json, data);
+		
+		if (!result.wasOk()) {
+			onError.callOnMessageThread({
+				"Failed to load preset: Invalid data", Error::Code::BadState, Error::Code::InvalidValueTree
+			});
+			return;
+		}
+		
+		fromValueTree(fromVar(data));
 	}
 }

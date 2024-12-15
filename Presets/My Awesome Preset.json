@@ -1,0 +1,71 @@
+{
+	"bank": {
+	  "name": "My Awesome Preset",
+	  "mappers": [
+		{
+		  "name": "First",
+		  "note": 1
+		},
+		{
+		  "name": "",
+		  "note": -1
+		},
+		{
+		  "name": "",
+		  "note": -1
+		},
+		{
+		  "name": "",
+		  "note": -1
+		},
+		{
+		  "name": "",
+		  "note": -1
+		},
+		{
+		  "name": "",
+		  "note": -1
+		},
+		{
+		  "name": "",
+		  "note": -1
+		},
+		{
+		  "name": "Middle A",
+		  "note": 8
+		},
+		{
+		  "name": "Middle B",
+		  "note": 9
+		},
+		{
+		  "name": "",
+		  "note": -1
+		},
+		{
+		  "name": "",
+		  "note": -1
+		},
+		{
+		  "name": "",
+		  "note": -1
+		},
+		{
+		  "name": "",
+		  "note": -1
+		},
+		{
+		  "name": "",
+		  "note": -1
+		},
+		{
+		  "name": "",
+		  "note": -1
+		},
+		{
+		  "name": "Last",
+		  "note": 15
+		}
+	  ]
+	}
+  }

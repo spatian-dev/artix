@@ -183,7 +183,6 @@ namespace Artix::Ui::Component {
 		juce::Colour textColor;
 
 		Metric fontSize = Metric::MEDIUM;
-		juce::Font font;
 		juce::Justification justification = juce::Justification::centred;
 
 		juce::String text;
@@ -202,21 +201,21 @@ namespace Artix::Ui::Component {
 		float dragVelocity = 0, dragValue = 0, dragScale = 96;
 		bool isBeingDragged = false;
 
-		void mouseEnter(const juce::MouseEvent& event) override {
+		void mouseEnter(const juce::MouseEvent&) override {
 			setMouseCursor(juce::MouseCursor::UpDownResizeCursor);
 			repaint();
 		}
-		void mouseExit(const juce::MouseEvent& event) override {
+		void mouseExit(const juce::MouseEvent&) override {
 			setMouseCursor(juce::MouseCursor::NormalCursor);
 			repaint();
 		}
 
-		void mouseDown(const juce::MouseEvent& event) override {
+		void mouseDown(const juce::MouseEvent&) override {
 			dragVelocity = 0;
 			isBeingDragged = true;
 			startTimer(50);
 		}
-		void mouseUp(const juce::MouseEvent& event) override {
+		void mouseUp(const juce::MouseEvent&) override {
 			stopTimer();
 			isBeingDragged = false;
 			setValue(static_cast<T>(std::clamp(dragValue, (float) TLimits::min(), (float) TLimits::max())));
@@ -229,7 +228,7 @@ namespace Artix::Ui::Component {
 			);
 		}
 
-		void mouseWheelMove(const juce::MouseEvent& event, const juce::MouseWheelDetails& wheel) override {
+		void mouseWheelMove(const juce::MouseEvent&, const juce::MouseWheelDetails& wheel) override {
 			if (isBeingDragged || (wheel.deltaY == 0))
 				return;
 
@@ -264,7 +263,7 @@ namespace Artix::Ui::Component {
 		}
 
 		void updateFont() {
-			font = theme->getMonospaceFont(fontSize);
+			const auto font = theme->getMonospaceFont(fontSize);
 			minimumSafeHeight = std::ceil(font.getHeight() + (2 * innerArea.getY()));
 			minimumSafeWidth = std::ceil(
 				juce::GlyphArrangement::getStringWidth(font, placeholder) + (2 * innerArea.getX())

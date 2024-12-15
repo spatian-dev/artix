@@ -65,7 +65,6 @@ namespace Artix::Midi {
 	}
 
 	void MidiChannelMapper::fromValueTree(const juce::ValueTree& vt) noexcept {
-		jassert(vt.hasType(Id::MidiChannelMapper));
 		if (!vt.hasType(Id::MidiChannelMapper)) {
 			onError.callOnMessageThread({
 				"Invalid ValueTree type", Error::Code::BadState, Error::Code::InvalidValueTree
@@ -74,6 +73,23 @@ namespace Artix::Midi {
 		}
 
 		setName(vt.getProperty(Id::Name, name));
-		setNote((int) vt.getProperty(Id::Note, (int) note.load()));
+		setNote(vt.getProperty(Id::Note, (int) note.load()));
+	}
+
+	juce::var MidiChannelMapper::toVar() const noexcept {
+		juce::DynamicObject::Ptr obj = new juce::DynamicObject();
+		obj->setProperty("name", getName());
+		obj->setProperty("note", (int8_t) getNote());
+
+		return obj.get();
+	}
+
+	juce::ValueTree MidiChannelMapper::fromVar(const juce::var& data) noexcept {
+		auto vt = juce::ValueTree(Id::MidiChannelMapper);
+		vt.setProperty(Id::Name, data.getProperty("name", getName()), nullptr);
+		vt.setProperty(
+			Id::Note, data.getProperty("note", (int8_t) getNote()), nullptr
+		);
+		return vt;
 	}
 }

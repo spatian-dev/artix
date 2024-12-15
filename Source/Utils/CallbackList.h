@@ -73,7 +73,7 @@ namespace Artix::Utils {
 			return true;
 		}
 
-		virtual bool contains(const Key i, bool throws = false) const {
+		virtual bool contains(const Key i) const {
 			ScopedLock lock(mutex);
 			return callbacks.contains(i);
 		}

@@ -209,8 +209,8 @@ namespace Artix::Ui::Component {
 			const auto padding = theme->getSpacing(Metric::SMALL);
 			innerArea = theme->getInnerArea(this, Metric::TINY, Metric::SMALL);
 
-			name.setFont(theme->getFontSize(Metric::TINY));
-			label.setFont(theme->getFontSize(Metric::MEDIUM));
+			name.setFont(juce::FontOptions(theme->getFontSize(Metric::TINY)));
+			label.setFont(juce::FontOptions(theme->getFontSize(Metric::MEDIUM)));
 
 			if (layoutDirection == DigitalSelectorPanelDirection::HORIZONTAL) {
 				auto displayWidth = (int) selector.getMinimumSafeWidth();

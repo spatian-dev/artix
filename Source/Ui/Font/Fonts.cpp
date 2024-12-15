@@ -11,10 +11,10 @@
 #include "Fonts.h"
 
 namespace Artix::Ui::Font {
-    static const juce::Typeface::Ptr sansSerifTypeface = juce::Typeface::createSystemTypefaceFor(
+    const juce::Typeface::Ptr sansSerifTypeface = juce::Typeface::createSystemTypefaceFor(
         BinaryData::RobotoCondensedRegular_ttf, BinaryData::RobotoCondensedRegular_ttfSize
     );
-    static const juce::Typeface::Ptr monospacedTypeface = juce::Typeface::createSystemTypefaceFor(
+    const juce::Typeface::Ptr monospacedTypeface = juce::Typeface::createSystemTypefaceFor(
         BinaryData::Share_Tech_Mono_ttf, BinaryData::Share_Tech_Mono_ttfSize
     );
 }

@@ -9,8 +9,13 @@
               pluginManufacturerCode="Sptn" pluginCode="Artx" pluginAUMainType="'aumi'"
               pluginVST3Category="Instrument,Tools" pluginVSTCategory="kPlugCategGenerator"
               cppLanguageStandard="20" bundleIdentifier="dev.Spatian.Artix"
-              aaxIdentifier="dev.Spatian.Artix">
+              aaxIdentifier="dev.Spatian.Artix" defines="JUCE_MODAL_LOOPS_PERMITTED=1">
   <MAINGROUP id="WBcm9v" name="Artix">
+    <GROUP id="{C61D2F50-AF3F-0047-6C8E-D339A867755D}" name="Presets">
+      <FILE id="xxR495" name="default.json" compile="0" resource="1" file="Presets/default.json"/>
+      <FILE id="KmJsgw" name="My Awesome Preset.json" compile="0" resource="1"
+            file="Presets/My Awesome Preset.json"/>
+    </GROUP>
     <GROUP id="{D3E7ACCF-DFC5-52C4-295D-A90DD50D4E01}" name="Fonts">
       <FILE id="vuEvYM" name="RobotoCondensed-Regular.ttf" compile="0" resource="1"
             file="Fonts/Roboto_Condensed/RobotoCondensed-Regular.ttf"/>
@@ -36,6 +41,8 @@
               file="Source/Midi/MidiChannelMapperBank.cpp"/>
         <FILE id="XU8YMC" name="MidiChannelMapperBank.h" compile="0" resource="0"
               file="Source/Midi/MidiChannelMapperBank.h"/>
+        <FILE id="c8yrbE" name="Presets.cpp" compile="1" resource="0" file="Source/Midi/Presets.cpp"/>
+        <FILE id="ls9WXE" name="Presets.h" compile="0" resource="0" file="Source/Midi/Presets.h"/>
       </GROUP>
       <GROUP id="{E1DD3EC6-6667-6CC7-07AD-172EBFE1018B}" name="Ui">
         <GROUP id="{CC547DB6-A198-67B7-4AB7-771C2046CAD1}" name="Component">
@@ -80,6 +87,8 @@
             file="Source/PluginProcessor.cpp"/>
       <FILE id="WYZhBv" name="PluginProcessor.h" compile="0" resource="0"
             file="Source/PluginProcessor.h"/>
+      <FILE id="XShJpK" name="Settings.cpp" compile="1" resource="0" file="Source/Settings.cpp"/>
+      <FILE id="VpRpii" name="Settings.h" compile="0" resource="0" file="Source/Settings.h"/>
     </GROUP>
   </MAINGROUP>
   <MODULES>

@@ -12,7 +12,18 @@
 
 namespace Artix::Midi {
 	MidiChannelMapperBank::MidiChannelMapperBank(Channel outputChannel, juce::String name) :
-		outputChannel(outputChannel), name(name) {}
+		outputChannel(outputChannel), name(name) {
+
+		for (auto& m : mappers) {
+			m.onError.add([this](const Artix::Error::ErrorDetails err) {
+				juce::NativeMessageBox::showMessageBox(
+					juce::MessageBoxIconType::WarningIcon,
+					"Something went wrong",
+					"Failed to load preset: " + err.msg
+				);
+			});
+		}
+	}
 
 	Channel MidiChannelMapperBank::getOutputChannel() const noexcept {
 		return outputChannel;
@@ -60,7 +71,6 @@ namespace Artix::Midi {
 	}
 
 	void MidiChannelMapperBank::fromValueTree(const juce::ValueTree& vt) noexcept {
-		jassert(vt.hasType(Id::MidiChannelMapperBank));
 		if (!vt.hasType(Id::MidiChannelMapperBank)) {
 			onError.callOnMessageThread({
 				"Invalid ValueTree type", Error::Code::BadState, Error::Code::InvalidValueTree
@@ -69,7 +79,7 @@ namespace Artix::Midi {
 		}
 
 		setName(vt.getProperty(Id::Name, this->name));
-		setOutputChannel((int) vt.getProperty(Id::OutputChannel, (int) outputChannel.load()));
+		setOutputChannel(vt.getProperty(Id::OutputChannel, (int) outputChannel.load()));
 
 		int i = 0;
 		for (auto child : vt) {
@@ -78,16 +88,49 @@ namespace Artix::Midi {
 			}
 
 			mappers[i++].fromValueTree(child);
+			if (i >= CHANNEL_COUNT)
+				break;
 		}
 
 		if (i != CHANNEL_COUNT) {
-			juce::MessageManager::callAsync([this]() {
-				onError.callOnMessageThread({
-					"ValueTree is missing children", Error::Code::BadState, Error::Code::MissingChildren
-				});
+			onError.callOnMessageThread({
+				"ValueTree is missing children", Error::Code::BadState, Error::Code::MissingChildren
 			});
+			return;
 		}
 	}
+
+	juce::var MidiChannelMapperBank::toVar() const noexcept {
+		juce::DynamicObject::Ptr obj = new juce::DynamicObject();
+		obj->setProperty("name", getName());
+		obj->setProperty("outputChannel", (uint8_t) getOutputChannel());
+
+		auto outgoingMappers = juce::var();
+		for (auto& m : mappers) {
+			outgoingMappers.append(m.toVar());
+		}
+		obj->setProperty("mappers", outgoingMappers);
+		return obj.get();
+	}
+
+	juce::ValueTree MidiChannelMapperBank::fromVar(const juce::var& data) noexcept {
+		auto vt = juce::ValueTree(Id::MidiChannelMapperBank);
+		vt.setProperty(Id::Name, data.getProperty("name", getName()), nullptr);
+		vt.setProperty(
+			Id::OutputChannel, data.getProperty("outputChannel", (uint8_t) getOutputChannel()), nullptr
+		);
+
+		auto incomingMappers = data.getProperty("mappers", juce::var()).getArray();
+		if (incomingMappers) {
+			int count = std::min<int>(incomingMappers->size(), CHANNEL_COUNT);
+
+			for (int i = 0; i < count; i++) {
+				vt.addChild(mappers[i].fromVar((*incomingMappers)[i]), -1, nullptr);
+			}
+		}
+		return vt;
+	}
+
 	const juce::String MidiChannelMapperBank::getDescription() const {
 		std::stringstream ss;
 		ss << "Output Bank: \"" << name << "\", output channel: " << (int) outputChannel.load() << "\n";

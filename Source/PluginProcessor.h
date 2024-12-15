@@ -9,7 +9,10 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include <memory>
 
+#include "Settings.h"
+#include "Midi/Presets.h"
 #include "AppState.h"
 
 class ArtixAudioProcessor : public juce::AudioProcessor {
@@ -46,6 +49,10 @@ class ArtixAudioProcessor : public juce::AudioProcessor {
 	void setStateInformation(const void* data, int sizeInBytes) override;
 
 	private:
+	std::unique_ptr<juce::InterProcessLock> processLock;
+	std::unique_ptr<Artix::Settings> settings;
+	std::unique_ptr<Artix::Midi::Presets> presets;
 	Artix::AppState state;
+
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ArtixAudioProcessor)
 };

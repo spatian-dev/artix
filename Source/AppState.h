@@ -37,6 +37,12 @@ namespace Artix {
         juce::ValueTree toValueTree() const noexcept;
         void fromValueTree(const juce::ValueTree& vt) noexcept;
 
+        juce::var toVar() const noexcept;
+        juce::ValueTree fromVar(const juce::var& data) noexcept;
+
+        juce::String toJson() const noexcept;
+        void fromJson(const juce::String json) noexcept;
+
         HeightChangedCallbacks onHeightChanged;
         ThemeChangedCallbacks onThemeChanged;
         Error::ErrorCallback onError;

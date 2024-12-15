@@ -14,7 +14,7 @@
 
 namespace Artix::Id {
 #define DEFINE_JUCE_ID(name) extern const juce::Identifier name; namespace Str { constexpr auto name = #name;}
-
+	
 	DEFINE_JUCE_ID(AppState)
 	DEFINE_JUCE_ID(Theme)
 	DEFINE_JUCE_ID(Height)

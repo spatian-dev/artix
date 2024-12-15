@@ -41,6 +41,9 @@ namespace Artix::Midi {
         juce::ValueTree toValueTree() const noexcept;
         void fromValueTree(const juce::ValueTree& vt) noexcept;
 
+        juce::var toVar() const noexcept;
+        juce::ValueTree fromVar(const juce::var& vt) noexcept;
+
         NameChangedCallback onNameChanged;
         NoteChangedCallback onNoteChanged;
         Error::ErrorCallback onError;
