@@ -152,12 +152,12 @@ namespace Artix::Ui::Component {
 			g.setFont(theme->getMonospaceFont(fontSize));
 			g.setColour(textColor);
 			g.drawFittedText(
-				text, innerArea.toNearestIntEdges(), justification, 1
+				text, innerArea, justification, 1
 			);
 		}
 
 		void resized() override {
-			innerArea = theme->getInnerArea(this, borderThickness, padding);
+			innerArea = theme->getInnerArea(this, borderThickness, padding).toNearestIntEdges();
 			updateFont();
 		}
 
@@ -175,7 +175,7 @@ namespace Artix::Ui::Component {
 		float minimumSafeWidth, minimumSafeHeight;
 		std::string placeholder;
 
-		juce::Rectangle<float> innerArea;
+		juce::Rectangle<int> innerArea;
 
 		juce::Colour backgroundColor;
 		juce::Colour backgroundHoverColor;

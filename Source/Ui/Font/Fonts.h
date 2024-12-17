@@ -13,9 +13,6 @@
 #include <JuceHeader.h>
 
 namespace Artix::Ui {
-    extern const juce::Typeface::Ptr sansSerifTypeface;
-    extern const juce::Typeface::Ptr monospacedTypeface;
-
     class Fonts {
         public:
         static const Fonts& get() {

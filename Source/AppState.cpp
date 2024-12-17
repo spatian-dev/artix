@@ -66,8 +66,14 @@ namespace Artix {
 	}
 
 	void AppState::load(const juce::ValueTree& vt) noexcept {
-		currentPreset = nullptr;
-		fromValueTree(vt);
+		auto newVt = vt.createCopy();
+		newVt.removeProperty(Id::Name, nullptr);
+		fromValueTree(newVt);
+
+		const auto presetName = vt.getProperty(Id::Name, "(unnamed)");
+		currentPreset = Midi::Presets::makeUserPreset(
+			presetName, toJson()
+		);
 	}
 
 	void AppState::load(const Midi::PresetPtr preset) noexcept {

@@ -11,7 +11,7 @@
 namespace Artix::Ui {
 	PluginEditor::PluginEditor(ArtixAudioProcessor& proc, AppState& state, Midi::Presets& presets)
 		: AudioProcessorEditor(&proc), audioProcessor(proc), state(state),
-		Themable(state.getTheme()), header(state, presets, theme),
+		Themable(state.getTheme()), header(proc, state, presets, theme),
 		mapperBank(state.getMapperBank(), theme), footer(theme) {
 		
 		setName("ArtixPluginEditor");
@@ -61,20 +61,21 @@ namespace Artix::Ui {
 		innerArea = theme->getInnerArea(this, Metric::SMALL, Metric::SMALL);
 
 		const auto padding = theme->getSpacing(Metric::SMALL);
-		const float panelHeight = theme->scale(36.0f);
+		const float headerHeight = theme->scale(40.0f);
+		const float footerHeight = theme->scale(36.0f);
 
 		header.setBounds(
 			(int) innerArea.getX(), (int) innerArea.getY(),
-			(int) innerArea.getWidth(), (int) panelHeight
+			(int) innerArea.getWidth(), (int) headerHeight
 		);
 		footer.setBounds(
-			(int) innerArea.getX(), (int) (innerArea.getBottom() - panelHeight),
-			(int) innerArea.getWidth(), (int) panelHeight
+			(int) innerArea.getX(), (int) (innerArea.getBottom() - footerHeight),
+			(int) innerArea.getWidth(), (int) footerHeight
 		);
 
 		mapperBank.setBounds(
 			(int) innerArea.getX(), (int) (header.getBottom() + padding),
-			(int) innerArea.getWidth(), (int) (innerArea.getHeight() - (2 * (padding + panelHeight)))
+			(int) innerArea.getWidth(), (int) (innerArea.getHeight() - ((2 * padding) + headerHeight + footerHeight))
 		);
 	}
 

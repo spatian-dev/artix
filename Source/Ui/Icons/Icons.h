@@ -13,7 +13,8 @@
 #include <JuceHeader.h>
 
 namespace Artix::Ui {
-    using DrawablePtr = std::shared_ptr<const juce::Drawable>;
+    using DrawablePtr = std::shared_ptr<juce::Drawable>;
+
     class Icons {
         public:
         static const Icons& get() {

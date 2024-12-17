@@ -77,7 +77,12 @@ const juce::String ArtixAudioProcessor::getProgramName(int index) {
     return preset ? preset->name : "";
 }
 
-void ArtixAudioProcessor::changeProgramName(int index, const juce::String& newName) {}
+void ArtixAudioProcessor::changeProgramName(int index, const juce::String& newName) {
+    auto preset = presets->getPreset(index);
+    if (preset) {
+        preset->name = newName;
+    }
+}
 
 void ArtixAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock) {}
 
@@ -138,7 +143,10 @@ juce::AudioProcessorEditor* ArtixAudioProcessor::createEditor() {
 }
 
 void ArtixAudioProcessor::getStateInformation(juce::MemoryBlock& destData) {
-    if (auto xmlState = state.toValueTree().createXml()) {
+    const auto preset = state.getCurrentPreset();
+    auto vt = state.toValueTree();
+    vt.setProperty(Artix::Id::Name, preset ? preset->name : "(unnamed)", nullptr);
+    if (auto xmlState = vt.createXml()) {
         copyXmlToBinary(*xmlState, destData);
     }
 }
@@ -147,6 +155,10 @@ void ArtixAudioProcessor::setStateInformation(const void* data, int sizeInBytes)
     if (auto xmlState = getXmlFromBinary(data, sizeInBytes)) {
         state.load(juce::ValueTree::fromXml(*xmlState));
     }
+}
+
+void ArtixAudioProcessor::notifyHostOfChange() {
+    this->updateHostDisplay();
 }
 
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter() {

@@ -12,10 +12,34 @@
 
 #include <JuceHeader.h>
 
-//#define JUCE_UTF8_CHARPOINTER(name, str) const auto #name = juce::CharPointer_UTF8("\xe2\x80\x94");
+namespace Artix::Utils {
+    class UTF8 {
+        public:
+        static const UTF8& get() {
+            static UTF8 instance;
+            return instance;
+        }
 
-#define DECLARE_JUCE_UTF8_CHARPOINT(name) extern const juce::CharPointer_UTF8 name
+        const juce::CharPointer_UTF8 EmDash = juce::CharPointer_UTF8("\xe2\x80\x94");
 
-namespace Artix::Utils::UTF8 {
-    DECLARE_JUCE_UTF8_CHARPOINT(EmDash);
+        const juce::CharPointer_UTF8 leftEquilateralArrowhead = juce::CharPointer_UTF8("\xf0\x9f\x9e\x80");
+        const juce::CharPointer_UTF8 upEquilateralArrowhead = juce::CharPointer_UTF8("\xf0\x9f\x9e\x81");
+        const juce::CharPointer_UTF8 rightEquilateralArrowhead = juce::CharPointer_UTF8("\xf0\x9f\x9e\x82");
+        const juce::CharPointer_UTF8 downEquilateralArrowhead = juce::CharPointer_UTF8("\xf0\x9f\x9e\x83");
+
+        const juce::CharPointer_UTF8 leftIsoscelesRightTriangle = juce::CharPointer_UTF8("\xf0\x9f\x9e\x80");
+        const juce::CharPointer_UTF8 upIsoscelesRightTriangle = juce::CharPointer_UTF8("\xf0\x9f\x9e\x81");
+        const juce::CharPointer_UTF8 rightIsoscelesRightTriangle = juce::CharPointer_UTF8("\xf0\x9f\x9e\x82");
+        const juce::CharPointer_UTF8 downIsoscelesRightTriangle = juce::CharPointer_UTF8("\xf0\x9f\x9e\x83");
+
+        const juce::CharPointer_UTF8 folderClosedEmoji = juce::CharPointer_UTF8("\xf0\x9f\x93\x81");
+        const juce::CharPointer_UTF8 folderOpenEmoji = juce::CharPointer_UTF8("\xf0\x9f\x93\x82");
+        const juce::CharPointer_UTF8 floppyDiskEmoji = juce::CharPointer_UTF8("\xf0\x9f\x92\xbe");
+
+        const juce::CharPointer_UTF8 f = juce::CharPointer_UTF8("\xf0\x9f\x92\xbe");
+        private:
+        UTF8() = default;
+        ~UTF8() = default;
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(UTF8)
+    };
 }

@@ -53,15 +53,18 @@ namespace Artix::Midi {
 
         int factoryPresetCount() const;
 
+        static PresetPtr makeUserPreset(
+            const juce::String name, const juce::String content
+        );
+
         private:
         static PresetPtr makeFactoryPreset(const juce::String name, const char* content);
         static PresetPtr makePreset(
             const juce::String name, const juce::String content,
             const juce::File file, const bool isFactory = false
         );
-
         int userPresetStartIndex = 0;
-        const juce::String extension = "artix";
+        const juce::String extension = ".artix";
         PresetList items;
 
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Presets)

@@ -18,7 +18,6 @@
 #include "Theme/Themes.h"
 #include "Component/DigitalSelectorPanel.h"
 #include "../Midi/MidiChannelMapperBank.h"
-#include "../Utils/UTF8.h"
 
 namespace Artix::Ui {
 	class MidiChannelMapperBankPanel : public juce::Component, private Theme::Themable {

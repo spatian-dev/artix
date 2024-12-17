@@ -36,6 +36,8 @@ namespace Artix {
         Midi::MidiChannelMapperBank& getMapperBank() noexcept;
 
         juce::ValueTree toValueTree() const noexcept;
+        juce::String toJson() const noexcept;
+
         void load(const juce::ValueTree& vt) noexcept;
         void load(const Midi::PresetPtr preset) noexcept;
 
@@ -51,7 +53,6 @@ namespace Artix {
         juce::var toVar() const noexcept;
         juce::ValueTree fromVar(const juce::var& data) noexcept;
 
-        juce::String toJson() const noexcept;
         void fromJson(const juce::String json) noexcept;
 
         std::atomic<int> height = 0;

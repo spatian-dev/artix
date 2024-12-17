@@ -18,6 +18,8 @@
 
 namespace Artix::Ui {
 	enum class Metric : uint8_t {
+		NONE,
+		MICRO,
 		TINY,
 		SMALL,
 		MEDIUM,
@@ -58,7 +60,7 @@ namespace Artix::Ui {
 			virtual ~BaseTheme() = default;
 
 			protected:
-			using MetricValues = std::array<float, 5>;
+			using MetricValues = std::array<float, 7>;
 			struct FontSize : MetricValues {};
 			struct Spacing : MetricValues {};
 			struct Rounding : MetricValues {};

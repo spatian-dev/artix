@@ -48,6 +48,8 @@ class ArtixAudioProcessor : public juce::AudioProcessor {
 	void getStateInformation(juce::MemoryBlock& destData) override;
 	void setStateInformation(const void* data, int sizeInBytes) override;
 
+	void notifyHostOfChange();
+
 	private:
 	std::unique_ptr<juce::InterProcessLock> processLock;
 	std::unique_ptr<Artix::Settings> settings;

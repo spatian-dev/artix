@@ -27,7 +27,7 @@ namespace Artix::Midi {
         items.removeRange(userPresetStartIndex, items.size() - userPresetStartIndex);
 
         const auto files = dataDirectory.findChildFiles(
-            juce::File::TypesOfFileToFind::findFiles, true, "*." + extension, juce::File::FollowSymlinks::no
+            juce::File::TypesOfFileToFind::findFiles, true, "*" + extension, juce::File::FollowSymlinks::no
         );
         for (const auto& f : files) {
             items.add(makePreset(
@@ -108,6 +108,10 @@ namespace Artix::Midi {
 
     int Presets::factoryPresetCount() const {
         return userPresetStartIndex;
+    }
+
+    PresetPtr Presets::makeUserPreset(const juce::String name, const juce::String content) {
+        return Presets::makePreset(name, content, juce::File(), false);
     }
 
     PresetPtr Presets::makeFactoryPreset(const juce::String name, const char* resourceName) {

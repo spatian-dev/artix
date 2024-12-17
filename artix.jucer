@@ -79,10 +79,8 @@
                 file="Source/Ui/Component/DigitalSelector.h"/>
           <FILE id="kXcT1c" name="DigitalSelectorPanel.h" compile="0" resource="0"
                 file="Source/Ui/Component/DigitalSelectorPanel.h"/>
-          <FILE id="cbSYSx" name="DrawableButton.cpp" compile="1" resource="0"
-                file="Source/Ui/Component/DrawableButton.cpp"/>
-          <FILE id="y36Zty" name="DrawableButton.h" compile="0" resource="0"
-                file="Source/Ui/Component/DrawableButton.h"/>
+          <FILE id="cbSYSx" name="Button.cpp" compile="1" resource="0" file="Source/Ui/Component/Button.cpp"/>
+          <FILE id="y36Zty" name="Button.h" compile="0" resource="0" file="Source/Ui/Component/Button.h"/>
           <FILE id="gnq6El" name="Link.cpp" compile="1" resource="0" file="Source/Ui/Component/Link.cpp"/>
           <FILE id="vw3NAH" name="Link.h" compile="0" resource="0" file="Source/Ui/Component/Link.h"/>
         </GROUP>
@@ -110,7 +108,6 @@
       </GROUP>
       <GROUP id="{7BB65A59-756B-2948-071F-B7D40524B24D}" name="Utils">
         <FILE id="yST4a9" name="CallbackList.h" compile="0" resource="0" file="Source/Utils/CallbackList.h"/>
-        <FILE id="w3J8Pf" name="UTF8.cpp" compile="1" resource="0" file="Source/Utils/UTF8.cpp"/>
         <FILE id="HTxVn8" name="UTF8.h" compile="0" resource="0" file="Source/Utils/UTF8.h"/>
       </GROUP>
       <FILE id="GfPc1X" name="AppState.cpp" compile="1" resource="0" file="Source/AppState.cpp"/>

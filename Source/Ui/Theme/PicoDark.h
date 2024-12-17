@@ -16,10 +16,10 @@ namespace Artix::Ui::Theme {
 	class PicoDark : public BaseTheme {
 		public:
 		PicoDark() : BaseTheme("Pico (Dark)") {
-			fontSize = {12, 16, 18, 22, 26};
-			spacing = {4, 8, 12, 16, 20};
-			rounding = {4, 8, 12, 18, 24};
-			thickness = {1, 2, 3, 5, 8};
+			fontSize = {0, 8, 12, 16, 18, 22, 26};
+			spacing = {0, 2, 4, 8, 12, 16, 20};
+			rounding = {0, 2, 4, 8, 12, 18, 24};
+			thickness = {0, 2, 1, 2, 3, 5, 8};
 			colorScheme = {
 				true,						// isDark
 				juce::Colour(0x0),			// transparent
