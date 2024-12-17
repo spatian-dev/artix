@@ -65,6 +65,20 @@ namespace Artix {
 		return vt;
 	}
 
+	void AppState::load(const juce::ValueTree& vt) noexcept {
+		currentPreset = nullptr;
+		fromValueTree(vt);
+	}
+
+	void AppState::load(const Midi::PresetPtr preset) noexcept {
+		currentPreset = preset;
+		fromJson(preset->data);
+	}
+
+	const Midi::PresetPtr AppState::getCurrentPreset() const noexcept {
+		return currentPreset;
+	}
+
 	void AppState::fromValueTree(const juce::ValueTree& vt) noexcept {
 		if (!vt.hasType(Id::AppState)) {
 			onError.callOnMessageThread({

@@ -13,6 +13,7 @@
 #include <optional>
 
 #include "../AppState.h"
+#include "../Midi/Presets.h"
 #include "../PluginProcessor.h"
 #include "Theme/Themes.h"
 #include "Header.h"
@@ -22,7 +23,7 @@
 namespace Artix::Ui {
 	class PluginEditor : public juce::AudioProcessorEditor, private Theme::Themable {
 		public:
-		PluginEditor(ArtixAudioProcessor&, AppState&);
+		PluginEditor(ArtixAudioProcessor&, AppState&, Midi::Presets&);
 		~PluginEditor() override;
 
 		void paint(juce::Graphics&) override;

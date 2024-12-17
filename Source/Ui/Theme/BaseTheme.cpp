@@ -64,7 +64,7 @@ namespace Artix::Ui::Theme {
 	}
 
 	const juce::Typeface::Ptr BaseTheme::getSansSerifTypeface() {
-		return Font::sansSerifTypeface;
+		return fonts.sansSerifTypeface;
 	}
 	const juce::Font BaseTheme::getSansSerifFont(float size, int styleFlags) {
 		return getSansSerifFont().withHeight(size).withStyle(styleFlags);
@@ -73,11 +73,11 @@ namespace Artix::Ui::Theme {
 		return getSansSerifFont(getFontSize(size), styleFlags);
 	}
 	const juce::Font BaseTheme::getSansSerifFont() {
-		return juce::FontOptions(Font::sansSerifTypeface);
+		return juce::FontOptions(fonts.sansSerifTypeface);
 	}
 
 	const juce::Typeface::Ptr BaseTheme::getMonospaceTypeface() {
-		return Font::monospacedTypeface;
+		return fonts.monospacedTypeface;
 	}
 	const juce::Font BaseTheme::getMonospaceFont(float size, int styleFlags) {
 		return getMonospaceFont().withHeight(size).withStyle(styleFlags);
@@ -86,7 +86,7 @@ namespace Artix::Ui::Theme {
 		return getMonospaceFont(getFontSize(size), styleFlags);
 	}
 	const juce::Font BaseTheme::getMonospaceFont() {
-		return juce::FontOptions(Font::monospacedTypeface);
+		return juce::FontOptions(fonts.monospacedTypeface);
 	}
 
 	float BaseTheme::getFontSize(Metric size) const noexcept {

@@ -26,17 +26,13 @@ namespace Artix::Midi {
         using Mappers = std::array<MidiChannelMapper, CHANNEL_COUNT>;
 
         public:
-        using NameChangedCallback = Utils::CallbackList<juce::String>;
         using ChannelChangedCallback = Utils::CallbackList<Channel>;
 
-        MidiChannelMapperBank(Channel outputChannel = Channel::First, juce::String name = "untitled");
+        MidiChannelMapperBank(Channel outputChannel = Channel::First);
 
         Channel getOutputChannel() const noexcept;
         void setOutputChannel(Channel v, bool muteCallbacks = false) noexcept;
         void setOutputChannel(int v, bool muteCallbacks = false) noexcept;
-
-        const juce::String getName() const noexcept;
-        void setName(juce::String v, bool muteCallbacks = false) noexcept;
 
         juce::ValueTree toValueTree() const noexcept;
         void fromValueTree(const juce::ValueTree& vt) noexcept;
@@ -46,7 +42,6 @@ namespace Artix::Midi {
 
         const juce::String getDescription() const;
 
-        NameChangedCallback onNameChanged;
         ChannelChangedCallback onOutputChannelChanged;
         Error::ErrorCallback onError;
 
@@ -96,11 +91,10 @@ namespace Artix::Midi {
 
         private:
         Mappers mappers;
-        
-        juce::ReadWriteLock mutex;
-        std::atomic<Channel> outputChannel;        
-        juce::String name;
 
-       JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MidiChannelMapperBank)
+        juce::ReadWriteLock mutex;
+        std::atomic<Channel> outputChannel;
+
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MidiChannelMapperBank)
     };
 }

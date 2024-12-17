@@ -9,8 +9,6 @@
 #include "PluginProcessor.h"
 #include "Ui/PluginEditor.h"
 
-#include "Midi/Presets.h"
-
 ArtixAudioProcessor::ArtixAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
     : AudioProcessor(BusesProperties()
@@ -24,7 +22,9 @@ ArtixAudioProcessor::ArtixAudioProcessor()
     DBG(settings->getDataDirectory().getFullPathName());
 
     presets = std::make_unique<Artix::Midi::Presets>(settings->getDataDirectory());
-
+    if (presets->factoryPresetCount() > 0)
+        state.load(presets->getPreset(0));
+    
     state.onError.add([this](const Artix::Error::ErrorDetails err) {
         juce::NativeMessageBox::showMessageBox(
             juce::MessageBoxIconType::WarningIcon,
@@ -62,11 +62,14 @@ int ArtixAudioProcessor::getNumPrograms() {
 }
 
 int ArtixAudioProcessor::getCurrentProgram() {
-    return 0;
+    return presets->indexOf(state.getCurrentPreset());
 }
 
 void ArtixAudioProcessor::setCurrentProgram(int index) {
-    // TODO
+    const auto preset = presets->getPreset(index);
+    if (!preset)
+        return;
+    state.load(preset);
 }
 
 const juce::String ArtixAudioProcessor::getProgramName(int index) {
@@ -131,7 +134,7 @@ bool ArtixAudioProcessor::hasEditor() const {
 }
 
 juce::AudioProcessorEditor* ArtixAudioProcessor::createEditor() {
-    return new Artix::Ui::PluginEditor(*this, state);
+    return new Artix::Ui::PluginEditor(*this, state, *presets);
 }
 
 void ArtixAudioProcessor::getStateInformation(juce::MemoryBlock& destData) {
@@ -142,7 +145,7 @@ void ArtixAudioProcessor::getStateInformation(juce::MemoryBlock& destData) {
 
 void ArtixAudioProcessor::setStateInformation(const void* data, int sizeInBytes) {
     if (auto xmlState = getXmlFromBinary(data, sizeInBytes)) {
-        state.fromValueTree(juce::ValueTree::fromXml(*xmlState));
+        state.load(juce::ValueTree::fromXml(*xmlState));
     }
 }
 

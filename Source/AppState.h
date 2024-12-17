@@ -17,6 +17,7 @@
 #include "Error/Error.h"
 #include "Ui/Theme/Themes.h"
 #include "Midi/MidiChannelMapperBank.h"
+#include "Midi/Presets.h"
 
 namespace Artix {
     class AppState {
@@ -35,6 +36,16 @@ namespace Artix {
         Midi::MidiChannelMapperBank& getMapperBank() noexcept;
 
         juce::ValueTree toValueTree() const noexcept;
+        void load(const juce::ValueTree& vt) noexcept;
+        void load(const Midi::PresetPtr preset) noexcept;
+
+        const Midi::PresetPtr getCurrentPreset() const noexcept;
+
+        HeightChangedCallbacks onHeightChanged;
+        ThemeChangedCallbacks onThemeChanged;
+        Error::ErrorCallback onError;
+
+        private:
         void fromValueTree(const juce::ValueTree& vt) noexcept;
 
         juce::var toVar() const noexcept;
@@ -43,17 +54,13 @@ namespace Artix {
         juce::String toJson() const noexcept;
         void fromJson(const juce::String json) noexcept;
 
-        HeightChangedCallbacks onHeightChanged;
-        ThemeChangedCallbacks onThemeChanged;
-        Error::ErrorCallback onError;
-
-        private:
         std::atomic<int> height = 0;
         Midi::MidiChannelMapperBank mapperBank;
 
         juce::ReadWriteLock themeMutex;
         Ui::Theme::ThemePtr theme;
 
+        Midi::PresetPtr currentPreset = nullptr;
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AppState)
     };
 }

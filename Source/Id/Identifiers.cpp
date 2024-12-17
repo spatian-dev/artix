@@ -11,20 +11,16 @@
 #include "Identifiers.h"
 
 namespace Artix::Id {
-#define DECLARE_JUCE_ID(name) const juce::Identifier name(#name);
+	const juce::Identifier AppState("AppState");
+	const juce::Identifier Theme("Theme");
+	const juce::Identifier Width("Width");
+	const juce::Identifier Height("Height");
 
-	DECLARE_JUCE_ID(AppState)
-	DECLARE_JUCE_ID(Theme)
-	DECLARE_JUCE_ID(Width)
-	DECLARE_JUCE_ID(Height)
+	const juce::Identifier MidiChannelMapper("MidiChannelMapper");
+	const juce::Identifier MidiChannelMapperBank("MidiChannelMapperBank");
 
-	DECLARE_JUCE_ID(MidiChannelMapper)
-	DECLARE_JUCE_ID(MidiChannelMapperBank)
-
-	DECLARE_JUCE_ID(Name)
-	DECLARE_JUCE_ID(Note)
-	DECLARE_JUCE_ID(InputChannel)
-	DECLARE_JUCE_ID(OutputChannel)
-
-#undef DECLARE_JUCE_ID
+	const juce::Identifier Name("Name");
+	const juce::Identifier Note("Note");
+	const juce::Identifier InputChannel("InputChannel");
+	const juce::Identifier OutputChannel("OutputChannel");
 }

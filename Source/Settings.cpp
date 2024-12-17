@@ -25,7 +25,6 @@ namespace Artix {
         const auto docsDirectory =
             juce::File::getSpecialLocation(juce::File::SpecialLocationType::commonDocumentsDirectory)
                 .getChildFile(JucePlugin_Manufacturer).getChildFile(JucePlugin_Name);
-        // docsDirectory.createDirectory();
 
         defaults = std::make_unique<juce::PropertySet>();
         defaults->setValue("data_directory", docsDirectory.getFullPathName());
@@ -45,10 +44,6 @@ namespace Artix {
     }
 
     bool Settings::setDataDirectory(juce::File directory) {
-        /*if (!directory.isDirectory() && !directory.createDirectory().wasOk()) {
-            return false;
-        }*/
-        
         props->setValue("data_directory", directory.getFullPathName());
         return true;
     }

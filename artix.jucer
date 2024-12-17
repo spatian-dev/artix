@@ -11,6 +11,32 @@
               cppLanguageStandard="20" bundleIdentifier="dev.Spatian.Artix"
               aaxIdentifier="dev.Spatian.Artix" defines="JUCE_MODAL_LOOPS_PERMITTED=1">
   <MAINGROUP id="WBcm9v" name="Artix">
+    <GROUP id="{1E3115D5-0A5D-F793-BDB6-3F7E4FB1BC02}" name="Icons">
+      <FILE id="MB2RvR" name="caret-left-outline.svg" compile="0" resource="1"
+            file="Icons/flowbite-icons/caret-left-outline.svg"/>
+      <FILE id="eygXfn" name="caret-left-solid.svg" compile="0" resource="1"
+            file="Icons/flowbite-icons/caret-left-solid.svg"/>
+      <FILE id="V4O0R5" name="caret-right-outline.svg" compile="0" resource="1"
+            file="Icons/flowbite-icons/caret-right-outline.svg"/>
+      <FILE id="pBVLhO" name="caret-right-solid.svg" compile="0" resource="1"
+            file="Icons/flowbite-icons/caret-right-solid.svg"/>
+      <FILE id="d8tudw" name="floppy-outline.svg" compile="0" resource="1"
+            file="Icons/flowbite-icons/floppy-outline.svg"/>
+      <FILE id="a5Lnll" name="floppy-solid.svg" compile="0" resource="1"
+            file="Icons/flowbite-icons/floppy-solid.svg"/>
+      <FILE id="T0rtMb" name="folder-duplicate-outline.svg" compile="0" resource="1"
+            file="Icons/flowbite-icons/folder-duplicate-outline.svg"/>
+      <FILE id="IjQNuX" name="folder-duplicate-solid.svg" compile="0" resource="1"
+            file="Icons/flowbite-icons/folder-duplicate-solid.svg"/>
+      <FILE id="sFcdmz" name="folder-open-outline.svg" compile="0" resource="1"
+            file="Icons/flowbite-icons/folder-open-outline.svg"/>
+      <FILE id="FJDB3T" name="folder-open-solid.svg" compile="0" resource="1"
+            file="Icons/flowbite-icons/folder-open-solid.svg"/>
+      <FILE id="LpARSY" name="github.svg" compile="0" resource="1" file="Icons/flowbite-icons/github.svg"/>
+      <FILE id="nucKCy" name="globe-outline.svg" compile="0" resource="1"
+            file="Icons/flowbite-icons/globe-outline.svg"/>
+      <FILE id="BhDQDU" name="globe-solid.svg" compile="0" resource="1" file="Icons/flowbite-icons/globe-solid.svg"/>
+    </GROUP>
     <GROUP id="{C61D2F50-AF3F-0047-6C8E-D339A867755D}" name="Presets">
       <FILE id="xxR495" name="default.json" compile="0" resource="1" file="Presets/default.json"/>
       <FILE id="KmJsgw" name="My Awesome Preset.json" compile="0" resource="1"
@@ -45,16 +71,22 @@
         <FILE id="ls9WXE" name="Presets.h" compile="0" resource="0" file="Source/Midi/Presets.h"/>
       </GROUP>
       <GROUP id="{E1DD3EC6-6667-6CC7-07AD-172EBFE1018B}" name="Ui">
+        <GROUP id="{292A0675-9805-5B66-D870-A9F4D0090717}" name="Icons">
+          <FILE id="vOA5iU" name="Icons.h" compile="0" resource="0" file="Source/Ui/Icons/Icons.h"/>
+        </GROUP>
         <GROUP id="{CC547DB6-A198-67B7-4AB7-771C2046CAD1}" name="Component">
           <FILE id="XAs1GJ" name="DigitalSelector.h" compile="0" resource="0"
                 file="Source/Ui/Component/DigitalSelector.h"/>
           <FILE id="kXcT1c" name="DigitalSelectorPanel.h" compile="0" resource="0"
                 file="Source/Ui/Component/DigitalSelectorPanel.h"/>
+          <FILE id="cbSYSx" name="DrawableButton.cpp" compile="1" resource="0"
+                file="Source/Ui/Component/DrawableButton.cpp"/>
+          <FILE id="y36Zty" name="DrawableButton.h" compile="0" resource="0"
+                file="Source/Ui/Component/DrawableButton.h"/>
           <FILE id="gnq6El" name="Link.cpp" compile="1" resource="0" file="Source/Ui/Component/Link.cpp"/>
           <FILE id="vw3NAH" name="Link.h" compile="0" resource="0" file="Source/Ui/Component/Link.h"/>
         </GROUP>
         <GROUP id="{5B8F8D6D-7E93-B41E-0CD7-6A2CECBA64A9}" name="Font">
-          <FILE id="QaB9ee" name="Fonts.cpp" compile="1" resource="0" file="Source/Ui/Font/Fonts.cpp"/>
           <FILE id="jbr3bL" name="Fonts.h" compile="0" resource="0" file="Source/Ui/Font/Fonts.h"/>
         </GROUP>
         <GROUP id="{57EA490F-8C33-FFFC-A4EF-FC4DD3D14DB9}" name="Theme">

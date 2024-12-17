@@ -11,8 +11,13 @@
 #include "Header.h"
 
 namespace Artix::Ui {
-    Header::Header(Theme::ThemePtr theme) : Themable(theme) {
+    Header::Header(AppState& state, Midi::Presets& presets, Theme::ThemePtr theme) :
+        state(state), presets(presets), Themable(theme) {
         setTheme(theme);
+
+        prevPresetButton.setImages(icons.caretLeftSolid.get(), nullptr, icons.caretLeftOutline.get());
+
+        addAndMakeVisible(prevPresetButton);
     }
 
     Header::~Header() {}
@@ -26,6 +31,10 @@ namespace Artix::Ui {
 
     void Header::resized() {
         innerArea = theme->getInnerArea(this, Metric::SMALL, Metric::SMALL);
+        prevPresetButton.setBounds(
+            (int) innerArea.getX(), (int) innerArea.getY(),
+            (int) innerArea.getHeight(), (int) innerArea.getHeight()
+        );
     }
     void Header::setTheme(Theme::ThemePtr v) noexcept {
         Themable::setTheme(v);

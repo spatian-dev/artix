@@ -152,7 +152,8 @@ namespace Artix::Ui {
 			virtual void setScaledThickness(bool v) noexcept;
 
 			private:
-			JUCE_LEAK_DETECTOR(BaseTheme)
+			const Fonts& fonts = Fonts::get();
+			JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(BaseTheme)
 		};
 	}
 }

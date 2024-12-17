@@ -11,8 +11,8 @@
 #include "MidiChannelMapperBank.h"
 
 namespace Artix::Midi {
-	MidiChannelMapperBank::MidiChannelMapperBank(Channel outputChannel, juce::String name) :
-		outputChannel(outputChannel), name(name) {
+	MidiChannelMapperBank::MidiChannelMapperBank(Channel outputChannel) :
+		outputChannel(outputChannel) {
 
 		for (auto& m : mappers) {
 			m.onError.add([this](const Artix::Error::ErrorDetails err) {
@@ -43,24 +43,9 @@ namespace Artix::Midi {
 		setOutputChannel(clampChannel(v), muteCallbacks);
 	}
 
-	const juce::String MidiChannelMapperBank::getName() const noexcept {
-		const juce::ScopedReadLock lock(mutex);
-		return name;
-	}
-
-	void MidiChannelMapperBank::setName(juce::String v, bool muteCallbacks) noexcept {
-		const juce::ScopedWriteLock lock(mutex);
-		if (name == v) return;
-		name = v;
-
-		if (muteCallbacks) return;
-		onNameChanged.callSafely(name);
-	}
-
 	juce::ValueTree MidiChannelMapperBank::toValueTree() const noexcept {
 		const juce::ScopedReadLock lock(mutex);
 		auto vt = juce::ValueTree(Id::MidiChannelMapperBank);
-		vt.setProperty(Id::Name, name, nullptr);
 		vt.setProperty(Id::OutputChannel, (int) outputChannel.load(), nullptr);
 
 		for (auto& m : mappers) {
@@ -78,7 +63,6 @@ namespace Artix::Midi {
 			return;
 		}
 
-		setName(vt.getProperty(Id::Name, this->name));
 		setOutputChannel(vt.getProperty(Id::OutputChannel, (int) outputChannel.load()));
 
 		int i = 0;
@@ -102,7 +86,6 @@ namespace Artix::Midi {
 
 	juce::var MidiChannelMapperBank::toVar() const noexcept {
 		juce::DynamicObject::Ptr obj = new juce::DynamicObject();
-		obj->setProperty("name", getName());
 		obj->setProperty("outputChannel", (uint8_t) getOutputChannel());
 
 		auto outgoingMappers = juce::var();
@@ -115,7 +98,6 @@ namespace Artix::Midi {
 
 	juce::ValueTree MidiChannelMapperBank::fromVar(const juce::var& data) noexcept {
 		auto vt = juce::ValueTree(Id::MidiChannelMapperBank);
-		vt.setProperty(Id::Name, data.getProperty("name", getName()), nullptr);
 		vt.setProperty(
 			Id::OutputChannel, data.getProperty("outputChannel", (uint8_t) getOutputChannel()), nullptr
 		);
@@ -133,7 +115,7 @@ namespace Artix::Midi {
 
 	const juce::String MidiChannelMapperBank::getDescription() const {
 		std::stringstream ss;
-		ss << "Output Bank: \"" << name << "\", output channel: " << (int) outputChannel.load() << "\n";
+		ss << "Output Channel: " << (int) outputChannel.load() << "\n";
 		for (auto& m : mappers) {
 			ss << "\t" << m.getDescription();
 		}

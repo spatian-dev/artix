@@ -12,7 +12,27 @@
 
 #include <JuceHeader.h>
 
-namespace Artix::Ui::Font {
+namespace Artix::Ui {
     extern const juce::Typeface::Ptr sansSerifTypeface;
     extern const juce::Typeface::Ptr monospacedTypeface;
+
+    class Fonts {
+        public:
+        static const Fonts& get() {
+            static Fonts instance;
+            return instance;
+        }
+
+        const juce::Typeface::Ptr sansSerifTypeface = juce::Typeface::createSystemTypefaceFor(
+        BinaryData::RobotoCondensedRegular_ttf, BinaryData::RobotoCondensedRegular_ttfSize
+        );
+        const juce::Typeface::Ptr monospacedTypeface = juce::Typeface::createSystemTypefaceFor(
+            BinaryData::Share_Tech_Mono_ttf, BinaryData::Share_Tech_Mono_ttfSize
+        );
+
+        private:
+        Fonts() = default;
+        ~Fonts() = default;
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Fonts)
+    };
 }
