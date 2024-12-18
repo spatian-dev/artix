@@ -45,6 +45,7 @@ namespace Artix {
 
     bool Settings::setDataDirectory(juce::File directory) {
         props->setValue("data_directory", directory.getFullPathName());
+        props->saveIfNeeded();
         return true;
     }
 }

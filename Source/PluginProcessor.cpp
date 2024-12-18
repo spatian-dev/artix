@@ -17,20 +17,31 @@ ArtixAudioProcessor::ArtixAudioProcessor()
 {
     processLock = std::make_unique<juce::InterProcessLock>(juce::String(JucePlugin_Name));
     
-    settings = std::make_unique<Artix::Settings>(processLock);
+    settings = std::make_shared<Artix::Settings>(processLock);
     DBG("Settings file: " + settings->getFilePath());
     DBG(settings->getDataDirectory().getFullPathName());
 
-    presets = std::make_unique<Artix::Midi::Presets>(settings->getDataDirectory());
-    if (presets->factoryPresetCount() > 0)
-        state.load(presets->getPreset(0));
-    
     state.onError.add([this](const Artix::Error::ErrorDetails err) {
         juce::NativeMessageBox::showMessageBox(
             juce::MessageBoxIconType::WarningIcon,
             "Something went wrong",
             "Failed to load preset: " + err.msg,
             getActiveEditor()
+        );
+    });
+
+    presets = std::make_unique<Artix::Midi::Presets>(settings->getDataDirectory());
+    if (presets->factoryPresetCount() > 0) {
+        state.fromState(*presets->getPreset(0)->state);
+    }
+
+    state.onDirtyChanged.add([this](const bool) {
+        this->updateHostDisplay(
+            juce::AudioProcessor::ChangeDetails()
+                .withLatencyChanged(false)
+                .withParameterInfoChanged(false)
+                .withProgramChanged(true)
+                .withNonParameterStateChanged(false)
         );
     });
 }
@@ -58,31 +69,20 @@ double ArtixAudioProcessor::getTailLengthSeconds() const {
 }
 
 int ArtixAudioProcessor::getNumPrograms() {
-    return std::max(presets->factoryPresetCount(), 1);
+    return 1;
 }
 
 int ArtixAudioProcessor::getCurrentProgram() {
-    return presets->indexOf(state.getCurrentPreset());
+    return 1;
 }
 
-void ArtixAudioProcessor::setCurrentProgram(int index) {
-    const auto preset = presets->getPreset(index);
-    if (!preset)
-        return;
-    state.load(preset);
-}
+void ArtixAudioProcessor::setCurrentProgram(int index) {}
 
 const juce::String ArtixAudioProcessor::getProgramName(int index) {
-    const auto preset = presets->getPreset(index);
-    return preset ? preset->name : "";
+    return "(none)";
 }
 
-void ArtixAudioProcessor::changeProgramName(int index, const juce::String& newName) {
-    auto preset = presets->getPreset(index);
-    if (preset) {
-        preset->name = newName;
-    }
-}
+void ArtixAudioProcessor::changeProgramName(int index, const juce::String& newName) {}
 
 void ArtixAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock) {}
 
@@ -139,26 +139,19 @@ bool ArtixAudioProcessor::hasEditor() const {
 }
 
 juce::AudioProcessorEditor* ArtixAudioProcessor::createEditor() {
-    return new Artix::Ui::PluginEditor(*this, state, *presets);
+    return new Artix::Ui::PluginEditor(*this, state, *presets, *settings);
 }
 
 void ArtixAudioProcessor::getStateInformation(juce::MemoryBlock& destData) {
-    const auto preset = state.getCurrentPreset();
-    auto vt = state.toValueTree();
-    vt.setProperty(Artix::Id::Name, preset ? preset->name : "(unnamed)", nullptr);
-    if (auto xmlState = vt.createXml()) {
+    if (auto xmlState = state.toValueTree().createXml()) {
         copyXmlToBinary(*xmlState, destData);
     }
 }
 
 void ArtixAudioProcessor::setStateInformation(const void* data, int sizeInBytes) {
     if (auto xmlState = getXmlFromBinary(data, sizeInBytes)) {
-        state.load(juce::ValueTree::fromXml(*xmlState));
+        state.fromValueTree(juce::ValueTree::fromXml(*xmlState));
     }
-}
-
-void ArtixAudioProcessor::notifyHostOfChange() {
-    this->updateHostDisplay();
 }
 
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter() {

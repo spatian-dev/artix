@@ -13,17 +13,18 @@
 #include <memory>
 #include <JuceHeader.h>
 
-#include "../PluginProcessor.h"
-#include "../AppState.h"
+#include "../State.h"
 #include "../Midi/Presets.h"
 #include "Component/Button.h"
+#include "Component/Label.h"
 #include "Theme/Themes.h"
 #include "../Utils/UTF8.h"
+#include "../Settings.h"
 
 namespace Artix::Ui {
     class Header : public juce::Component, private Theme::Themable {
         public:
-        Header(ArtixAudioProcessor& proc, AppState& state, Midi::Presets& presets, Theme::ThemePtr theme);
+        Header(State& state, Midi::Presets& presets, Theme::ThemePtr theme, Settings& settings);
         ~Header() override;
 
         void paint(juce::Graphics&) override;
@@ -33,13 +34,13 @@ namespace Artix::Ui {
 
         private:
         using Button = Ui::Component::Button;
-        
-        ArtixAudioProcessor& audioProcessor;
+        using Label = Ui::Component::Label;
 
+        Settings& settings;
         juce::Rectangle<float> innerArea;
         juce::Rectangle<int> textArea;
         Midi::Presets& presets;
-        AppState& state;
+        State& state;
 
         const Utils::UTF8& utf8 = Utils::UTF8::get();
 
@@ -55,11 +56,18 @@ namespace Artix::Ui {
         Button::ClickedCallback::Identifier loadButtonClickedId;
         Button loadButton = Ui::Component::Button(theme, "Load");
 
-        Button::ClickedCallback::Identifier dataFolderButtonClickedId;
-        Button dataFolderButton = Ui::Component::Button(theme, "Folder");
+        Button::ClickedCallback::Identifier settingsButtonClickedId;
+        Button settingsButton = Ui::Component::Button(theme, "Settings");
 
-        juce::Label presetName;
+        Label presetLabel;
+        Label::ClickedCallback::Identifier presetLabelClickedId;
 
+        State::DirtyChangedCallback::Identifier stateDirtyChangedId;
+
+        juce::PopupMenu presetsMenu();
+        juce::PopupMenu settingsMenu();
+
+        void switchPreset(const Midi::PresetPtr preset);
         void setPresetName(juce::String v);
 
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Header)

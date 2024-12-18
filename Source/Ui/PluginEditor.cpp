@@ -9,9 +9,10 @@
 #include "PluginEditor.h"
 
 namespace Artix::Ui {
-	PluginEditor::PluginEditor(ArtixAudioProcessor& proc, AppState& state, Midi::Presets& presets)
-		: AudioProcessorEditor(&proc), audioProcessor(proc), state(state),
-		Themable(state.getTheme()), header(proc, state, presets, theme),
+	PluginEditor::PluginEditor(
+		ArtixAudioProcessor& proc, State& state, Midi::Presets& presets, Settings& settings
+	) : AudioProcessorEditor(&proc), audioProcessor(proc), state(state), settings(settings),
+		Themable(state.getTheme()), header(state, presets, theme, settings),
 		mapperBank(state.getMapperBank(), theme), footer(theme) {
 		
 		setName("ArtixPluginEditor");

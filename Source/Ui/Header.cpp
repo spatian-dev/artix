@@ -11,27 +11,17 @@
 #include "Header.h"
 
 namespace Artix::Ui {
-    Header::Header(ArtixAudioProcessor& proc, AppState& state, Midi::Presets& presets, Theme::ThemePtr theme) :
-        audioProcessor(proc), Themable(theme), state(state), presets(presets) {
+    Header::Header(State& state, Midi::Presets& presets, Theme::ThemePtr theme, Settings& settings) :
+        Themable(theme), settings(settings), state(state), presets(presets) {
         setTheme(theme);
 
         prevPresetButtonClickedId = prevPresetButton.onClick.add([this](juce::MouseEvent evt) {
-            this->state.load(
-                this->presets.getPreviousPreset(
-                    this->presets.indexOf(this->state.getCurrentPreset())
-                )
-            );
-            setPresetName(this->state.getCurrentPreset()->name);
+            switchPreset(this->presets.getPreviousPreset(this->presets.indexOf(this->state)));
         });
         addAndMakeVisible(prevPresetButton);
 
         nextPresetButtonClickedId = nextPresetButton.onClick.add([this](juce::MouseEvent evt) {
-            this->state.load(
-                this->presets.getNextPreset(
-                    this->presets.indexOf(this->state.getCurrentPreset())
-                )
-            );
-            setPresetName(this->state.getCurrentPreset()->name);
+            switchPreset(this->presets.getNextPreset(this->presets.indexOf(this->state)));
         });
         addAndMakeVisible(nextPresetButton);
 
@@ -47,20 +37,29 @@ namespace Artix::Ui {
         });
         addAndMakeVisible(loadButton);
 
-        dataFolderButton.setAutoSize(Button::AutoSize::AutoSizeWidth);
-        dataFolderButtonClickedId = dataFolderButton.onClick.add([](juce::MouseEvent evt) {
-            DBG("Data folder");
+        settingsButton.setAutoSize(Button::AutoSize::AutoSizeWidth);
+        settingsButtonClickedId = settingsButton.onClick.add([this](juce::MouseEvent evt) {
+            settingsMenu().showMenuAsync(juce::PopupMenu::Options{}.withTargetComponent(settingsButton));
         });
-        addAndMakeVisible(dataFolderButton);
-
-        presetName.setMouseCursor(juce::MouseCursor::PointingHandCursor);
-        presetName.setEditable(false, true); 
-        setPresetName(state.getCurrentPreset()->name);
-        presetName.onTextChange = [this]() {
-            this->state.getCurrentPreset()->name = this->presetName.getText();
-            this->audioProcessor.notifyHostOfChange();
+        addAndMakeVisible(settingsButton);
+        
+        presetLabel.setMouseCursor(juce::MouseCursor::PointingHandCursor);
+        presetLabel.setEditable(false, true);
+        setPresetName(state.getName());
+        presetLabel.onTextChange = [this]() {
+            this->state.setName(presetLabel.getText());
         };
-        addAndMakeVisible(presetName);
+        presetLabelClickedId = presetLabel.onClick.add([this](juce::MouseEvent evt) {
+            presetsMenu().showMenuAsync(juce::PopupMenu::Options{}.withTargetComponent(presetLabel));
+        });
+        addAndMakeVisible(presetLabel);
+
+        stateDirtyChangedId = state.onDirtyChanged.add([this](const bool isDirty) {
+            presetLabel.setColour( juce::Label::textColourId, this->theme->getUIColor(
+                isDirty ? UIColor::TEXT_PRIMARY : UIColor::TEXT_ELEMENT
+            ));
+            resized();
+        });
     }
 
     Header::~Header() {
@@ -76,8 +75,14 @@ namespace Artix::Ui {
         if (loadButtonClickedId)
             loadButton.onClick.remove(loadButtonClickedId.value());
 
-        if (dataFolderButtonClickedId)
-            dataFolderButton.onClick.remove(dataFolderButtonClickedId.value());
+        if (settingsButtonClickedId)
+            settingsButton.onClick.remove(settingsButtonClickedId.value());
+
+        if (stateDirtyChangedId)
+            state.onDirtyChanged.remove(stateDirtyChangedId.value());
+
+        if (presetLabelClickedId)
+            presetLabel.onClick.remove(presetLabelClickedId.value());
     }
 
     void Header::paint(juce::Graphics& g) {
@@ -98,13 +103,13 @@ namespace Artix::Ui {
 
         const auto padding = (int) theme->getSpacing(Metric::TINY);
 
-        dataFolderButton.setBounds(
-            intInnerArea.getRight() - dataFolderButton.getWidth(),
+        settingsButton.setBounds(
+            intInnerArea.getRight() - settingsButton.getWidth(),
             top, height, height
         );
 
         loadButton.setBounds(
-            dataFolderButton.getX() - (loadButton.getWidth() + padding),
+            settingsButton.getX() - (loadButton.getWidth() + padding),
             top, height, height
         );
 
@@ -117,20 +122,70 @@ namespace Artix::Ui {
             saveButton.getX() - (height + padding), top, height, height
         );
 
-        presetName.setBounds(
+        presetLabel.setFont(juce::FontOptions(theme->getFontSize(Metric::MEDIUM), juce::Font::plain));
+        presetLabel.setBounds(
             prevPresetButton.getRight() + padding, top,
             nextPresetButton.getX() - (prevPresetButton.getRight() + (2 * padding)), height
         );
     }
+    
     void Header::setTheme(Theme::ThemePtr v) noexcept {
         Themable::setTheme(v);
         prevPresetButton.setTheme(v);
-        presetName.setColour(juce::Label::textColourId, theme->getUIColor(UIColor::TEXT_ELEMENT));
-        presetName.setColour(juce::Label::textWhenEditingColourId, theme->getUIColor(UIColor::TEXT_ELEMENT));
+        presetLabel.setColour(juce::Label::textColourId, theme->getUIColor(UIColor::TEXT_ELEMENT));
+        presetLabel.setColour(juce::Label::textWhenEditingColourId, theme->getUIColor(UIColor::TEXT_ELEMENT));
         resized();
         repaint();
     }
+    
+    juce::PopupMenu Header::settingsMenu() {
+        juce::PopupMenu themesMenu;        
+        for (const auto& t : Theme::Themes::getInstance()) {
+            themesMenu.addItem(t.first, true, t.second == state.getTheme(), [this, t]() {
+                state.setTheme(t.second);
+            });
+        }
+
+        juce::PopupMenu settingsMenu;
+        settingsMenu.addSubMenu("Theme", themesMenu);
+        settingsMenu.addItem("Change Data Folder", [this]() {
+            auto dlg = juce::FileChooser(
+                "Choose data folder", settings.getDataDirectory()
+            );
+            if (!dlg.browseForDirectory())
+                return;
+            settings.setDataDirectory(dlg.getResult());
+            presets.refreshUserPresets(settings.getDataDirectory());
+        });
+        return settingsMenu;
+    }
+
+    juce::PopupMenu Header::presetsMenu() {
+        juce::PopupMenu factoryPresetsMenu;
+        juce::PopupMenu userPresetsMenu;
+        for (auto& preset : presets) {
+            bool isCurrent = *preset->state == state;
+            auto menu = preset->isFactory ? &factoryPresetsMenu : &userPresetsMenu;
+            menu->addItem(
+                preset->state->getName(), true, isCurrent, [this, preset, isCurrent]() {
+                if (!isCurrent) switchPreset(preset);
+            }
+            );
+        }
+
+        juce::PopupMenu presetsMenu;
+        presetsMenu.addSubMenu("Factory", factoryPresetsMenu);
+        presetsMenu.addSubMenu("User", userPresetsMenu);
+        return presetsMenu;
+    }
+
+    void Header::switchPreset(const Midi::PresetPtr preset) {
+        this->state.fromState(*preset->state);
+        setPresetName(this->state.getName());
+        resized();
+    }
+
     void Header::setPresetName(juce::String v) {
-        this->presetName.setText(v, juce::NotificationType::dontSendNotification);
+        this->presetLabel.setText(v, juce::NotificationType::dontSendNotification);
     }
 }

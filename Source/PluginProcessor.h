@@ -13,7 +13,7 @@
 
 #include "Settings.h"
 #include "Midi/Presets.h"
-#include "AppState.h"
+#include "State.h"
 
 class ArtixAudioProcessor : public juce::AudioProcessor {
 	public:
@@ -48,13 +48,11 @@ class ArtixAudioProcessor : public juce::AudioProcessor {
 	void getStateInformation(juce::MemoryBlock& destData) override;
 	void setStateInformation(const void* data, int sizeInBytes) override;
 
-	void notifyHostOfChange();
-
 	private:
 	std::unique_ptr<juce::InterProcessLock> processLock;
-	std::unique_ptr<Artix::Settings> settings;
+	std::shared_ptr<Artix::Settings> settings;
 	std::unique_ptr<Artix::Midi::Presets> presets;
-	Artix::AppState state;
+	Artix::State state;
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ArtixAudioProcessor)
 };

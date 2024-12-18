@@ -1,70 +1,72 @@
 {
-	"bank": {
-	  "name": "My Awesome Preset",
-	  "mappers": [
+	"Height": 1200,
+    "Name": "My Awesome Preset",
+	"MidiChannelMapperBank": {
+	  "OutputChannel": 1,
+	  "MidiChannelMapperList": [
 		{
-		  "name": "First",
-		  "note": 1
+		  "Name": "First",
+		  "Note": 1
 		},
 		{
-		  "name": "",
-		  "note": -1
+		  "Name": "",
+		  "Note": -1
 		},
 		{
-		  "name": "",
-		  "note": -1
+		  "Name": "",
+		  "Note": -1
 		},
 		{
-		  "name": "",
-		  "note": -1
+		  "Name": "",
+		  "Note": -1
 		},
 		{
-		  "name": "",
-		  "note": -1
+		  "Name": "",
+		  "Note": -1
 		},
 		{
-		  "name": "",
-		  "note": -1
+		  "Name": "",
+		  "Note": -1
 		},
 		{
-		  "name": "",
-		  "note": -1
+		  "Name": "",
+		  "Note": -1
 		},
 		{
-		  "name": "Middle A",
-		  "note": 8
+		  "Name": "Middle A",
+		  "Note": 8
 		},
 		{
-		  "name": "Middle B",
-		  "note": 9
+		  "Name": "Middle B",
+		  "Note": 9
 		},
 		{
-		  "name": "",
-		  "note": -1
+		  "Name": "",
+		  "Note": -1
 		},
 		{
-		  "name": "",
-		  "note": -1
+		  "Name": "",
+		  "Note": -1
 		},
 		{
-		  "name": "",
-		  "note": -1
+		  "Name": "",
+		  "Note": -1
 		},
 		{
-		  "name": "",
-		  "note": -1
+		  "Name": "",
+		  "Note": -1
 		},
 		{
-		  "name": "",
-		  "note": -1
+		  "Name": "",
+		  "Note": -1
 		},
 		{
-		  "name": "",
-		  "note": -1
+		  "Name": "",
+		  "Note": -1
 		},
 		{
-		  "name": "Last",
-		  "note": 15
+		  "Name": "Last",
+		  "Note": 15
 		}
 	  ]
 	}

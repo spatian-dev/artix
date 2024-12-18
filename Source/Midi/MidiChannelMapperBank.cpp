@@ -14,14 +14,24 @@ namespace Artix::Midi {
 	MidiChannelMapperBank::MidiChannelMapperBank(Channel outputChannel) :
 		outputChannel(outputChannel) {
 
-		for (auto& m : mappers) {
-			m.onError.add([this](const Artix::Error::ErrorDetails err) {
-				juce::NativeMessageBox::showMessageBox(
-					juce::MessageBoxIconType::WarningIcon,
-					"Something went wrong",
-					"Failed to load preset: " + err.msg
-				);
+		for (size_t i = 0; i < mappers.size(); i++) {
+			auto& m = mappers[i];
+			mapperErrorIds[i] = m.onError.add([this](const Artix::Error::ErrorDetails err) {
+				onError.callSafely(err);
 			});
+			mapperDirtyChangedIds[i] = m.onDirtyChanged.add([this](const bool v) {
+				if (v) setIsDirty(true);
+			});
+		}
+	}
+
+	MidiChannelMapperBank::~MidiChannelMapperBank() {
+		for (size_t i = 0; i < mappers.size(); i++) {
+			auto& m = mappers[i];
+			if (mapperErrorIds[i])
+				m.onError.remove(mapperErrorIds[i].value());
+			if (mapperDirtyChangedIds[i])
+				m.onDirtyChanged.remove(mapperDirtyChangedIds[i].value());
 		}
 	}
 
@@ -29,25 +39,38 @@ namespace Artix::Midi {
 		return outputChannel;
 	}
 
-	void MidiChannelMapperBank::setOutputChannel(Channel v, bool muteCallbacks) noexcept {
+	void MidiChannelMapperBank::setOutputChannel(Channel v, bool muteCallbacks) {
 		jassertValidMidiChannel(v);
 		const Channel newChannel = clampChannel(v);
 		if (outputChannel == newChannel) return;
 		outputChannel = newChannel;
+		setIsDirty(true, muteCallbacks || muteDirty);
 
 		if (muteCallbacks) return;
 		onOutputChannelChanged.callSafely(outputChannel);
 	}
 
-	void MidiChannelMapperBank::setOutputChannel(int v, bool muteCallbacks) noexcept {
+	void MidiChannelMapperBank::setOutputChannel(int v, bool muteCallbacks) {
 		setOutputChannel(clampChannel(v), muteCallbacks);
 	}
 
-	juce::ValueTree MidiChannelMapperBank::toValueTree() const noexcept {
+	bool MidiChannelMapperBank::getIsDirty() const noexcept {
+		return isDirty;
+	}
+
+	void MidiChannelMapperBank::setIsDirty(bool v, bool muteCallbacks) {
+		if (isDirty == v) return;
+		isDirty = v;
+
+		if (muteCallbacks) return;
+		onDirtyChanged.callSafely(v);
+	}
+
+	juce::ValueTree MidiChannelMapperBank::toValueTree() const {
 		const juce::ScopedReadLock lock(mutex);
 		auto vt = juce::ValueTree(Id::MidiChannelMapperBank);
+		
 		vt.setProperty(Id::OutputChannel, (int) outputChannel.load(), nullptr);
-
 		for (auto& m : mappers) {
 			vt.addChild(m.toValueTree(), -1, nullptr);
 		}
@@ -55,15 +78,18 @@ namespace Artix::Midi {
 		return vt;
 	}
 
-	void MidiChannelMapperBank::fromValueTree(const juce::ValueTree& vt) noexcept {
-		if (!vt.hasType(Id::MidiChannelMapperBank)) {
+	bool MidiChannelMapperBank::fromValueTree(const juce::ValueTree& vt, bool muteCallbacks) {
+		if (!(vt.isValid() && vt.hasType(Id::MidiChannelMapperBank))) {
 			onError.callOnMessageThread({
 				"Invalid ValueTree type", Error::Code::BadState, Error::Code::InvalidValueTree
 			});
-			return;
+			return false;
 		}
 
-		setOutputChannel(vt.getProperty(Id::OutputChannel, (int) outputChannel.load()));
+		bool result = true;
+		muteDirty = true;
+
+		setOutputChannel(vt.getProperty(Id::OutputChannel, (int) outputChannel.load()), muteCallbacks);
 
 		int i = 0;
 		for (auto child : vt) {
@@ -71,46 +97,55 @@ namespace Artix::Midi {
 				continue;
 			}
 
-			mappers[i++].fromValueTree(child);
+			if (mappers[i].fromValueTree(child, muteCallbacks)) {
+				i++;
+			}
+
 			if (i >= CHANNEL_COUNT)
 				break;
 		}
+		muteDirty = false;
 
 		if (i != CHANNEL_COUNT) {
 			onError.callOnMessageThread({
 				"ValueTree is missing children", Error::Code::BadState, Error::Code::MissingChildren
 			});
-			return;
+			result = false;
 		}
+
+		setIsDirty(!result, muteCallbacks);
+		return result;
 	}
 
-	juce::var MidiChannelMapperBank::toVar() const noexcept {
+	juce::var MidiChannelMapperBank::toVar() const {
 		juce::DynamicObject::Ptr obj = new juce::DynamicObject();
-		obj->setProperty("outputChannel", (uint8_t) getOutputChannel());
+		obj->setProperty(Id::OutputChannel, (uint8_t) getOutputChannel());
 
 		auto outgoingMappers = juce::var();
 		for (auto& m : mappers) {
 			outgoingMappers.append(m.toVar());
 		}
-		obj->setProperty("mappers", outgoingMappers);
+		obj->setProperty(Id::MidiChannelMapperList, outgoingMappers);
 		return obj.get();
 	}
 
-	juce::ValueTree MidiChannelMapperBank::fromVar(const juce::var& data) noexcept {
+	bool MidiChannelMapperBank::fromVar(const juce::var& data, bool muteCallbacks) {
 		auto vt = juce::ValueTree(Id::MidiChannelMapperBank);
 		vt.setProperty(
-			Id::OutputChannel, data.getProperty("outputChannel", (uint8_t) getOutputChannel()), nullptr
+			Id::OutputChannel, data.getProperty(Id::OutputChannel, (uint8_t) getOutputChannel()), nullptr
 		);
 
-		auto incomingMappers = data.getProperty("mappers", juce::var()).getArray();
+		auto incomingMappers = data.getProperty(Id::MidiChannelMapperList, juce::var()).getArray();
 		if (incomingMappers) {
 			int count = std::min<int>(incomingMappers->size(), CHANNEL_COUNT);
 
 			for (int i = 0; i < count; i++) {
-				vt.addChild(mappers[i].fromVar((*incomingMappers)[i]), -1, nullptr);
+				if (mappers[i].fromVar((*incomingMappers)[i], muteCallbacks)) {
+					vt.addChild(mappers[i].toValueTree(), -1, nullptr);
+				}
 			}
 		}
-		return vt;
+		return fromValueTree(vt, muteCallbacks);
 	}
 
 	const juce::String MidiChannelMapperBank::getDescription() const {

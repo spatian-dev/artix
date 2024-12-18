@@ -183,8 +183,9 @@ namespace Artix::Ui::Component {
     }
     void Button::setTheme(Theme::ThemePtr v) noexcept {
         Themable::setTheme(v);
-        setTextColor(theme->getUIColor(UIColor::TEXT));
-        setButtonColor(theme->getUIColor(UIColor::BACKGROUND_SECONDARY));
+        const auto bg = theme->getUIColor(UIColor::BACKGROUND_SECONDARY);
+        setButtonColor(bg);
+        setTextColor(bg.contrasting(0.6f));
         resized();
         repaint();
     }

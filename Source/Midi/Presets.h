@@ -12,14 +12,15 @@
 
 #include <map>
 #include <memory>
+#include <optional>
 #include <JuceHeader.h>
+#include "../State.h"
 
 /* Warning: Non-thread safe. Call only from message thread. */
 
 namespace Artix::Midi {
     struct Preset {
-        juce::String name;
-        juce::String data;
+        std::shared_ptr<State> state;
         juce::File file;
         bool isFactory = false;
     };
@@ -33,19 +34,19 @@ namespace Artix::Midi {
         ~Presets();
 
         void refreshUserPresets(const juce::File dataDirectory);
-
-        void add(const juce::String name, const juce::String content);
+        void add(const juce::String content);
 
         PresetPtr getNextPreset(int current, bool wrap = true) const;
         PresetPtr getPreviousPreset(int current, bool wrap = true) const;
         PresetPtr getPreset(int index) const;
         PresetPtr operator[] (int index) const;
-
         int size() const noexcept;
         int indexOf(const PresetPtr& item) const;
         int indexOf(const juce::String name) const;
+        int indexOf(const State& state) const;
         bool contains(const PresetPtr& item) const;
         bool contains(const juce::String name) const;
+        bool contains(const State& state) const;
         PresetPtr* begin();
         const PresetPtr* begin() const;
         PresetPtr* end();
@@ -53,19 +54,21 @@ namespace Artix::Midi {
 
         int factoryPresetCount() const;
 
-        static PresetPtr makeUserPreset(
-            const juce::String name, const juce::String content
+        static std::optional<PresetPtr> makeUserPreset(const juce::String content
         );
 
         private:
-        static PresetPtr makeFactoryPreset(const juce::String name, const char* content);
-        static PresetPtr makePreset(
-            const juce::String name, const juce::String content,
+        static std::optional<PresetPtr> makeFactoryPreset(const char* resourceName);
+        static std::optional<PresetPtr> makePreset(
+            const juce::String content,
             const juce::File file, const bool isFactory = false
         );
+
         int userPresetStartIndex = 0;
         const juce::String extension = ".artix";
         PresetList items;
+
+        juce::ReadWriteLock mutex;
 
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Presets)
     };

@@ -14,8 +14,13 @@
 
 namespace Artix::Midi {
     Presets::Presets(juce::File dataDirectory) {
-        items.add(makeFactoryPreset("(default)", "default_json"));
-        items.add(makeFactoryPreset("My Awesome Preset", "My_Awesome_Preset_json"));
+        const std::array<const char*, 2> factoryPresets = {"default_json", "My_Awesome_Preset_json"};
+        std::optional<PresetPtr> preset;
+        for (auto& presetFile : factoryPresets) {
+            if ((preset = makeFactoryPreset(presetFile)).has_value()) {
+                items.add(preset.value());
+            }
+        }
 
         userPresetStartIndex = items.size();
         refreshUserPresets(dataDirectory);
@@ -29,17 +34,22 @@ namespace Artix::Midi {
         const auto files = dataDirectory.findChildFiles(
             juce::File::TypesOfFileToFind::findFiles, true, "*" + extension, juce::File::FollowSymlinks::no
         );
+
+        std::optional<PresetPtr> preset;
         for (const auto& f : files) {
-            items.add(makePreset(
-                f.getRelativePathFrom(dataDirectory).trimCharactersAtEnd(extension),
-                f.loadFileAsString(),
-                f
-            ));
+            preset = makePreset(f.loadFileAsString(), f);
+
+            if (preset.has_value()) {
+                items.add(preset.value());
+            }
         }
     }
 
-    void Presets::add(const juce::String name, const juce::String content) {
-        items.add(makePreset(name, content, juce::File()));
+    void Presets::add(const juce::String content) {
+        std::optional<PresetPtr> preset;
+        if ((preset = makePreset(content, juce::File())).has_value()) {
+            items.add(preset.value());
+        }
     }
 
     PresetPtr Presets::getNextPreset(int current, bool wrap) const {
@@ -50,7 +60,7 @@ namespace Artix::Midi {
     }
 
     PresetPtr Presets::getPreviousPreset(int current, bool wrap) const {
-        if (current <= 1) {
+        if (current <= 0) {
             return wrap ? getPreset(items.size() - 1) : nullptr;
         }
         return  getPreset(current - 1);
@@ -75,7 +85,17 @@ namespace Artix::Midi {
     int Presets::indexOf(const juce::String name) const {
         int i = 0;
         for (const auto& item : items) {
-            if (item->name == name)
+            if (item->state->getName() == name)
+                return i;
+            i++;
+        }
+        return -1;
+    }
+
+    int Presets::indexOf(const State& state) const {
+        int i = 0;
+        for (const auto& item : items) {
+            if (*item->state == state)
                 return i;
             i++;
         }
@@ -86,10 +106,14 @@ namespace Artix::Midi {
         return items.contains(item);
     }
 
+    bool Presets::contains(const State& state) const {
+        return indexOf(state) > -1;
+    }
+
     bool Presets::contains(const juce::String name) const {
         return indexOf(name) > -1;
     }
-    
+
     PresetPtr* Presets::begin() {
         return items.begin();
     }
@@ -110,22 +134,26 @@ namespace Artix::Midi {
         return userPresetStartIndex;
     }
 
-    PresetPtr Presets::makeUserPreset(const juce::String name, const juce::String content) {
-        return Presets::makePreset(name, content, juce::File(), false);
+    std::optional<PresetPtr> Presets::makeUserPreset(const juce::String content) {
+        return makePreset(content, juce::File(), false);
     }
 
-    PresetPtr Presets::makeFactoryPreset(const juce::String name, const char* resourceName) {
+    std::optional<PresetPtr> Presets::makeFactoryPreset(const char* resourceName) {
         int size = 0;
         const auto data = BinaryData::getNamedResource(resourceName, size);
-        return Presets::makePreset(
-            name,
-            data != nullptr ? juce::String::createStringFromData(data, size) : "{}",
-            juce::File(),
-            true
+        if (data == nullptr)
+            return {};
+        return Presets::makePreset(juce::String::createStringFromData(data, size), juce::File(), true
         );
     }
 
-    PresetPtr Presets::makePreset(juce::String name, juce::String content, juce::File file, bool isFactory) {
-        return std::make_shared<Preset>(name, content, file, isFactory);
+    std::optional<PresetPtr> Presets::makePreset(
+        juce::String content, juce::File file, bool isFactory
+    ) {
+        auto state = std::make_shared<State>();
+        if (!state->fromJson(content))
+            return {};
+
+        return std::make_shared<Preset>(state, file, isFactory);
     }
 }

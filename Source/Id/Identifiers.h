@@ -13,18 +13,21 @@
 #include <JuceHeader.h>
 
 namespace Artix::Id {
-    extern const juce::Identifier AppState;
-    extern const juce::Identifier Theme;
-    extern const juce::Identifier Height;
-    extern const juce::Identifier MidiChannelMapper;
-    extern const juce::Identifier MidiChannelMapperBank;
-    extern const juce::Identifier Name;
-    extern const juce::Identifier Note;
-    extern const juce::Identifier InputChannel;
-    extern const juce::Identifier OutputChannel;
+    inline const juce::Identifier State("State");
+    inline const juce::Identifier Theme("Theme");
+    inline const juce::Identifier Width("Width");
+    inline const juce::Identifier Height("Height");
+
+    inline const juce::Identifier MidiChannelMapper("MidiChannelMapper");
+    inline const juce::Identifier MidiChannelMapperList("MidiChannelMapperList");
+    inline const juce::Identifier MidiChannelMapperBank("MidiChannelMapperBank");
+
+    inline const juce::Identifier Name("Name");
+    inline const juce::Identifier Note("Note");
+    inline const juce::Identifier OutputChannel("OutputChannel");
 
     namespace Str {
-        constexpr auto AppState = "AppState";
+        constexpr auto State = "State";
         constexpr auto Theme = "Theme";
         constexpr auto Height = "Height";
         constexpr auto MidiChannelMapper = "MidiChannelMapper";
