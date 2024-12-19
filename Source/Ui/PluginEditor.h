@@ -13,7 +13,7 @@
 #include <memory>
 #include <optional>
 
-#include "../State.h"
+#include "../PluginState.h"
 #include "../Midi/Presets.h"
 #include "../PluginProcessor.h"
 #include "Theme/Themes.h"
@@ -24,7 +24,7 @@
 namespace Artix::Ui {
 	class PluginEditor : public juce::AudioProcessorEditor, private Theme::Themable {
 		public:
-		PluginEditor(ArtixAudioProcessor&, State&, Midi::Presets&, Settings& settings);
+		PluginEditor(ArtixAudioProcessor&, PluginState&, Midi::Presets&, Settings&);
 		~PluginEditor() override;
 
 		void paint(juce::Graphics&) override;
@@ -39,10 +39,10 @@ namespace Artix::Ui {
 
 		ArtixAudioProcessor& audioProcessor;
 		Settings& settings;
-		State& state;
+		PluginState& state;
 
-		State::HeightChangedCallbacks::Identifier heightChangedCallbackId;
-		State::ThemeChangedCallbacks::Identifier themeChangedCallbackId;
+		PluginState::HeightChangedCallbacks::Identifier heightChangedCallbackId;
+		PluginState::ThemeChangedCallbacks::Identifier themeChangedCallbackId;
 
 		juce::Rectangle<float> innerArea;
 

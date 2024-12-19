@@ -11,12 +11,7 @@
 #include "State.h"
 
 namespace Artix {
-    State::State(juce::String name, int height): name(name), height(height) {
-        {
-            juce::ScopedWriteLock lock(themeMutex);
-            theme = Ui::Theme::Themes::getInstance().begin()->second;
-        }
-
+    State::State(juce::String name): name(name) {
         bankErrorId = mapperBank.onError.add([this](const juce::String err) {
             onError.callSafely(err);
         });
@@ -48,34 +43,6 @@ namespace Artix {
         onNameChanged.callSafely(name);
     }
 
-    int State::getHeight() const noexcept {
-        return height;
-    }
-
-    void State::setHeight(int v, bool muteCallbacks) {
-        if (height == v) return;
-        height = v;
-        setIsDirty(true, muteCallbacks);
-
-        if (muteCallbacks) return;
-        onHeightChanged.callSafely(height);
-    }
-
-    Ui::Theme::ThemePtr State::getTheme() const {
-        juce::ScopedReadLock lock(themeMutex);
-        return theme;
-    }
-
-    void State::setTheme(Ui::Theme::ThemePtr v, bool muteCallbacks) {
-        juce::ScopedWriteLock lock(themeMutex);
-        if (theme.get() == v.get()) return;
-        theme = v;
-        setIsDirty(true, muteCallbacks);
-
-        if (muteCallbacks) return;
-        onThemeChanged.callSafely(theme);
-    }
-
     bool State::getIsDirty() const noexcept {
         return isDirty;
     }
@@ -100,8 +67,6 @@ namespace Artix {
         auto vt = juce::ValueTree(Id::State);
 
         vt.setProperty(Id::Name, getName(), nullptr);
-        vt.setProperty(Id::Height, height.load(), nullptr);
-        vt.setProperty(Id::Theme, getTheme()->getName(), nullptr);
         vt.addChild(mapperBank.toValueTree(), -1, nullptr);
         return vt;
     }
@@ -116,13 +81,7 @@ namespace Artix {
         muteDirty = true;
 
         setName(vt.getProperty(Id::Name, this->name), muteCallbacks);
-        setHeight(vt.getProperty(Id::Height, (int) this->height), muteCallbacks);
-
-        auto localTheme = getTheme();
-        setTheme(Ui::Theme::Themes::getInstance().tryFind(
-            vt.getProperty(Id::Theme, localTheme->getName()), localTheme
-        ), muteCallbacks);
-
+        
         auto bank = vt.getChildWithName(Id::MidiChannelMapperBank);
         if (!(bank.isValid() && mapperBank.fromValueTree(bank, muteCallbacks)))
             result = false;
@@ -135,8 +94,6 @@ namespace Artix {
     juce::var State::toVar() const {
         juce::DynamicObject::Ptr obj = new juce::DynamicObject();
         obj->setProperty(Id::Name, getName());
-        obj->setProperty(Id::Height, getHeight());
-        obj->setProperty(Id::Theme, getTheme()->getName());
         obj->setProperty(Id::MidiChannelMapperBank, mapperBank.toVar());
         return obj.get();
     }
@@ -144,9 +101,7 @@ namespace Artix {
     bool State::fromVar(const juce::var& data, bool muteCallbacks) {
         auto vt = juce::ValueTree(Id::State);
         vt.setProperty(Id::Name, data.getProperty(Id::Name, getName()), nullptr);
-        vt.setProperty(Id::Height, data.getProperty(Id::Height, getHeight()), nullptr);
-        vt.setProperty(Id::Theme, data.getProperty(Id::Theme, getTheme()->getName()), nullptr);
-
+        
         if (!mapperBank.fromVar(data.getProperty(Id::MidiChannelMapperBank, juce::var()), muteCallbacks))
             return false;
 

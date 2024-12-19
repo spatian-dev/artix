@@ -23,20 +23,12 @@ namespace Artix {
         public:
         using DirtyChangedCallback = Utils::CallbackList<bool>;
         using NameChangedCallbacks = Utils::CallbackList<juce::String>;
-        using HeightChangedCallbacks = Utils::CallbackList<int>;
-        using ThemeChangedCallbacks = Utils::CallbackList<Ui::Theme::ThemePtr>;
 
-        State(juce::String name = "(unnamed)", int height = 800);
+        State(juce::String name = "(unnamed)");
         ~State();
 
         juce::String getName() const;
         void setName(juce::String v, bool muteCallbacks = false);
-
-        int getHeight() const noexcept;
-        void setHeight(int v, bool muteCallbacks = false);
-
-        Ui::Theme::ThemePtr getTheme() const;
-        void setTheme(Ui::Theme::ThemePtr v, bool muteCallbacks = false);
 
         bool getIsDirty() const noexcept;
         void setIsDirty(bool v, bool muteCallbacks = false);
@@ -56,8 +48,6 @@ namespace Artix {
         bool fromState(const State& state, bool muteCallbacks = false);
 
         NameChangedCallbacks onNameChanged;
-        HeightChangedCallbacks onHeightChanged;
-        ThemeChangedCallbacks onThemeChanged;
         DirtyChangedCallback onDirtyChanged;
         Error::ErrorCallback onError;
 
@@ -68,11 +58,7 @@ namespace Artix {
         juce::ReadWriteLock nameMutex;
         juce::String name;
 
-        std::atomic<int> height;
         Midi::MidiChannelMapperBank mapperBank;
-
-        juce::ReadWriteLock themeMutex;
-        Ui::Theme::ThemePtr theme;
 
         std::atomic<bool> isDirty = false;
         std::atomic<bool> muteDirty = false;
@@ -82,7 +68,6 @@ namespace Artix {
 
     inline bool operator==(const State& left, const State& right) {
         return (left.getName() == right.getName()) &&
-            (left.getHeight() == right.getHeight()) &&
             (left.getMapperBank() == right.getMapperBank());
     };
     inline bool operator!=(const State& left, const State& right) {

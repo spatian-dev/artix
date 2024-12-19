@@ -14,7 +14,7 @@
 
 namespace Artix::Midi {
     Presets::Presets(juce::File dataDirectory) {
-        const std::array<const char*, 2> factoryPresets = {"default_json", "My_Awesome_Preset_json"};
+        const std::array<const char*, 1> factoryPresets = {"default_json"};
         std::optional<PresetPtr> preset;
         for (auto& presetFile : factoryPresets) {
             if ((preset = makeFactoryPreset(presetFile)).has_value()) {

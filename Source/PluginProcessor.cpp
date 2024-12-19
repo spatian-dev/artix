@@ -11,15 +11,15 @@
 
 ArtixAudioProcessor::ArtixAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
-    : AudioProcessor(BusesProperties()
-    )
+    : AudioProcessor(BusesProperties())
 #endif
 {
     processLock = std::make_unique<juce::InterProcessLock>(juce::String(JucePlugin_Name));
     
-    settings = std::make_shared<Artix::Settings>(processLock);
+    settings = std::make_unique<Artix::Settings>(processLock, 1000);
+    state = std::make_unique<Artix::PluginState>(*settings);
 
-    state.onError.add([this](const juce::String err) {
+    state->onError.add([this](const juce::String err) {
         juce::NativeMessageBox::showMessageBox(
             juce::MessageBoxIconType::WarningIcon,
             "Something went wrong",
@@ -30,10 +30,10 @@ ArtixAudioProcessor::ArtixAudioProcessor()
 
     presets = std::make_unique<Artix::Midi::Presets>(settings->getDataDirectory());
     if (presets->factoryPresetCount() > 0) {
-        state.fromState(*presets->getPreset(0)->state);
+        state->fromState(*presets->getPreset(0)->state);
     }
 
-    state.onDirtyChanged.add([this](const bool) {
+    state->onDirtyChanged.add([this](const bool) {
         this->updateHostDisplay(
             juce::AudioProcessor::ChangeDetails()
                 .withLatencyChanged(false)
@@ -108,10 +108,10 @@ void ArtixAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::M
         if (inputChannel < 1)
             continue;
 
-        const int outCh = (int) state.getMapperBank().getOutputChannel();
+        const int outCh = (int) state->getMapperBank().getOutputChannel();
         message.setChannel(outCh);
 
-        auto& mapper = state.getMapperBank()[inputChannel - 1];
+        auto& mapper = state->getMapperBank()[inputChannel - 1];
 
         if (mapper.isActive() && message.isNoteOn()) {
             midiOut.addEvent(
@@ -137,18 +137,18 @@ bool ArtixAudioProcessor::hasEditor() const {
 }
 
 juce::AudioProcessorEditor* ArtixAudioProcessor::createEditor() {
-    return new Artix::Ui::PluginEditor(*this, state, *presets, *settings);
+    return new Artix::Ui::PluginEditor(*this, *state, *presets, *settings);
 }
 
 void ArtixAudioProcessor::getStateInformation(juce::MemoryBlock& destData) {
-    if (auto xmlState = state.toValueTree().createXml()) {
+    if (auto xmlState = state->toValueTree().createXml()) {
         copyXmlToBinary(*xmlState, destData);
     }
 }
 
 void ArtixAudioProcessor::setStateInformation(const void* data, int sizeInBytes) {
     if (auto xmlState = getXmlFromBinary(data, sizeInBytes)) {
-        state.fromValueTree(juce::ValueTree::fromXml(*xmlState));
+        state->fromValueTree(juce::ValueTree::fromXml(*xmlState));
     }
 }
 

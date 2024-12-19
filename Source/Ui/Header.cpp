@@ -11,7 +11,7 @@
 #include "Header.h"
 
 namespace Artix::Ui {
-    Header::Header(State& state, Midi::Presets& presets, Theme::ThemePtr theme, Settings& settings):
+    Header::Header(PluginState& state, Midi::Presets& presets, Theme::ThemePtr theme, Settings& settings):
         Themable(theme), settings(settings), state(state), presets(presets) {
         setTheme(theme);
 
@@ -180,7 +180,11 @@ namespace Artix::Ui {
         juce::PopupMenu themesMenu;
         for (const auto& t : Theme::Themes::getInstance()) {
             themesMenu.addItem(t.first, true, t.second == state.getTheme(), [safeThis, t]() {
-                if (safeThis != nullptr) safeThis->state.setTheme(t.second);
+                if (safeThis == nullptr)
+                    return;
+
+                safeThis->state.setTheme(t.second);
+                safeThis->settings.save();
             });
         }
 
@@ -197,8 +201,10 @@ namespace Artix::Ui {
             );
             if (!dlg.browseForDirectory())
                 return;
-            safeThis->settings.setDataDirectory(dlg.getResult());
-            safeThis->presets.refreshUserPresets(safeThis->settings.getDataDirectory());
+            const auto result = dlg.getResult();
+            safeThis->settings.setDataDirectory(result);
+            safeThis->settings.save();
+            safeThis->presets.refreshUserPresets(result);
         });
         settingsMenu.addItem("Rescan Data Folder", [safeThis]() {
             if (safeThis == nullptr)
@@ -231,9 +237,9 @@ namespace Artix::Ui {
         return presetsMenu;
     }
 
-    void Header::switchState(const State& state) {
-        this->state.fromState(state);
-        setPresetName(this->state.getName());
+    void Header::switchState(const State& newState) {
+        state.fromState(newState);
+        setPresetName(state.getName());
         resized();
     }
 

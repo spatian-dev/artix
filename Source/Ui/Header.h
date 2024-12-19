@@ -13,7 +13,7 @@
 #include <memory>
 #include <JuceHeader.h>
 
-#include "../State.h"
+#include "../PluginState.h"
 #include "../Midi/Presets.h"
 #include "Component/Button.h"
 #include "Component/Label.h"
@@ -24,7 +24,7 @@
 namespace Artix::Ui {
     class Header : public juce::Component, private Theme::Themable {
         public:
-        Header(State& state, Midi::Presets& presets, Theme::ThemePtr theme, Settings& settings);
+        Header(PluginState& state, Midi::Presets& presets, Theme::ThemePtr theme, Settings& settings);
         ~Header() override;
 
         void paint(juce::Graphics&) override;
@@ -40,7 +40,7 @@ namespace Artix::Ui {
         juce::Rectangle<float> innerArea;
         juce::Rectangle<int> textArea;
         Midi::Presets& presets;
-        State& state;
+        PluginState& state;
 
         const Utils::UTF8& utf8 = Utils::UTF8::get();
 
