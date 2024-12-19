@@ -17,10 +17,10 @@ namespace Artix {
             theme = Ui::Theme::Themes::getInstance().begin()->second;
         }
 
-        bankErrorId = mapperBank.onError.add([this](const Artix::Error::ErrorDetails err) {
+        bankErrorId = mapperBank.onError.add([this](const juce::String err) {
             onError.callSafely(err);
         });
-        bankDirtyChangedId =mapperBank.onDirtyChanged.add([this](const bool v) {
+        bankDirtyChangedId = mapperBank.onDirtyChanged.add([this](const bool v) {
             if (v) setIsDirty(true);
         });
     }
@@ -108,9 +108,7 @@ namespace Artix {
 
     bool State::fromValueTree(const juce::ValueTree& vt, bool muteCallbacks) {
         if (!(vt.isValid() && vt.hasType(Id::State))) {
-            onError.callOnMessageThread({
-                "Invalid ValueTree type", Error::Code::BadState, Error::Code::InvalidValueTree
-            });
+            onError.callOnMessageThread("Invalid ValueTree type");
             return false;
         }
 
@@ -127,7 +125,7 @@ namespace Artix {
 
         auto bank = vt.getChildWithName(Id::MidiChannelMapperBank);
         if (!(bank.isValid() && mapperBank.fromValueTree(bank, muteCallbacks)))
-            result = false;            
+            result = false;
 
         muteDirty = false;
         setIsDirty(!result, muteCallbacks);
@@ -169,9 +167,7 @@ namespace Artix {
         const auto result = juce::JSON::parse(json, data);
 
         if (!result.wasOk()) {
-            onError.callOnMessageThread({
-                "Failed to load preset: Invalid data", Error::Code::BadState, Error::Code::InvalidValueTree
-            });
+            onError.callOnMessageThread("Failed to load preset: Invalid data");
             return false;
         }
 

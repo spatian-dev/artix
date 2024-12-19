@@ -20,94 +20,97 @@
 #include <vector>
 
 namespace Artix::Utils {
-	template <
-		typename Argument, typename CriticalSection = juce::DummyCriticalSection, typename Key = uint8_t
-	> requires std::is_integral_v<Key>
-	class CallbackList {
-		public:
-		using Identifier = std::optional<Key>;
-		using Callback = std::function<void(const Argument)>;
+    template <
+        typename Argument, typename CriticalSection = juce::DummyCriticalSection, typename Key = uint8_t
+    > requires std::is_integral_v<Key>
+        class CallbackList {
+            public:
+            using Identifier = std::optional<Key>;
+            using Callback = std::function<void(const Argument)>;
 
-		CallbackList() = default;
-		virtual ~CallbackList() = default;
+            CallbackList() = default;
+            virtual ~CallbackList() = default;
 
-		virtual std::optional<Key> add(const Callback cb, bool throws = false) {
-			ScopedLock lock(mutex);
-			
-			const bool indexAtMax = (index == KLimits::max());
-			const bool hasVacancy = (vacancies.size() > 0);
+            virtual std::optional<Key> add(const Callback& cb, bool throws = false) {
+                ScopedLock lock(mutex);
 
-			if (indexAtMax && !hasVacancy) {
-				if (throws)
-					throw std::length_error("Maximum storage capacity reached");
+                const bool indexAtMax = (index == KLimits::max());
+                const bool hasVacancy = (vacancies.size() > 0);
 
-				return {};
-			}
+                if (indexAtMax && !hasVacancy) {
+                    if (throws)
+                        throw std::length_error("Maximum storage capacity reached");
 
-			Key i;
-			if (hasVacancy) {
-				i = vacancies.back();
-				vacancies.pop_back();
-			} else {
-				// indexAtMax should always be false at this point
-				jassert(!indexAtMax);
-				i = ++index;
-			}
-			jassert(!callbacks.contains(i));
-			callbacks.emplace(i, cb);
+                    return {};
+                }
 
-			return i;
-		}
+                Key i;
+                if (hasVacancy) {
+                    i = vacancies.back();
+                    vacancies.pop_back();
+                } else {
+                    // indexAtMax should always be false at this point
+                    jassert(!indexAtMax);
+                    i = ++index;
+                }
+                jassert(!callbacks.contains(i));
+                callbacks.emplace(i, cb);
 
-		virtual bool remove(const Key i, bool throws = false) {
-			ScopedLock lock(mutex);
+                return i;
+            }
 
-			if (!callbacks.contains(i)) {
-				if (throws)
-					throw std::out_of_range("No value exists for the given key");
-				return false;
-			}
+            virtual bool remove(const Key i, bool throws = false) {
+                ScopedLock lock(mutex);
 
-			vacancies.push_back(i);
-			callbacks.extract(i);
-			return true;
-		}
+                if (!callbacks.contains(i)) {
+                    if (throws)
+                        throw std::out_of_range("No value exists for the given key");
+                    return false;
+                }
 
-		virtual bool contains(const Key i) const {
-			ScopedLock lock(mutex);
-			return callbacks.contains(i);
-		}
+                vacancies.push_back(i);
+                callbacks.extract(i);
+                return true;
+            }
 
-		virtual inline void call(const Argument v) {
-			ScopedLock lock(mutex);
-			for (const auto& cb : callbacks) {
-				cb.second(v);
-			}
-		}
+            virtual bool contains(const Key i) const {
+                ScopedLock lock(mutex);
+                return callbacks.contains(i);
+            }
 
-		virtual inline void callOnMessageThread(const Argument v) {			
-			juce::MessageManager::callAsync([this, v]() { call(v); });
-		}
+            virtual inline void callOnMessageThread(const Argument v) {
+                ScopedLock lock(mutex);
+                juce::MessageManager::callAsync([callbacks = callbacks, v]() {
+                    for (const auto& cb : callbacks) {
+                        cb.second(v);
+                    }
+                });
+            }
 
-		/*
-			WARNING: This is only synchronous if called from the message thread.
-		*/
-		virtual inline void callSafely(const Argument v) {
-			const auto messageManager = juce::MessageManager::getInstance();
-			if (messageManager->isThisTheMessageThread()) {
-				call(v);
-			} else {
-				juce::MessageManager::callAsync([this, v]() { call(v); });
-			}
-		}
+            /* WARNING: This is only synchronous if called from the message thread. */
+            virtual inline void callSafely(const Argument v) {
+                const auto messageManager = juce::MessageManager::getInstance();
+                ScopedLock lock(mutex);
 
-		private:
-		using KLimits = std::numeric_limits<Key>;
-		using ScopedLock = CriticalSection::ScopedLockType;
+                if (messageManager->isThisTheMessageThread()) {
+                    for (const auto& cb : callbacks) {
+                        cb.second(v);
+                    }
+                } else {
+                    callOnMessageThread(v);
+                }
+            }
 
-		Key index = 0;
-		CriticalSection mutex;
-		std::vector<Key> vacancies;
-		std::map<Key, Callback> callbacks;
-	};
+            private:
+            using KLimits = std::numeric_limits<Key>;
+            using ScopedLock = CriticalSection::ScopedLockType;
+
+            Key index = 0;
+            CriticalSection mutex;
+            std::vector<Key> vacancies;
+            std::map<Key, Callback> callbacks;
+
+            
+            JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(CallbackList)
+    };
 }

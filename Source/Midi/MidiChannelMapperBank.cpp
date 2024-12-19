@@ -16,7 +16,7 @@ namespace Artix::Midi {
 
 		for (size_t i = 0; i < mappers.size(); i++) {
 			auto& m = mappers[i];
-			mapperErrorIds[i] = m.onError.add([this](const Artix::Error::ErrorDetails err) {
+			mapperErrorIds[i] = m.onError.add([this](const juce::String err) {
 				onError.callSafely(err);
 			});
 			mapperDirtyChangedIds[i] = m.onDirtyChanged.add([this](const bool v) {
@@ -80,9 +80,7 @@ namespace Artix::Midi {
 
 	bool MidiChannelMapperBank::fromValueTree(const juce::ValueTree& vt, bool muteCallbacks) {
 		if (!(vt.isValid() && vt.hasType(Id::MidiChannelMapperBank))) {
-			onError.callOnMessageThread({
-				"Invalid ValueTree type", Error::Code::BadState, Error::Code::InvalidValueTree
-			});
+			onError.callOnMessageThread("Invalid ValueTree type");
 			return false;
 		}
 
@@ -107,9 +105,7 @@ namespace Artix::Midi {
 		muteDirty = false;
 
 		if (i != CHANNEL_COUNT) {
-			onError.callOnMessageThread({
-				"ValueTree is missing children", Error::Code::BadState, Error::Code::MissingChildren
-			});
+			onError.callOnMessageThread("ValueTree is missing children");
 			result = false;
 		}
 

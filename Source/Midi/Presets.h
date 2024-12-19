@@ -21,7 +21,6 @@
 namespace Artix::Midi {
     struct Preset {
         std::shared_ptr<State> state;
-        juce::File file;
         bool isFactory = false;
     };
 
@@ -57,15 +56,15 @@ namespace Artix::Midi {
         static std::optional<PresetPtr> makeUserPreset(const juce::String content
         );
 
+        inline static const juce::String extension = ".artix";
+
         private:
         static std::optional<PresetPtr> makeFactoryPreset(const char* resourceName);
         static std::optional<PresetPtr> makePreset(
-            const juce::String content,
-            const juce::File file, const bool isFactory = false
+            const juce::String content, const bool isFactory = false
         );
 
         int userPresetStartIndex = 0;
-        const juce::String extension = ".artix";
         PresetList items;
 
         juce::ReadWriteLock mutex;

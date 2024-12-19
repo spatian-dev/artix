@@ -67,6 +67,7 @@ namespace Artix::Ui {
         juce::PopupMenu presetsMenu();
         juce::PopupMenu settingsMenu();
 
+        void switchState(const State& state);
         void switchPreset(const Midi::PresetPtr preset);
         void setPresetName(juce::String v);
 

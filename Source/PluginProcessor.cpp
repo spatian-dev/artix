@@ -18,14 +18,12 @@ ArtixAudioProcessor::ArtixAudioProcessor()
     processLock = std::make_unique<juce::InterProcessLock>(juce::String(JucePlugin_Name));
     
     settings = std::make_shared<Artix::Settings>(processLock);
-    DBG("Settings file: " + settings->getFilePath());
-    DBG(settings->getDataDirectory().getFullPathName());
 
-    state.onError.add([this](const Artix::Error::ErrorDetails err) {
+    state.onError.add([this](const juce::String err) {
         juce::NativeMessageBox::showMessageBox(
             juce::MessageBoxIconType::WarningIcon,
             "Something went wrong",
-            "Failed to load preset: " + err.msg,
+            "Failed to load preset: " + err,
             getActiveEditor()
         );
     });

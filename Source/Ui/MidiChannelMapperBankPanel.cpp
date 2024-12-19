@@ -21,8 +21,11 @@ namespace Artix::Ui {
 			static_cast<uint8_t>(Midi::Channel::First), static_cast<uint8_t>(Midi::Channel::Last)
 		);
 
+		const auto safeThis = juce::Component::SafePointer<MidiChannelMapperBankPanel>(this);
 		mapperBankOutputChannelChangedCallbackId = mapperBank.onOutputChannelChanged.add(
-			[this](Midi::Channel ch) { outputChannel.setValue(static_cast<uint8_t>(ch)); }
+			[safeThis](Midi::Channel ch) {
+				if (safeThis != nullptr) safeThis->outputChannel.setValue(static_cast<uint8_t>(ch));
+			}
 		);
 		outputChannelValueChangedCallbackId = outputChannel.onValueChanged.add([&mapperBank](uint8_t v) {
 			mapperBank.setOutputChannel(v);

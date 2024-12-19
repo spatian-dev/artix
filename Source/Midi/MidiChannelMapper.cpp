@@ -82,9 +82,7 @@ namespace Artix::Midi {
 
 	bool MidiChannelMapper::fromValueTree(const juce::ValueTree& vt, bool muteCallbacks) {
 		if (!(vt.isValid() && vt.hasType(Id::MidiChannelMapper))) {
-			onError.callOnMessageThread({
-				"Invalid ValueTree type", Error::Code::BadState, Error::Code::InvalidValueTree
-			});
+			onError.callOnMessageThread("Invalid ValueTree type");
 			return false;
 		}
 

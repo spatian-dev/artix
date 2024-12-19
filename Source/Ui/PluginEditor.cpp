@@ -1,7 +1,7 @@
 /*
   ==============================================================================
 
-	This file contains the basic framework code for a JUCE plugin editor.
+    This file contains the basic framework code for a JUCE plugin editor.
 
   ==============================================================================
 */
@@ -9,92 +9,96 @@
 #include "PluginEditor.h"
 
 namespace Artix::Ui {
-	PluginEditor::PluginEditor(
-		ArtixAudioProcessor& proc, State& state, Midi::Presets& presets, Settings& settings
-	) : AudioProcessorEditor(&proc), audioProcessor(proc), state(state), settings(settings),
-		Themable(state.getTheme()), header(state, presets, theme, settings),
-		mapperBank(state.getMapperBank(), theme), footer(theme) {
-		
-		setName("ArtixPluginEditor");
-		setDescription("Artix Plugin Editor");
+    PluginEditor::PluginEditor(
+        ArtixAudioProcessor& proc, State& state, Midi::Presets& presets, Settings& settings
+    ): AudioProcessorEditor(&proc), audioProcessor(proc), state(state), settings(settings),
+        Themable(state.getTheme()), header(state, presets, theme, settings),
+        mapperBank(state.getMapperBank(), theme), footer(theme) {
 
-		addAndMakeVisible(header);
-		addAndMakeVisible(mapperBank);
-		addAndMakeVisible(footer);
+        setName("ArtixPluginEditor");
+        setDescription("Artix Plugin Editor");
 
-		const auto localConstrainer = getConstrainer();
-		localConstrainer->setFixedAspectRatio(ASPECT_RATIO);
-		localConstrainer->setSizeLimits(
-			(int) std::floor(MIN_HEIGHT * ASPECT_RATIO), (int) MIN_HEIGHT,
-			(int) std::ceil(MAX_HEIGHT * ASPECT_RATIO), (int) MAX_HEIGHT
-		);
+        addAndMakeVisible(header);
+        addAndMakeVisible(mapperBank);
+        addAndMakeVisible(footer);
 
-		stateHeightChanged(state.getHeight());
-		heightChangedCallbackId = state.onHeightChanged.add(
-			[this](int v) { stateHeightChanged(v); }
-		);
+        const auto localConstrainer = getConstrainer();
+        localConstrainer->setFixedAspectRatio(ASPECT_RATIO);
+        localConstrainer->setSizeLimits(
+            (int) std::floor(MIN_HEIGHT * ASPECT_RATIO), (int) MIN_HEIGHT,
+            (int) std::ceil(MAX_HEIGHT * ASPECT_RATIO), (int) MAX_HEIGHT
+        );
 
-		setBufferedToImage(true);
-		setTheme(theme);
-		themeChangedCallbackId = state.onThemeChanged.add([this](Theme::ThemePtr v) { setTheme(v); });
+        const auto safeThis = juce::Component::SafePointer<PluginEditor>(this);
 
-		setResizable(true, false);
-	}
+        stateHeightChanged(state.getHeight());
+        heightChangedCallbackId = state.onHeightChanged.add(
+            [safeThis](int v) { if (safeThis != nullptr) safeThis->stateHeightChanged(v); }
+        );
 
-	PluginEditor::~PluginEditor() {
-		if (heightChangedCallbackId)
-			state.onHeightChanged.remove(heightChangedCallbackId.value());
+        setBufferedToImage(true);
+        setTheme(theme);
+        themeChangedCallbackId = state.onThemeChanged.add(
+            [safeThis](Theme::ThemePtr v) { if (safeThis != nullptr) safeThis->setTheme(v); }
+        );
 
-		if (themeChangedCallbackId)
-			state.onThemeChanged.remove(themeChangedCallbackId.value());
-	}
+        setResizable(true, false);
+    }
 
-	void PluginEditor::paint(juce::Graphics& g) {
-		theme->fillBackground(this, g);
-	}
+    PluginEditor::~PluginEditor() {
+        if (heightChangedCallbackId)
+            state.onHeightChanged.remove(heightChangedCallbackId.value());
 
-	void PluginEditor::resized() {
-		state.setHeight(getHeight());
+        if (themeChangedCallbackId)
+            state.onThemeChanged.remove(themeChangedCallbackId.value());
+    }
 
-		const auto scaler = 1 + (getWidth() - MIN_HEIGHT) / (4 * (MAX_HEIGHT - MIN_HEIGHT));
-		theme->setScaler(scaler);
+    void PluginEditor::paint(juce::Graphics& g) {
+        theme->fillBackground(this, g);
+    }
 
-		innerArea = theme->getInnerArea(this, Metric::SMALL, Metric::SMALL);
+    void PluginEditor::resized() {
+        state.setHeight(getHeight());
 
-		const auto padding = theme->getSpacing(Metric::SMALL);
-		const float headerHeight = theme->scale(40.0f);
-		const float footerHeight = theme->scale(36.0f);
+        const auto scaler = 1 + (getWidth() - MIN_HEIGHT) / (4 * (MAX_HEIGHT - MIN_HEIGHT));
+        theme->setScaler(scaler);
 
-		header.setBounds(
-			(int) innerArea.getX(), (int) innerArea.getY(),
-			(int) innerArea.getWidth(), (int) headerHeight
-		);
-		footer.setBounds(
-			(int) innerArea.getX(), (int) (innerArea.getBottom() - footerHeight),
-			(int) innerArea.getWidth(), (int) footerHeight
-		);
+        innerArea = theme->getInnerArea(this, Metric::SMALL, Metric::SMALL);
 
-		mapperBank.setBounds(
-			(int) innerArea.getX(), (int) (header.getBottom() + padding),
-			(int) innerArea.getWidth(), (int) (innerArea.getHeight() - ((2 * padding) + headerHeight + footerHeight))
-		);
-	}
+        const auto padding = theme->getSpacing(Metric::SMALL);
+        const float headerHeight = theme->scale(40.0f);
+        const float footerHeight = theme->scale(36.0f);
 
-	void PluginEditor::stateHeightChanged(int v) {
-		if (v == (int) getHeight())
-			return;
+        header.setBounds(
+            (int) innerArea.getX(), (int) innerArea.getY(),
+            (int) innerArea.getWidth(), (int) headerHeight
+        );
+        footer.setBounds(
+            (int) innerArea.getX(), (int) (innerArea.getBottom() - footerHeight),
+            (int) innerArea.getWidth(), (int) footerHeight
+        );
 
-		setSize((int) std::floor(v * ASPECT_RATIO), v);
-	}
+        mapperBank.setBounds(
+            (int) innerArea.getX(), (int) (header.getBottom() + padding),
+            (int) innerArea.getWidth(), (int) (innerArea.getHeight() - ((2 * padding) + headerHeight + footerHeight))
+        );
+    }
 
-	void PluginEditor::setTheme(Theme::ThemePtr v) noexcept {
-		Themable::setTheme(v);
-		getLookAndFeel().setDefaultSansSerifTypeface(theme->getSansSerifTypeface());
-		theme->setScaledFontSize(true);
-		header.setTheme(v);
-		mapperBank.setTheme(v);
-		footer.setTheme(v);
-		resized();
-		repaint();
-	}
+    void PluginEditor::stateHeightChanged(int v) {
+        if (v == (int) getHeight())
+            return;
+
+        setSize((int) std::floor(v * ASPECT_RATIO), v);
+    }
+
+    void PluginEditor::setTheme(Theme::ThemePtr v) noexcept {
+        Themable::setTheme(v);
+        getLookAndFeel().setDefaultSansSerifTypeface(theme->getSansSerifTypeface());
+        theme->setScaledFontSize(true);
+        header.setTheme(v);
+        mapperBank.setTheme(v);
+        footer.setTheme(v);
+        resized();
+        repaint();
+    }
 }

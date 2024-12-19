@@ -61,10 +61,10 @@ namespace Artix {
         DirtyChangedCallback onDirtyChanged;
         Error::ErrorCallback onError;
 
+        private:
         DirtyChangedCallback::Identifier bankDirtyChangedId;
         Error::ErrorCallback::Identifier bankErrorId;
 
-        private:
         juce::ReadWriteLock nameMutex;
         juce::String name;
 
