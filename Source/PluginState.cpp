@@ -13,6 +13,9 @@
 namespace Artix {
     PluginState::PluginState(Settings& settings, juce::String name): State(name), settings(settings) {
         height = settings.getWindowHeight();
+        
+        lastOpenFolder = this->settings.getDataDirectory().getFullPathName();
+        lastSaveFolder = this->settings.getDataDirectory().getFullPathName();
 
         juce::ScopedWriteLock lock(themeMutex);
         theme = Ui::Theme::Themes::getInstance().tryFind(
@@ -51,5 +54,27 @@ namespace Artix {
 
         if (muteCallbacks) return;
         onThemeChanged.callSafely(theme);
+    }
+
+    juce::String PluginState::getLastOpenFolder() const {
+        juce::ScopedReadLock lock(lastOpenFolderMutex);
+        return lastOpenFolder;
+    }
+
+    void PluginState::setLastOpenFolder(juce::String v) {
+        juce::ScopedWriteLock lock(lastOpenFolderMutex);
+        if (lastOpenFolder == v) return;
+        lastOpenFolder = v;
+    }
+
+    juce::String PluginState::getLastSaveFolder() const {
+        juce::ScopedReadLock lock(lastSaveFolderMutex);
+        return lastSaveFolder;
+    }
+
+    void PluginState::setLastSaveFolder(juce::String v) {
+        juce::ScopedWriteLock lock(lastSaveFolderMutex);
+        if (lastSaveFolder == v) return;
+        lastSaveFolder = v;
     }
 }

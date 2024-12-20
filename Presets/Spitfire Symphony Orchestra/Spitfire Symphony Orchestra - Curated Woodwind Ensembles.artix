@@ -1,0 +1,72 @@
+{
+	"Name": "Spitfire Symphony Orchestra - Curated Woodwind Ensembles",
+	"MidiChannelMapperBank": {
+		"OutputChannel": 1,
+		"MidiChannelMapperList": [
+			{
+				"Name": "Beast Long",
+				"Note": 0
+			},
+			{
+				"Name": "Beast Short",
+				"Note": 1
+			},
+			{
+				"Name": "Chorus Long",
+				"Note": 2
+			},
+			{
+				"Name": "Chorus Short",
+				"Note": 3
+			},
+			{
+				"Name": "Light Short",
+				"Note": 4
+			},
+			{
+				"Name": "Orchestrator Long",
+				"Note": 5
+			},
+			{
+				"Name": "Orchestrator Short",
+				"Note": 6
+			},
+			{
+				"Name": "Slow Chorus Long",
+				"Note": 7
+			},
+			{
+				"Name": "Slow Orchestrator Long",
+				"Note": 8
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			}
+		]
+	}
+}

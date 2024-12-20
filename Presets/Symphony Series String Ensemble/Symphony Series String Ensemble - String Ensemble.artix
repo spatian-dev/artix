@@ -1,0 +1,72 @@
+{
+	"Name": "Symphony Series String Ensemble - String Ensemble",
+	"MidiChannelMapperBank": {
+		"OutputChannel": 1,
+		"MidiChannelMapperList": [
+			{
+				"Name": "Sustain",
+				"Note": 101
+			},
+			{
+				"Name": "Sordino Sustain Vibrato",
+				"Note": 102
+			},
+			{
+				"Name": "Tremolo",
+				"Note": 103
+			},
+			{
+				"Name": "Staccato",
+				"Note": 104
+			},
+			{
+				"Name": "Spiccato",
+				"Note": 105
+			},
+			{
+				"Name": "Pizzicato",
+				"Note": 106
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			}
+		]
+	}
+}

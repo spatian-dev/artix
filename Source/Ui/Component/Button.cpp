@@ -109,7 +109,7 @@ namespace Artix::Ui::Component {
         buttonDownColor = v;
     }
 
-    void Button::mouseDown(const juce::MouseEvent& event) {
+    void Button::mouseDown(const juce::MouseEvent&) {
         state = State::DOWN;
         repaint();
     }
@@ -118,16 +118,16 @@ namespace Artix::Ui::Component {
         if (state == State::DOWN) {
             this->onClick.callSafely(event);
         }
-        state = isMouseOver() ? State::HOVER : State::NORMAL;        
+        state = /*isMouseOver() ? State::HOVER :*/ State::NORMAL;
         repaint();
     }
 
-    void Button::mouseEnter(const juce::MouseEvent& event) {
+    void Button::mouseEnter(const juce::MouseEvent&) {
         state = isMouseButtonDown() ? State::DOWN : State::HOVER;
         repaint();
     }
 
-    void Button::mouseExit(const juce::MouseEvent& event) {
+    void Button::mouseExit(const juce::MouseEvent&) {
         state = State::NORMAL;
         repaint();
     }

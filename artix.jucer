@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="UYmpvb" name="Artix" projectType="audioplug" useAppConfig="0"
-              addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" version="0.1.0"
+              addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" version="1.0.0"
               companyName="Spatian.dev" companyWebsite="https://artix.spatian.dev"
               companyEmail="contact@spatian.dev" pluginFormats="buildVST3"
               pluginCharacteristicsValue="pluginIsMidiEffectPlugin,pluginProducesMidiOut,pluginWantsMidiIn"
-              pluginDesc="A simple Plugin that maps MIDI channel to notes, to simplify your keyswitches and more."
+              pluginDesc="A simple Plugin that maps MIDI channels to notes, to simplify your keyswitches and more."
               pluginManufacturerCode="Sptn" pluginCode="Artx" pluginAUMainType="'aumi'"
               pluginVST3Category="Instrument,Tools" pluginVSTCategory="kPlugCategGenerator"
               cppLanguageStandard="20" bundleIdentifier="dev.Spatian.Artix"
@@ -18,7 +18,101 @@
             file="Fonts/Share_Tech_Mono/Share_Tech_Mono.ttf"/>
     </GROUP>
     <GROUP id="{C61D2F50-AF3F-0047-6C8E-D339A867755D}" name="Presets">
-      <FILE id="xxR495" name="default.json" compile="0" resource="1" file="Presets/default.json"/>
+      <GROUP id="{05ACB471-43F0-5716-3B6E-FE8BAC002D3C}" name="Session Horns Pro">
+        <FILE id="k22Pet" name="Session Horns Pro - Keyswitch.artix" compile="0"
+              resource="1" file="Presets/Session Horns Pro/Session Horns Pro - Keyswitch.artix"/>
+      </GROUP>
+      <GROUP id="{DA95312A-D8AA-CA77-F865-C73AF910AD3E}" name="Session Strings Pro 2">
+        <FILE id="kezcvw" name="Session Strings Pro 2 - Basses.artix" compile="0"
+              resource="1" file="Presets/Session Strings Pro 2/Session Strings Pro 2 - Basses.artix"/>
+        <FILE id="lSASis" name="Session Strings Pro 2 - Celli.artix" compile="0"
+              resource="1" file="Presets/Session Strings Pro 2/Session Strings Pro 2 - Celli.artix"/>
+        <FILE id="Rbz0xT" name="Session Strings Pro 2 - Violas.artix" compile="0"
+              resource="1" file="Presets/Session Strings Pro 2/Session Strings Pro 2 - Violas.artix"/>
+        <FILE id="gpSEnZ" name="Session Strings Pro 2 - Violins.artix" compile="0"
+              resource="1" file="Presets/Session Strings Pro 2/Session Strings Pro 2 - Violins.artix"/>
+      </GROUP>
+      <GROUP id="{C5E308BB-4793-B7D6-3285-F811642E071F}" name="Spitfire Symphony Orchestra">
+        <FILE id="bHa4rW" name="Spitfire Symphony Orchestra - Curated Brass Ensembles.artix"
+              compile="0" resource="1" file="Presets/Spitfire Symphony Orchestra/Spitfire Symphony Orchestra - Curated Brass Ensembles.artix"/>
+        <FILE id="syfe41" name="Spitfire Symphony Orchestra - Curated String Ensembles.artix"
+              compile="0" resource="1" file="Presets/Spitfire Symphony Orchestra/Spitfire Symphony Orchestra - Curated String Ensembles.artix"/>
+        <FILE id="KjdELd" name="Spitfire Symphony Orchestra - Curated Tutti Ensembles.artix"
+              compile="0" resource="1" file="Presets/Spitfire Symphony Orchestra/Spitfire Symphony Orchestra - Curated Tutti Ensembles.artix"/>
+        <FILE id="lnsZF0" name="Spitfire Symphony Orchestra - Curated Woodwind Ensembles.artix"
+              compile="0" resource="1" file="Presets/Spitfire Symphony Orchestra/Spitfire Symphony Orchestra - Curated Woodwind Ensembles.artix"/>
+      </GROUP>
+      <GROUP id="{93178D2D-AFAD-76FE-B20C-9D2097CDC80B}" name="Symphony Series Brass Ensemble">
+        <FILE id="agLFty" name="Symphony Series Brass Ensemble - Brass Ensemble.artix"
+              compile="0" resource="1" file="Presets/Symphony Series Brass Ensemble/Symphony Series Brass Ensemble - Brass Ensemble.artix"/>
+        <FILE id="sLwAo0" name="Symphony Series Brass Ensemble - Horns.artix"
+              compile="0" resource="1" file="Presets/Symphony Series Brass Ensemble/Symphony Series Brass Ensemble - Horns.artix"/>
+        <FILE id="Ga7BVv" name="Symphony Series Brass Ensemble - Trombones.artix"
+              compile="0" resource="1" file="Presets/Symphony Series Brass Ensemble/Symphony Series Brass Ensemble - Trombones.artix"/>
+        <FILE id="yibPxn" name="Symphony Series Brass Ensemble - Trumpets.artix"
+              compile="0" resource="1" file="Presets/Symphony Series Brass Ensemble/Symphony Series Brass Ensemble - Trumpets.artix"/>
+        <FILE id="x8pyaN" name="Symphony Series Brass Ensemble - Tubas.artix"
+              compile="0" resource="1" file="Presets/Symphony Series Brass Ensemble/Symphony Series Brass Ensemble - Tubas.artix"/>
+      </GROUP>
+      <GROUP id="{154EDB7B-2FB1-61DC-C453-715D02D0EC5C}" name="Symphony Series Brass Solo">
+        <FILE id="gPor7n" name="Symphony Series Brass Solo - Brass Quartet.artix"
+              compile="0" resource="1" file="Presets/Symphony Series Brass Solo/Symphony Series Brass Solo - Brass Quartet.artix"/>
+        <FILE id="u9hDiy" name="Symphony Series Brass Solo - Horn 1.artix"
+              compile="0" resource="1" file="Presets/Symphony Series Brass Solo/Symphony Series Brass Solo - Horn 1.artix"/>
+        <FILE id="pkkUv3" name="Symphony Series Brass Solo - Horn 2.artix"
+              compile="0" resource="1" file="Presets/Symphony Series Brass Solo/Symphony Series Brass Solo - Horn 2.artix"/>
+        <FILE id="gM0FYa" name="Symphony Series Brass Solo - Trombone.artix"
+              compile="0" resource="1" file="Presets/Symphony Series Brass Solo/Symphony Series Brass Solo - Trombone.artix"/>
+        <FILE id="GBESN4" name="Symphony Series Brass Solo - Trumpet.artix"
+              compile="0" resource="1" file="Presets/Symphony Series Brass Solo/Symphony Series Brass Solo - Trumpet.artix"/>
+        <FILE id="KpvmBh" name="Symphony Series Brass Solo - Tuba.artix" compile="0"
+              resource="1" file="Presets/Symphony Series Brass Solo/Symphony Series Brass Solo - Tuba.artix"/>
+      </GROUP>
+      <GROUP id="{F62BC2EF-FD13-1D4C-9B6C-943682020844}" name="Symphony Series String Ensemble">
+        <FILE id="k0xiyl" name="Symphony Series String Ensemble - Basses.artix"
+              compile="0" resource="1" file="Presets/Symphony Series String Ensemble/Symphony Series String Ensemble - Basses.artix"/>
+        <FILE id="bYviKE" name="Symphony Series String Ensemble - Cellos.artix"
+              compile="0" resource="1" file="Presets/Symphony Series String Ensemble/Symphony Series String Ensemble - Cellos.artix"/>
+        <FILE id="aWeATQ" name="Symphony Series String Ensemble - String Ensemble.artix"
+              compile="0" resource="1" file="Presets/Symphony Series String Ensemble/Symphony Series String Ensemble - String Ensemble.artix"/>
+        <FILE id="bjT2jt" name="Symphony Series String Ensemble - Violas.artix"
+              compile="0" resource="1" file="Presets/Symphony Series String Ensemble/Symphony Series String Ensemble - Violas.artix"/>
+        <FILE id="gxG0g4" name="Symphony Series String Ensemble - Violins.artix"
+              compile="0" resource="1" file="Presets/Symphony Series String Ensemble/Symphony Series String Ensemble - Violins.artix"/>
+      </GROUP>
+      <GROUP id="{F6366870-5213-CC38-F90A-161D32597F40}" name="Symphony Series Woodwind Ensemble">
+        <FILE id="PcHKFR" name="Symphony Series Woodwind Ensemble - Bass Winds.artix"
+              compile="0" resource="1" file="Presets/Symphony Series Woodwind Ensemble/Symphony Series Woodwind Ensemble - Bass Winds.artix"/>
+        <FILE id="PASrC5" name="Symphony Series Woodwind Ensemble - Bassoons.artix"
+              compile="0" resource="1" file="Presets/Symphony Series Woodwind Ensemble/Symphony Series Woodwind Ensemble - Bassoons.artix"/>
+        <FILE id="imUGIs" name="Symphony Series Woodwind Ensemble - Clarinets.artix"
+              compile="0" resource="1" file="Presets/Symphony Series Woodwind Ensemble/Symphony Series Woodwind Ensemble - Clarinets.artix"/>
+        <FILE id="QTStPN" name="Symphony Series Woodwind Ensemble - Flutes.artix"
+              compile="0" resource="1" file="Presets/Symphony Series Woodwind Ensemble/Symphony Series Woodwind Ensemble - Flutes.artix"/>
+        <FILE id="Y1pxBB" name="Symphony Series Woodwind Ensemble - Oboes.artix"
+              compile="0" resource="1" file="Presets/Symphony Series Woodwind Ensemble/Symphony Series Woodwind Ensemble - Oboes.artix"/>
+        <FILE id="D7LGf2" name="Symphony Series Woodwind Ensemble - Saxophones.artix"
+              compile="0" resource="1" file="Presets/Symphony Series Woodwind Ensemble/Symphony Series Woodwind Ensemble - Saxophones.artix"/>
+        <FILE id="Z8hHEf" name="Symphony Series Woodwind Ensemble - Woodwind Ensemble.artix"
+              compile="0" resource="1" file="Presets/Symphony Series Woodwind Ensemble/Symphony Series Woodwind Ensemble - Woodwind Ensemble.artix"/>
+      </GROUP>
+      <GROUP id="{6A99742A-B040-E858-F4DD-E4C84738075E}" name="Symphony Series Woodwind Solo">
+        <FILE id="GXH0lN" name="Symphony Series Woodwind Solo - Bassoon.artix"
+              compile="0" resource="1" file="Presets/Symphony Series Woodwind Solo/Symphony Series Woodwind Solo - Bassoon.artix"/>
+        <FILE id="LIB9eG" name="Symphony Series Woodwind Solo - Clarinet.artix"
+              compile="0" resource="1" file="Presets/Symphony Series Woodwind Solo/Symphony Series Woodwind Solo - Clarinet.artix"/>
+        <FILE id="eYc9hq" name="Symphony Series Woodwind Solo - Contrabassoon.artix"
+              compile="0" resource="1" file="Presets/Symphony Series Woodwind Solo/Symphony Series Woodwind Solo - Contrabassoon.artix"/>
+        <FILE id="NbGvYZ" name="Symphony Series Woodwind Solo - Flute.artix"
+              compile="0" resource="1" file="Presets/Symphony Series Woodwind Solo/Symphony Series Woodwind Solo - Flute.artix"/>
+        <FILE id="eEI0Bl" name="Symphony Series Woodwind Solo - Oboe.artix"
+              compile="0" resource="1" file="Presets/Symphony Series Woodwind Solo/Symphony Series Woodwind Solo - Oboe.artix"/>
+        <FILE id="Yxq1By" name="Symphony Series Woodwind Solo - Saxophone.artix"
+              compile="0" resource="1" file="Presets/Symphony Series Woodwind Solo/Symphony Series Woodwind Solo - Saxophone.artix"/>
+        <FILE id="wTQaSV" name="Symphony Series Woodwind Solo - Woodwind Quintet.artix"
+              compile="0" resource="1" file="Presets/Symphony Series Woodwind Solo/Symphony Series Woodwind Solo - Woodwind Quintet.artix"/>
+      </GROUP>
+      <FILE id="xxR495" name="default.artix" compile="0" resource="1" file="Presets/default.artix"/>
     </GROUP>
     <GROUP id="{B78DA840-25E5-5D81-9502-C5854E5ED100}" name="Source">
       <GROUP id="{4A58E561-0ADA-675B-FB87-D3A6B4A13DDD}" name="Error">

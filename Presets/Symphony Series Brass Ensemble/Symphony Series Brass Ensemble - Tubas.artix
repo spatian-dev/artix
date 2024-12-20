@@ -1,0 +1,79 @@
+{
+  "Name": "Symphony Series Brass Ensemble - Tubas",
+  "MidiChannelMapperBank": {
+    "OutputChannel": 1,
+    "MidiChannelMapperList": [
+      {
+        "Name": "Sustain All",
+        "Note": 24
+      },
+
+      {
+        "Name": "Sustain Decrescendo",
+        "Note": 25
+      },
+
+      {
+        "Name": "Sustain Trill",
+        "Note": 26
+      },
+
+      {
+        "Name": "Staccato",
+        "Note": 27
+      },
+
+      {
+        "Name": "Staccato Velocity",
+        "Note": 28
+      },
+
+      {
+        "Name": "Sforzando",
+        "Note": 29
+      },
+
+      {
+        "Name": "Swell Fast",
+        "Note": 30
+      },
+
+      {
+        "Name": "Blast Short Fortississimo",
+        "Note": 31
+      },
+      {
+        "Name": "",
+        "Note": -1
+      },
+      {
+        "Name": "",
+        "Note": -1
+      },
+      {
+        "Name": "",
+        "Note": -1
+      },
+      {
+        "Name": "",
+        "Note": -1
+      },
+      {
+        "Name": "",
+        "Note": -1
+      },
+      {
+        "Name": "",
+        "Note": -1
+      },
+      {
+        "Name": "",
+        "Note": -1
+      },
+      {
+        "Name": "",
+        "Note": -1
+      }
+    ]
+  }
+}

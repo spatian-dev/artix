@@ -35,6 +35,12 @@ namespace Artix {
         Ui::Theme::ThemePtr getTheme() const;
         void setTheme(Ui::Theme::ThemePtr v, bool muteCallbacks = false);
 
+        juce::String getLastOpenFolder() const;
+        void setLastOpenFolder(juce::String v);
+
+        juce::String getLastSaveFolder() const;
+        void setLastSaveFolder(juce::String v);
+
         HeightChangedCallbacks onHeightChanged;
         ThemeChangedCallbacks onThemeChanged;
         
@@ -45,15 +51,12 @@ namespace Artix {
         juce::ReadWriteLock themeMutex;
         Ui::Theme::ThemePtr theme;
 
+        juce::String lastOpenFolder;
+        juce::ReadWriteLock lastOpenFolderMutex;
+
+        juce::String lastSaveFolder;
+        juce::ReadWriteLock lastSaveFolderMutex;
+
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PluginState)
     };
-
-    /*inline bool operator==(const State& left, const State& right) {
-        return (left.getName() == right.getName()) &&
-            (left.getHeight() == right.getHeight()) &&
-            (left.getMapperBank() == right.getMapperBank());
-    };
-    inline bool operator!=(const State& left, const State& right) {
-        return !(left == right);
-    };*/
 }

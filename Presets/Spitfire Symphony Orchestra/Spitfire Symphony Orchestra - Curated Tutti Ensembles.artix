@@ -1,0 +1,72 @@
+{
+	"Name": "Spitfire Symphony Orchestra - Curated Tutti Ensembles",
+	"MidiChannelMapperBank": {
+		"OutputChannel": 1,
+		"MidiChannelMapperList": [
+			{
+				"Name": "Long",
+				"Note": 0
+			},
+			{
+				"Name": "Staccato",
+				"Note": 1
+			},
+			{
+				"Name": "Beast Long",
+				"Note": 2
+			},
+			{
+				"Name": "Beast Short",
+				"Note": 3
+			},
+			{
+				"Name": "Brass String Choir Long",
+				"Note": 4
+			},
+			{
+				"Name": "Brass String Choir Short",
+				"Note": 5
+			},
+			{
+				"Name": "Low Brass String Stab",
+				"Note": 6
+			},
+			{
+				"Name": "Low Woodwind String Stab",
+				"Note": 7
+			},
+			{
+				"Name": "Nutcracker",
+				"Note": 8
+			},
+			{
+				"Name": "Woodwind String 1 Long",
+				"Note": 9
+			},
+			{
+				"Name": "Woodwind String 1 Short",
+				"Note": 10
+			},
+			{
+				"Name": "Woodwind String 2 Long",
+				"Note": 11
+			},
+			{
+				"Name": "Woodwind String 2 Short",
+				"Note": 12
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			}
+		]
+	}
+}

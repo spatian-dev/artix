@@ -1,0 +1,72 @@
+{
+	"Name": "Symphony Series Brass Ensemble - Brass Ensemble",
+	"MidiChannelMapperBank": {
+		"OutputChannel": 1,
+		"MidiChannelMapperList": [
+			{
+				"Name": "Sustain",
+				"Note": 24
+			},
+			{
+				"Name": "Staccato",
+				"Note": 25
+			},
+			{
+				"Name": "Blast Fortississimo",
+				"Note": 26
+			},
+			{
+				"Name": "Decrescendo",
+				"Note": 27
+			},
+			{
+				"Name": "Sforzando",
+				"Note": 28
+			},
+			{
+				"Name": "Crescendo",
+				"Note": 29
+			},
+			{
+				"Name": "Swell",
+				"Note": 30
+			},
+			{
+				"Name": "Staccato Velocity",
+				"Note": 31
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			}
+		]
+	}
+}

@@ -14,7 +14,48 @@
 
 namespace Artix::Midi {
     Presets::Presets(juce::File dataDirectory) {
-        const std::array<const char*, 1> factoryPresets = {"default_json"};
+        const std::array<const char*, 40> factoryPresets = {
+            "default_artix",
+            "Session_Horns_Pro__Keyswitch_artix",
+            "Session_Strings_Pro_2__Basses_artix",
+            "Session_Strings_Pro_2__Celli_artix",
+            "Session_Strings_Pro_2__Violas_artix",
+            "Session_Strings_Pro_2__Violins_artix",
+            "Spitfire_Symphony_Orchestra__Curated_Brass_Ensembles_artix",
+            "Spitfire_Symphony_Orchestra__Curated_String_Ensembles_artix",
+            "Spitfire_Symphony_Orchestra__Curated_Tutti_Ensembles_artix",
+            "Spitfire_Symphony_Orchestra__Curated_Woodwind_Ensembles_artix",
+            "Symphony_Series_Brass_Ensemble__Brass_Ensemble_artix",
+            "Symphony_Series_Brass_Ensemble__Horns_artix",
+            "Symphony_Series_Brass_Ensemble__Trombones_artix",
+            "Symphony_Series_Brass_Ensemble__Trumpets_artix",
+            "Symphony_Series_Brass_Ensemble__Tubas_artix",
+            "Symphony_Series_Brass_Solo__Brass_Quartet_artix",
+            "Symphony_Series_Brass_Solo__Horn_1_artix",
+            "Symphony_Series_Brass_Solo__Horn_2_artix",
+            "Symphony_Series_Brass_Solo__Trombone_artix",
+            "Symphony_Series_Brass_Solo__Trumpet_artix",
+            "Symphony_Series_Brass_Solo__Tuba_artix",
+            "Symphony_Series_String_Ensemble__Basses_artix",
+            "Symphony_Series_String_Ensemble__Cellos_artix",
+            "Symphony_Series_String_Ensemble__String_Ensemble_artix",
+            "Symphony_Series_String_Ensemble__Violas_artix",
+            "Symphony_Series_String_Ensemble__Violins_artix",
+            "Symphony_Series_Woodwind_Ensemble__Bass_Winds_artix",
+            "Symphony_Series_Woodwind_Ensemble__Bassoons_artix",
+            "Symphony_Series_Woodwind_Ensemble__Clarinets_artix",
+            "Symphony_Series_Woodwind_Ensemble__Flutes_artix",
+            "Symphony_Series_Woodwind_Ensemble__Oboes_artix",
+            "Symphony_Series_Woodwind_Ensemble__Saxophones_artix",
+            "Symphony_Series_Woodwind_Ensemble__Woodwind_Ensemble_artix",
+            "Symphony_Series_Woodwind_Solo__Bassoon_artix",
+            "Symphony_Series_Woodwind_Solo__Clarinet_artix",
+            "Symphony_Series_Woodwind_Solo__Contrabassoon_artix",
+            "Symphony_Series_Woodwind_Solo__Flute_artix",
+            "Symphony_Series_Woodwind_Solo__Oboe_artix",
+            "Symphony_Series_Woodwind_Solo__Saxophone_artix",
+            "Symphony_Series_Woodwind_Solo__Woodwind_Quintet_artix",
+        };
         std::optional<PresetPtr> preset;
         for (auto& presetFile : factoryPresets) {
             if ((preset = makeFactoryPreset(presetFile)).has_value()) {

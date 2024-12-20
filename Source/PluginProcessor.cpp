@@ -11,11 +11,11 @@
 
 ArtixAudioProcessor::ArtixAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
-    : AudioProcessor(BusesProperties())
+    : AudioProcessor(getBusesLayout())
 #endif
 {
     processLock = std::make_unique<juce::InterProcessLock>(juce::String(JucePlugin_Name));
-    
+
     settings = std::make_unique<Artix::Settings>(processLock, 1000);
     state = std::make_unique<Artix::PluginState>(*settings);
 
@@ -33,14 +33,17 @@ ArtixAudioProcessor::ArtixAudioProcessor()
         state->fromState(*presets->getPreset(0)->state);
     }
 
+    state->getMapperBank().onOutputChannelChanged.add([this](const Artix::Midi::Channel) {
+        shouldGlobalNoteOff = true;
+    });
+    for (auto& m : state->getMapperBank()) {
+        m.onNoteChanged.add([this](const Artix::Midi::Note) {
+            shouldGlobalNoteOff = true;
+        });
+    }
+
     state->onDirtyChanged.add([this](const bool) {
-        this->updateHostDisplay(
-            juce::AudioProcessor::ChangeDetails()
-                .withLatencyChanged(false)
-                .withParameterInfoChanged(false)
-                .withProgramChanged(true)
-                .withNonParameterStateChanged(false)
-        );
+        shouldGlobalNoteOff = true;
     });
 }
 
@@ -74,15 +77,15 @@ int ArtixAudioProcessor::getCurrentProgram() {
     return 1;
 }
 
-void ArtixAudioProcessor::setCurrentProgram(int index) {}
+void ArtixAudioProcessor::setCurrentProgram(int /*index*/) {}
 
-const juce::String ArtixAudioProcessor::getProgramName(int index) {
+const juce::String ArtixAudioProcessor::getProgramName(int /*index*/) {
     return "(none)";
 }
 
-void ArtixAudioProcessor::changeProgramName(int index, const juce::String& newName) {}
+void ArtixAudioProcessor::changeProgramName(int /*index*/, const juce::String& /*newName*/) {}
 
-void ArtixAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock) {}
+void ArtixAudioProcessor::prepareToPlay(double /*sampleRate*/, int /*samplesPerBlock*/) {}
 
 void ArtixAudioProcessor::releaseResources() {}
 
@@ -99,36 +102,49 @@ void ArtixAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::M
 
     juce::MidiBuffer midiOut;
 
+    const int outCh = (int) state->getMapperBank().getOutputChannel();
+    if (shouldGlobalNoteOff) {
+        for (int ch = (int) (Artix::Midi::Channel::First); ch < ((int) (Artix::Midi::Channel::Last)) + 1; ch++) {
+            // This is apparently not enough for some hosts ...
+            midiOut.addEvent(juce::MidiMessage::allNotesOff(ch), 0);
+
+            for (int n = (int) (Artix::Midi::Note::First); n < ((int) (Artix::Midi::Note::Last)) + 1; n++) {
+                // So we're forced to do this ugly workaround ...
+                midiOut.addEvent(juce::MidiMessage::noteOff(ch, n), 0);
+            }
+        }
+        shouldGlobalNoteOff = false;
+    }
+
     for (const auto metadata : midiIn) {
         auto message = metadata.getMessage();
-
-        const auto timestamp = metadata.samplePosition;
-
         const auto inputChannel = message.getChannel();
-        if (inputChannel < 1)
+
+        if (!message.isNoteOnOrOff() || (inputChannel < 1)) {
+            midiOut.addEvent(message, metadata.samplePosition);
             continue;
-
-        const int outCh = (int) state->getMapperBank().getOutputChannel();
+        }
+        
         message.setChannel(outCh);
-
         auto& mapper = state->getMapperBank()[inputChannel - 1];
 
         if (mapper.isActive() && message.isNoteOn()) {
             midiOut.addEvent(
                 juce::MidiMessage::noteOn(outCh, (int) mapper.getNote(), message.getVelocity()),
-                timestamp
+                metadata.samplePosition
             );
         }
 
-        midiOut.addEvent(message, timestamp);
+        midiOut.addEvent(message, metadata.samplePosition);
 
         if (mapper.isActive() && message.isNoteOff()) {
             midiOut.addEvent(
                 juce::MidiMessage::noteOff(outCh, (int) mapper.getNote(), message.getVelocity()),
-                timestamp
+                metadata.samplePosition
             );
         }
     }
+
     midiIn.swapWith(midiOut);
 }
 
@@ -150,6 +166,14 @@ void ArtixAudioProcessor::setStateInformation(const void* data, int sizeInBytes)
     if (auto xmlState = getXmlFromBinary(data, sizeInBytes)) {
         state->fromValueTree(juce::ValueTree::fromXml(*xmlState));
     }
+}
+
+juce::AudioProcessor::BusesProperties ArtixAudioProcessor::getBusesLayout() {
+    // Live and Cakewalk don't like to load midi-only plugins, so we add an audio output there.
+    const juce::PluginHostType host;
+    return host.isAbletonLive() || host.isSonar()
+        ? BusesProperties().withOutput("out", juce::AudioChannelSet::stereo())
+        : BusesProperties();
 }
 
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter() {

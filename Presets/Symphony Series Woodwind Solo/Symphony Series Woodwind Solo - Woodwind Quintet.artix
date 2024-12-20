@@ -1,0 +1,72 @@
+{
+	"Name": "Symphony Series Woodwind Solo - Woodwind Quintet",
+	"MidiChannelMapperBank": {
+		"OutputChannel": 1,
+		"MidiChannelMapperList": [
+			{
+				"Name": "Sustain",
+				"Note": 12
+			},
+			{
+				"Name": "Staccato",
+				"Note": 13
+			},
+			{
+				"Name": "Crescendo",
+				"Note": 14
+			},
+			{
+				"Name": "Decrescendo",
+				"Note": 15
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			}
+		]
+	}
+}

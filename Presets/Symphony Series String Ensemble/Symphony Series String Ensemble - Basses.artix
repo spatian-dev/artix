@@ -1,0 +1,72 @@
+{
+	"Name": "Symphony Series String Ensemble - Basses",
+	"MidiChannelMapperBank": {
+		"OutputChannel": 1,
+		"MidiChannelMapperList": [
+			{
+				"Name": "Legato",
+				"Note": 72
+			},
+			{
+				"Name": "Sordino Sustain Vibrato",
+				"Note": 73
+			},
+			{
+				"Name": "Tremolo",
+				"Note": 74
+			},
+			{
+				"Name": "Harmonics",
+				"Note": 75
+			},
+			{
+				"Name": "Marcato",
+				"Note": 76
+			},
+			{
+				"Name": "Staccato",
+				"Note": 77
+			},
+			{
+				"Name": "Spiccato",
+				"Note": 78
+			},
+			{
+				"Name": "Pizzicato",
+				"Note": 79
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			}
+		]
+	}
+}

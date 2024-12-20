@@ -54,7 +54,7 @@ namespace Artix::Ui {
     }
 
     void PluginEditor::paint(juce::Graphics& g) {
-        theme->fillBackground(this, g);
+        theme->fillBackground(g);
     }
 
     void PluginEditor::resized() {

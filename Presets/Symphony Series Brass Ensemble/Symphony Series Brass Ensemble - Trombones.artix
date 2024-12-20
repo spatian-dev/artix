@@ -1,0 +1,72 @@
+{
+	"Name": "Symphony Series Brass Ensemble - Trombones",
+	"MidiChannelMapperBank": {
+		"OutputChannel": 1,
+		"MidiChannelMapperList": [
+			{
+				"Name": "Sustain All",
+				"Note": 24
+			},
+			{
+				"Name": "Sustain Bend Up",
+				"Note": 25
+			},
+			{
+				"Name": "Sustain Trill Tongued",
+				"Note": 26
+			},
+			{
+				"Name": "Staccato",
+				"Note": 27
+			},
+			{
+				"Name": "Staccato Triple Tongue",
+				"Note": 28
+			},
+			{
+				"Name": "Sforzando",
+				"Note": 29
+			},
+			{
+				"Name": "Swell",
+				"Note": 30
+			},
+			{
+				"Name": "Blast Fortississimo",
+				"Note": 31
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			}
+		]
+	}
+}

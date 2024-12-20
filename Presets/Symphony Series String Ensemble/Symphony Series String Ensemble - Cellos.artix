@@ -1,0 +1,72 @@
+{
+	"Name": "Symphony Series String Ensemble - Cellos",
+	"MidiChannelMapperBank": {
+		"OutputChannel": 1,
+		"MidiChannelMapperList": [
+			{
+				"Name": "Legato",
+				"Note": 24
+			},
+			{
+				"Name": "Sordino Sustain Vibrato",
+				"Note": 25
+			},
+			{
+				"Name": "Tremolo",
+				"Note": 26
+			},
+			{
+				"Name": "Octave Runs Up",
+				"Note": 27
+			},
+			{
+				"Name": "Harmonics",
+				"Note": 28
+			},
+			{
+				"Name": "Staccato",
+				"Note": 29
+			},
+			{
+				"Name": "Spiccato",
+				"Note": 30
+			},
+			{
+				"Name": "Pizzicato",
+				"Note": 31
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			}
+		]
+	}
+}

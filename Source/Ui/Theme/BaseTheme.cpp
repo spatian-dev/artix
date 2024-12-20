@@ -19,13 +19,13 @@ namespace Artix::Ui::Theme {
 		return area.reduced(offset, offset).toFloat();
 	}
 
-	void BaseTheme::fillBackground(juce::Component* component, juce::Graphics& g, UIColor backgroundColor) {
+	void BaseTheme::fillBackground(juce::Graphics& g, UIColor backgroundColor) {
 		g.fillAll(getUIColor(backgroundColor));
 	}
 
 	void BaseTheme::drawContainer(
-		juce::Component* component, juce::Graphics& g, juce::Rectangle<float> area, bool refill,
-		float borderThickness, float borderRounding, juce::Colour borderColor, juce::Colour backgroundColor
+		juce::Graphics& g, juce::Rectangle<float> area, bool refill, float borderThickness,
+		float borderRounding, juce::Colour borderColor, juce::Colour backgroundColor
 	) {
 		if (refill) {
 			g.setColour(backgroundColor);
@@ -36,21 +36,20 @@ namespace Artix::Ui::Theme {
 	}
 
 	void BaseTheme::drawContainer(
-		juce::Component* component, juce::Graphics& g, juce::Rectangle<float> area, bool refill,
+		juce::Graphics& g, juce::Rectangle<float> area, bool refill,
 		Metric borderThickness, UIColor borderColor, UIColor backgroundColor
 	) {
 		drawContainer(
-			component, g, area, refill, getThickness(borderThickness), 0, getUIColor(borderColor),
-			getUIColor(backgroundColor)
+			g, area, refill, getThickness(borderThickness), 0, getUIColor(borderColor), getUIColor(backgroundColor)
 		);
 	}
 
 	void BaseTheme::drawRounderContainer(
-		juce::Component* component, juce::Graphics& g, juce::Rectangle<float> area, bool refill,
+		juce::Graphics& g, juce::Rectangle<float> area, bool refill,
 		Metric borderThickness, Metric borderRounding, UIColor borderColor, UIColor backgroundColor
 	) {
 		drawContainer(
-			component, g, area, refill, getThickness(borderThickness), getRounding(borderRounding),
+			g, area, refill, getThickness(borderThickness), getRounding(borderRounding),
 			getUIColor(borderColor), getUIColor(backgroundColor)
 		);
 	}

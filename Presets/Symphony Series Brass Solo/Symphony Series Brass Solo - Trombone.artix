@@ -1,0 +1,72 @@
+{
+	"Name": "Symphony Series Brass Solo - Trombone",
+	"MidiChannelMapperBank": {
+		"OutputChannel": 1,
+		"MidiChannelMapperList": [
+			{
+				"Name": "Sustain Piano",
+				"Note": 24
+			},
+			{
+				"Name": "Sustain Forte",
+				"Note": 25
+			},
+			{
+				"Name": "Staccato Velocity",
+				"Note": 26
+			},
+			{
+				"Name": "Staccato Triple Tongue",
+				"Note": 27
+			},
+			{
+				"Name": "Staccato Tongue Stop",
+				"Note": 28
+			},
+			{
+				"Name": "Sforzando Fast",
+				"Note": 29
+			},
+			{
+				"Name": "Swell Fast",
+				"Note": 30
+			},
+			{
+				"Name": "Staccato Fortississimo",
+				"Note": 31
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			}
+		]
+	}
+}

@@ -1,0 +1,72 @@
+{
+	"Name": "Symphony Series Woodwind Solo - Saxophone",
+	"MidiChannelMapperBank": {
+		"OutputChannel": 1,
+		"MidiChannelMapperList": [
+			{
+				"Name": "Sustain All",
+				"Note": 12
+			},
+			{
+				"Name": "Sustain Half Trills",
+				"Note": 13
+			},
+			{
+				"Name": "Staccato",
+				"Note": 14
+			},
+			{
+				"Name": "Staccato Double Tongue Piano",
+				"Note": 15
+			},
+			{
+				"Name": "Crescendo",
+				"Note": 16
+			},
+			{
+				"Name": "Decrescendo",
+				"Note": 17
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			}
+		]
+	}
+}

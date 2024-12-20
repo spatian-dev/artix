@@ -1,0 +1,72 @@
+{
+	"Name": "Symphony Series Brass Solo - Horn 2",
+	"MidiChannelMapperBank": {
+		"OutputChannel": 1,
+		"MidiChannelMapperList": [
+			{
+				"Name": "Sustain Piano",
+				"Note": 24
+			},
+			{
+				"Name": "Sustain Forte",
+				"Note": 25
+			},
+			{
+				"Name": "Staccato Velocity",
+				"Note": 26
+			},
+			{
+				"Name": "Staccato Double Tongue",
+				"Note": 27
+			},
+			{
+				"Name": "Staccato Stop Mute",
+				"Note": 28
+			},
+			{
+				"Name": "Sforzando Fast",
+				"Note": 29
+			},
+			{
+				"Name": "Swell Fast",
+				"Note": 30
+			},
+			{
+				"Name": "Blast Short Fortississimo",
+				"Note": 31
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			}
+		]
+	}
+}

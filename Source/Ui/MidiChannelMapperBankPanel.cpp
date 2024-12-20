@@ -48,7 +48,7 @@ namespace Artix::Ui {
 				static_cast<int8_t>(Midi::Note::None), static_cast<int8_t>(Midi::Note::Last)
 			);
 
-			mapperSelector->setCustomFormatter([](int8_t v, int8_t maxChars, int8_t maxDigits) -> juce::String {
+			mapperSelector->setCustomFormatter([](int8_t v, int8_t maxChars, int8_t) -> juce::String {
 				if (v == static_cast<int8_t>(Midi::Note::None)) {
 					return std::string(maxChars, '-');
 				}
@@ -110,7 +110,7 @@ namespace Artix::Ui {
 
 	void MidiChannelMapperBankPanel::paint(juce::Graphics& g) {
 		theme->drawRounderContainer(
-			this, g, getLocalBounds().toFloat(), false, Metric::SMALL, Metric::TINY,
+			g, getLocalBounds().toFloat(), false, Metric::SMALL, Metric::TINY,
 			UIColor::BORDER_ELEMENT, UIColor::BACKGROUND
 		);
 	}

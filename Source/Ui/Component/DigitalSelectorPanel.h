@@ -159,7 +159,7 @@ namespace Artix::Ui::Component {
 
 		void paint(juce::Graphics& g) override {
 			theme->drawRounderContainer(
-				this, g, getLocalBounds().toFloat(), true, Metric::TINY, Metric::TINY,
+				g, getLocalBounds().toFloat(), true, Metric::TINY, Metric::TINY,
 				UIColor::BORDER_ELEMENT, UIColor::BACKGROUND_ELEMENT
 			);
 

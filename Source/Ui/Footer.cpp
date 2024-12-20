@@ -29,7 +29,7 @@ namespace Artix::Ui {
 
 	void Footer::paint(juce::Graphics& g) {
 		theme->drawRounderContainer(
-			this, g, getLocalBounds().toFloat(), true, Metric::SMALL, Metric::TINY, UIColor::BORDER_MUTED,
+			g, getLocalBounds().toFloat(), true, Metric::SMALL, Metric::TINY, UIColor::BORDER_MUTED,
 			isMouseButtonDown() ? UIColor::BACKGROUND : UIColor::BACKGROUND_MUTED
 		);
 	}

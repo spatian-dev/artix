@@ -9,6 +9,7 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include <atomic>
 #include <memory>
 
 #include "Settings.h"
@@ -48,11 +49,15 @@ class ArtixAudioProcessor : public juce::AudioProcessor {
 	void getStateInformation(juce::MemoryBlock& destData) override;
 	void setStateInformation(const void* data, int sizeInBytes) override;
 
+	static juce::AudioProcessor::BusesProperties getBusesLayout();
+
 	private:
 	std::unique_ptr<juce::InterProcessLock> processLock;
 	std::unique_ptr<Artix::Settings> settings;
 	std::unique_ptr <Artix::PluginState> state;
 	std::unique_ptr<Artix::Midi::Presets> presets;
+
+	std::atomic<bool> shouldGlobalNoteOff = false;
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ArtixAudioProcessor)
 };

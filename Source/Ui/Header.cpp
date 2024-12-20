@@ -28,12 +28,15 @@ namespace Artix::Ui {
         saveButton.setAutoSize(Button::AutoSize::AutoSizeWidth);
         saveButtonClickedId = saveButton.onClick.add([this](juce::MouseEvent) {
             auto dlg = juce::FileChooser(
-                "Save preset as", this->settings.getDataDirectory(),
+                "Save preset as", this->state.getLastSaveFolder(),
                 "*" + Midi::Presets::extension, true, false, this
             );
             if (!dlg.browseForFileToSave(true))
                 return;
+
             const auto target = dlg.getResult();
+            this->state.setLastSaveFolder(target.getFullPathName());
+
             const auto result = target.replaceWithText(this->state.toJson());
             if (!result) {
                 juce::NativeMessageBox::showMessageBox(
@@ -43,20 +46,24 @@ namespace Artix::Ui {
                 return;
             }
             this->state.setIsDirty(false);
+            this->presets.refreshUserPresets(this->settings.getDataDirectory());
         });
         addAndMakeVisible(saveButton);
 
         loadButton.setAutoSize(Button::AutoSize::AutoSizeWidth);
         loadButtonClickedId = loadButton.onClick.add([this](juce::MouseEvent) {
             auto dlg = juce::FileChooser(
-                "Load preset from", this->settings.getDataDirectory(),
+                "Load preset from", this->state.getLastOpenFolder(),
                 "*" + Midi::Presets::extension, true, false, this
             );
             if (!dlg.browseForFileToOpen())
                 return;
 
+            const auto target = dlg.getResult();
+            this->state.setLastOpenFolder(target.getFullPathName());
+
             auto state = State();
-            if (!state.fromJson(dlg.getResult().loadFileAsString(), true)) {
+            if (!state.fromJson(target.loadFileAsString(), true)) {
                 juce::NativeMessageBox::showMessageBox(
                     juce::MessageBoxIconType::WarningIcon,
                     "Something went wrong", "Failed to load preset.", this
@@ -64,6 +71,7 @@ namespace Artix::Ui {
                 return;
             }
             switchState(state);
+            this->presets.refreshUserPresets(this->settings.getDataDirectory());
         });
         addAndMakeVisible(loadButton);
 
@@ -73,9 +81,15 @@ namespace Artix::Ui {
         });
         addAndMakeVisible(settingsButton);
 
+        const auto safeThis = juce::Component::SafePointer<Header>(this);
+
         presetLabel.setMouseCursor(juce::MouseCursor::PointingHandCursor);
         presetLabel.setEditable(false, true);
-        setPresetName(state.getName());
+        stateNameChangedId = this->state.onNameChanged.add([safeThis](const juce::String name) {
+            if (safeThis != nullptr)
+                safeThis->setPresetName(name);
+        });
+        setPresetName(this->state.getName());
         presetLabel.onTextChange = [this]() {
             this->state.setName(presetLabel.getText());
         };
@@ -84,8 +98,7 @@ namespace Artix::Ui {
         });
         addAndMakeVisible(presetLabel);
 
-        const auto safeThis = juce::Component::SafePointer<Header>(this);
-        stateDirtyChangedId = state.onDirtyChanged.add([safeThis](const bool isDirty) {
+        stateDirtyChangedId = this->state.onDirtyChanged.add([safeThis](const bool isDirty) {
             if (safeThis == nullptr)
                 return;
 
@@ -112,16 +125,19 @@ namespace Artix::Ui {
         if (settingsButtonClickedId)
             settingsButton.onClick.remove(settingsButtonClickedId.value());
 
-        if (stateDirtyChangedId)
-            state.onDirtyChanged.remove(stateDirtyChangedId.value());
-
         if (presetLabelClickedId)
             presetLabel.onClick.remove(presetLabelClickedId.value());
+
+        if (stateNameChangedId)
+            state.onNameChanged.remove(stateNameChangedId.value());
+
+        if (stateDirtyChangedId)
+            state.onDirtyChanged.remove(stateDirtyChangedId.value());
     }
 
     void Header::paint(juce::Graphics& g) {
         theme->drawRounderContainer(
-            this, g, getLocalBounds().toFloat(), true, Metric::SMALL, Metric::TINY,
+            g, getLocalBounds().toFloat(), true, Metric::SMALL, Metric::TINY,
             UIColor::BORDER_MUTED, UIColor::BACKGROUND_MUTED
         );
     }

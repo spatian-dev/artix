@@ -89,23 +89,21 @@ namespace Artix::Ui {
 				Metric padding = Metric::MEDIUM
 			) const noexcept;
 
-			virtual void fillBackground(
-				juce::Component* component, juce::Graphics& g, UIColor backgroundColor = UIColor::BACKGROUND
+			virtual void fillBackground(juce::Graphics& g, UIColor backgroundColor = UIColor::BACKGROUND);
+
+			virtual void drawContainer(
+				juce::Graphics& g, juce::Rectangle<float> area, bool refill, float borderThickness,
+				float borderRounding, juce::Colour borderColor, juce::Colour background
 			);
 
 			virtual void drawContainer(
-				juce::Component* component, juce::Graphics& g, juce::Rectangle<float> area, bool refill,
-				float borderThickness, float borderRounding, juce::Colour borderColor, juce::Colour background
-			);
-
-			virtual void drawContainer(
-				juce::Component* component, juce::Graphics& g, juce::Rectangle<float> area, bool refill = false,
+				juce::Graphics& g, juce::Rectangle<float> area, bool refill = false,
 				Metric borderThickness = Metric::SMALL, UIColor borderColor = UIColor::BORDER,
 				UIColor backgroundColor = UIColor::BACKGROUND
 			);
 
 			virtual void drawRounderContainer(
-				juce::Component* component, juce::Graphics& g, juce::Rectangle<float> area, bool refill = false,
+				juce::Graphics& g, juce::Rectangle<float> area, bool refill = false,
 				Metric borderThickness = Metric::SMALL, Metric borderRounding = Metric::SMALL,
 				UIColor borderColor = UIColor::BORDER, UIColor backgroundColor = UIColor::BACKGROUND
 			);

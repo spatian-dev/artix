@@ -62,6 +62,7 @@ namespace Artix::Ui {
         Label presetLabel;
         Label::ClickedCallback::Identifier presetLabelClickedId;
 
+        State::NameChangedCallbacks::Identifier stateNameChangedId;
         State::DirtyChangedCallback::Identifier stateDirtyChangedId;
 
         juce::PopupMenu presetsMenu();

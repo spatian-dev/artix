@@ -1,0 +1,72 @@
+{
+	"Name": "Spitfire Symphony Orchestra - Curated String Ensembles",
+	"MidiChannelMapperBank": {
+		"OutputChannel": 1,
+		"MidiChannelMapperList": [
+			{
+				"Name": "Cool Strings 1",
+				"Note": 0
+			},
+			{
+				"Name": "Cool Strings 2",
+				"Note": 1
+			},
+			{
+				"Name": "Cool Strings 3",
+				"Note": 2
+			},
+			{
+				"Name": "Cool Strings 4",
+				"Note": 3
+			},
+			{
+				"Name": "Giant Epic Long",
+				"Note": 4
+			},
+			{
+				"Name": "Giant Epic Short",
+				"Note": 5
+			},
+			{
+				"Name": "Ligeti Strings",
+				"Note": 6
+			},
+			{
+				"Name": "Mondo Plucks",
+				"Note": 7
+			},
+			{
+				"Name": "Slow Strings 1",
+				"Note": 8
+			},
+			{
+				"Name": "Slow Strings 2",
+				"Note": 9
+			},
+			{
+				"Name": "Super Slow Strings 1",
+				"Note": 10
+			},
+			{
+				"Name": "Super Slow Strings 2",
+				"Note": 11
+			},
+			{
+				"Name": "Slow Cool Strings 1",
+				"Note": 12
+			},
+			{
+				"Name": "Slow Cool Strings 2",
+				"Note": 13
+			},
+			{
+				"Name": "Slow Cool Strings 3",
+				"Note": 14
+			},
+			{
+				"Name": "Slow Cool Strings 4",
+				"Note": 15
+			}
+		]
+	}
+}

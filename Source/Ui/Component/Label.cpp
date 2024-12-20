@@ -11,7 +11,7 @@
 #include "Label.h"
 
 namespace Artix::Ui::Component {
-    void Label::mouseDown(const juce::MouseEvent& event) {
+    void Label::mouseDown(const juce::MouseEvent&) {
         state = State::DOWN;
     }
 
@@ -22,11 +22,11 @@ namespace Artix::Ui::Component {
         state = isMouseOver() ? State::HOVER : State::NORMAL;
     }
 
-    void Label::mouseEnter(const juce::MouseEvent& event) {
+    void Label::mouseEnter(const juce::MouseEvent&) {
         state = isMouseButtonDown() ? State::DOWN : State::HOVER;
     }
 
-    void Label::mouseExit(const juce::MouseEvent& event) {
+    void Label::mouseExit(const juce::MouseEvent&) {
         state = State::NORMAL;
     }
 }

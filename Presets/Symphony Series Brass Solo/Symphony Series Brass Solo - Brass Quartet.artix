@@ -1,0 +1,72 @@
+{
+	"Name": "Symphony Series Brass Solo - Brass Quartet",
+	"MidiChannelMapperBank": {
+		"OutputChannel": 1,
+		"MidiChannelMapperList": [
+			{
+				"Name": "Sustain Piano",
+				"Note": 24
+			},
+			{
+				"Name": "Sustain Forte",
+				"Note": 25
+			},
+			{
+				"Name": "Staccato Piano",
+				"Note": 26
+			},
+			{
+				"Name": "Staccato Forte",
+				"Note": 27
+			},
+			{
+				"Name": "Sforzando Fast",
+				"Note": 28
+			},
+			{
+				"Name": "Sforzando Slow",
+				"Note": 29
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			}
+		]
+	}
+}

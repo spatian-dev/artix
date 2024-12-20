@@ -74,17 +74,17 @@ namespace Artix::Ui::Component {
 		text = v;
 	}
 
-	void Link::mouseUp(const juce::MouseEvent& event) {
+	void Link::mouseUp(const juce::MouseEvent&) {
 		const auto url = juce::URL::createWithoutParsing(link);
 		url.launchInDefaultBrowser();
 	}
 
-	void Link::mouseEnter(const juce::MouseEvent& event) {
+	void Link::mouseEnter(const juce::MouseEvent&) {
 		setMouseCursor(juce::MouseCursor::PointingHandCursor);
 		repaint();
 	}
 
-	void Link::mouseExit(const juce::MouseEvent& event) {
+	void Link::mouseExit(const juce::MouseEvent&) {
 		setMouseCursor(juce::MouseCursor::NormalCursor);
 		repaint();
 	}

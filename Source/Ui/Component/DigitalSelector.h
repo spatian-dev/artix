@@ -144,7 +144,7 @@ namespace Artix::Ui::Component {
 				backgroundHoverColor : backgroundColor;
 
 			theme->drawContainer(
-				this, g, getLocalBounds().toFloat(), true,
+				g, getLocalBounds().toFloat(), true,
 				theme->getThickness(borderThickness), theme->getRounding(rounding),
 				borderColor, bgColor
 			);

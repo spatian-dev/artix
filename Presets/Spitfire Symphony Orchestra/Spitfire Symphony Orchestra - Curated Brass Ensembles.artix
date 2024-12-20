@@ -1,0 +1,72 @@
+{
+	"Name": "Spitfire Symphony Orchestra - Curated Brass Ensembles",
+	"MidiChannelMapperBank": {
+		"OutputChannel": 1,
+		"MidiChannelMapperList": [
+			{
+				"Name": "Beast Long",
+				"Note": 0
+			},
+			{
+				"Name": "Beast Short",
+				"Note": 1
+			},
+			{
+				"Name": "Choir Long",
+				"Note": 2
+			},
+			{
+				"Name": "Choir Short",
+				"Note": 3
+			},
+			{
+				"Name": "Power Long",
+				"Note": 4
+			},
+			{
+				"Name": "Sup. Choir Long",
+				"Note": 5
+			},
+			{
+				"Name": "Sup. Choir Short",
+				"Note": 6
+			},
+			{
+				"Name": "Slow Choir Long",
+				"Note": 7
+			},
+			{
+				"Name": "Slow Choir Short",
+				"Note": 8
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			},
+			{
+				"Name": "",
+				"Note": -1
+			}
+		]
+	}
+}
