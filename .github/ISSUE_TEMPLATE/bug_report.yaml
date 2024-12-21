@@ -1,0 +1,32 @@
+name: Bug Report
+description: Report an issue with Artix
+body:
+  - type: input
+    attributes:
+      label: Artix version
+      placeholder: E.g. v1.0.0
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: OS name and version
+      placeholder: E.g. Windows 11, macOS 15.2, etc...
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: DAW name and version
+      placeholder: E.g. FL Studio 24, Ableton Live 12, etc...
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Description
+      description: Describe clear the behaviour you're encountering, steps to reproduce it, and the expected behaviour.
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Minimal Reproducible Example repository
+      description: Link to a public MRE repository
+      placeholder: https://github.com/example/my-mre

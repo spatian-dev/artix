@@ -207,6 +207,11 @@ namespace Artix::Ui {
         juce::PopupMenu settingsMenu;
         settingsMenu.addSubMenu("Theme", themesMenu);
         settingsMenu.addSeparator();
+        settingsMenu.addItem("Open Data Folder", [safeThis]() {
+            if (safeThis == nullptr)
+                return;
+            safeThis->settings.getDataDirectory().revealToUser();
+        });
         settingsMenu.addItem("Change Data Folder", [safeThis]() {
             if (safeThis == nullptr)
                 return;

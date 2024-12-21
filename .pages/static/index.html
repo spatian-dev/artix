@@ -95,6 +95,16 @@
                 margin: calc(var(--pico-spacing) * 1.5) 0;
             }
 
+			body>main>.logo {
+				padding-bottom: var(--pico-block-spacing-vertical);
+			}
+
+			body>main img.center {
+				display: block;
+				margin-left: auto;
+				margin-right: auto;
+			}
+
             body>footer {
                 padding: calc(var(--pico-spacing) * 1.5) 0;
                 text-align: center;
@@ -160,23 +170,116 @@
         </header>
 
         <main class="container">
-            <svg version="1.2" baseProfile="tiny" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 839 290.5" overflow="visible" xml:space="preserve">
-				<path fill="#334155" d="M28.7 26.6h222.5c5.3 0 9.7 4.3 9.7 9.7v222.5c0 5.3-4.3 9.7-9.7 9.7H28.7c-5.3 0-9.7-4.3-9.7-9.7V36.2c0-5.3 4.3-9.6 9.7-9.6z"/>
-				<path fill="#CBD5E1" d="M159 205h29L152.5 90.1h-25.3L91.9 205h29l5.1-21.5h28l5 21.5zm-28-42.8 9-38 9 38h-18z"/>
-				<path fill="#344155" d="M530.8 153.7c13.5-12.8 14.8-40.5 6-56.3C522.2 70 475.3 80.5 450 78.5v139h33v-49h7.6l20 50H546v-1.4l-23.8-57c3.3-2 6.3-4.1 8.6-6.4zM483 104.5c4.8.5 17.7-1.5 21.3 2.4 7.7 7.7 7.9 26.3-.3 33.7-2.6 2.4-12.4 2.3-21 2v-38.1zm-95.7-26h-21.9l-42.9 139h35.1l5.9-25h34.4c2.7 11.1 4.8 20.1 5.9 25h35.1l-43-139h-8.6zm-17.7 88 11.2-47.6c3.2 15 7.2 31.9 10.9 47.6h-22.1zm450.7 51h-37.5L767 170.4l-16 47.1h-37.7l32-70.1L714 78.5h37.2l15.7 46.2 15.5-46.2h37.1l-31 68.9 31.8 70.1zM617 78.5h33v26h-33v113h-33v-113h-33v-26h66zm49 0h33v139h-33v-139z"/>
-			</svg>
-			<p>A simple VST that maps MIDI channel to note, to simplify your keyswitches and more.</p>
-<h3 id="debugging">Debugging</h3><p>To make debugging easy while developping:</p>
+			<div class="logo">
+				<svg version="1.2" baseProfile="tiny" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 839 290.5" overflow="visible" xml:space="preserve">
+					<path fill="#334155" d="M28.7 26.6h222.5c5.3 0 9.7 4.3 9.7 9.7v222.5c0 5.3-4.3 9.7-9.7 9.7H28.7c-5.3 0-9.7-4.3-9.7-9.7V36.2c0-5.3 4.3-9.6 9.7-9.6z"/>
+					<path fill="#CBD5E1" d="M159 205h29L152.5 90.1h-25.3L91.9 205h29l5.1-21.5h28l5 21.5zm-28-42.8 9-38 9 38h-18z"/>
+					<path fill="#344155" d="M530.8 153.7c13.5-12.8 14.8-40.5 6-56.3C522.2 70 475.3 80.5 450 78.5v139h33v-49h7.6l20 50H546v-1.4l-23.8-57c3.3-2 6.3-4.1 8.6-6.4zM483 104.5c4.8.5 17.7-1.5 21.3 2.4 7.7 7.7 7.9 26.3-.3 33.7-2.6 2.4-12.4 2.3-21 2v-38.1zm-95.7-26h-21.9l-42.9 139h35.1l5.9-25h34.4c2.7 11.1 4.8 20.1 5.9 25h35.1l-43-139h-8.6zm-17.7 88 11.2-47.6c3.2 15 7.2 31.9 10.9 47.6h-22.1zm450.7 51h-37.5L767 170.4l-16 47.1h-37.7l32-70.1L714 78.5h37.2l15.7 46.2 15.5-46.2h37.1l-31 68.9 31.8 70.1zM617 78.5h33v26h-33v113h-33v-113h-33v-26h66zm49 0h33v139h-33v-139z"/>
+				</svg>
+			</div>
+			<p>A simple VST that maps MIDI channels to notes, to simplify your keyswitches and more.</p>
+<h2 id="what-is-artix">What is Artix?</h2><p><a href="https://artix.spatian.dev" target="_blank">Artix</a> provides a way for music producers to map MIDI channels to MIDI notes.<br>This allows sending notes on different MIDI channels to trigger a different articulations per MIDI channel.</p>
+<p><img class="center" src="images/how-it-works.jpg" title="Artix in action" alt="Artix in action"></p>
+<h2 id="does-this-work-with-my-daw">Does this work with my DAW ?</h2><p>The only prerequisite is that your DAW supports assigning different MIDI channels to individual notes on the same track. This is the main feature of this plugin.</p>
+<p>Unfortunately, some DAWs like Ableton Live and Avid ProTools do not support this feature, and as such this plugin is of limited use in those DAWs.</p>
+<p>This plugin is confirmed to work correctly on the following platforms:</p>
 <ul>
-<li>Set the project <code>Artix_VST3</code> as your startup project.</li>
-<li>Set the debugging command in your IDE to JUCE&#39;s included <a href="https://github.com/juce-framework/JUCE/tree/master/extras/AudioPluginHost" target="_blank">`AudioPluginHost`</a>.</li>
-<li>Set the debugging command argumnets to the full path of <a href="https://github.com/spatian-dev/artix/blob/0.x/Debug.filtergraph" target="_blank">`Debug.filtergraph`</a>.</li>
+<li><a href="https://www.image-line.com/" target="_blank">Image-Line FL Studio</a>: Windows 10, Windows 11</li>
+<li><a href="https://www.reaper.fm/" target="_blank">Cockos Reaper</a>: Windows 10, Windows 11</li>
 </ul>
-<p>If additionally you would like to have the <a href="https://learn.microsoft.com/en-us/cpp/sanitizers/asan?view=msvc-170" target="_blank">Address Sanitizer \(ASan\)</a>, then make sure to:</p>
+<blockquote>
+<p><strong>ℹ️</strong> Have you built and tested this plugin on a platform / DAW missing form this list, please reach out!</p>
+</blockquote>
+<h2 id="how-to-use-artix">How to use Artix</h2><h3 id="installation">Installation</h3><ul>
+<li>Download and Install the latest <a href="https://aka.ms/vs/17/release/vc_redist.x64.exe" target="_blank">Microsoft Visual C++ Redistributable</a></li>
+<li>Compile or <a href="https://github.com/spatian-dev/artix/releases/latest" target="_blank">Download the latest compiled binaries</a> for your platform.</li>
+<li>Place the binaries in the appropriate folder for your platform<ul>
+<li>For VST3, see <a href="https://helpcenter.steinberg.de/hc/en-us/articles/115000177084-VST-plug-in-locations-on-Windows" target="_blank">VST3 location for Windows</a> or <a href="https://helpcenter.steinberg.de/hc/en-us/articles/115000171310-VST-plug-in-locations-on-Mac-OS-X-and-macOS" target="_blank">VST3 location for macOS</a></li>
+</ul>
+</li>
+<li>Open your DAW and scan for new plugins. Artix should show up in your DAW&#39;s plugin list.</li>
+</ul>
+<h3 id="user-interface">User Interface</h3><p>Here&#39;s a breakdown of the user interface:</p>
+<p><img class="center" src="images/artix-ui-breakdown.jpg" title="Artix in action" alt="Artix in action"></p>
+<p><strong>1. Toolbar</strong></p>
+<ul>
+<li><p><strong>(A)</strong> Preset Selector<br>The preset selector displays the currently selected preset. The text on the selector will change colors to indicate that unsaved changes have been made.<br>A single click on the selector will open up the presets menu. This menu will show the included factory presets along with your own custom presets from the configured data folder. You can also change presets using the buttons on either side of the preset selector.<br><img class="center" src="images/artix-presets-menu.jpg" title="Artix in action" alt="Artix in action"><br>Additionally, double clicking the preset selector allows you to edit the preset&#39;s name.</p>
+</li>
+<li><p><strong>Load</strong> and <strong>Save</strong> Buttons<br>The load and save buttons, as the name implies, allow you to load and save presets from and to arbitrary files.</p>
+</li>
+<li><p><strong>Settings</strong> Button<br>The settings menu allows you to access and change a handful of useful configuration parameters.</p>
+<ul>
+<li>The <strong>Theme</strong> menu displays a list of available themes to choose from.</li>
+<li><strong>Open Data Folder</strong> opens your currently configured data folder in your system&#39;s file browser.</li>
+<li><strong>Change Data Folder</strong> allows you to set a new data folder.</li>
+<li><strong>Rescan Data Folder</strong> reloads all the available presets from the currently configured data folder.<br><img class="center" src="images/artix-settings-menu.jpg" title="Artix in action" alt="Artix in action"></li>
+</ul>
+</li>
+</ul>
+<p><strong>2. Main area</strong></p>
+<ul>
+<li><p><strong>(B)</strong> MIDI Output Channel Selector<br>Click and drag up or down to change. If you drag farther notes will change faster. You can also use you mouse&#39;s scroll wheel when the cursor is on top of the selector to make changes.<br>  This is the MIDI channel that all MIDI messages going through Artix will be rerouted through.</p>
+</li>
+<li><p><strong>(C)</strong> MIDI Channel Panel</p>
+<ul>
+<li><p><strong>(D)</strong> MIDI Channel Number Indicator<br>  This indicates this MIDI channel&#39;s number.<br>  Incoming MIDI note on / off messages for this channel will automatically be converted into the configured note (see <strong>F</strong> below).</p>
+</li>
+<li><p><strong>(E)</strong> MIDI Channel Name<br>  Double click to edit. This allows you to set a name for this MIDI channel. It is useful to name the channel after the articulation it triggers, for example.</p>
+</li>
+<li><p><strong>(F)</strong> MIDI Note Selector<br>  Click and drag up or down to change. If you drag farther notes will change faster. You can also use you mouse&#39;s scroll wheel when the cursor is on top of the selector to make changes.<br>  This is the note that will be triggered when Artix receives MIDI note on / off messages on this channel. You would set this to the keyswitch you want to trigger, for example.<br>  When no note is indicated, no extra notes are triggered but incoming MIDI messages will still be rerouted to the configured MIDI output channel (see <strong>D</strong> above).</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="usage">Usage</h3><p>Using this plugin goes as follows:</p>
+<ul>
+<li>Add an instance of Artix to your project</li>
+<li>Add an instance of the plugin you want to control using Artix (the target).</li>
+<li>Configure your DAW so that MIDI going out of Artix is sent into the target plugin.</li>
+</ul>
+<p>How one would achieve this differs by DAW.</p>
+<ul>
+<li>In FL Studio, you can <a href="https://www.image-line.com/fl-studio-learning/fl-studio-online-manual/html/plugins/wrapper.htm#:~:text=plugin%20was%20loaded.-,MIDI,other%20MIDI%20device%20will%20be%20able%20to%20share%20exclusive%20MIDI%20data.,-Send%20note%20release" target="_blank">set the MIDI output port on the wrapper for Artix and the MIDI input port on the wrapper for the target plugin to the same port</a>.</li>
+<li>In Reaper, you can add send on the Artix mixer channel, and set its target to the target plugin.</li>
+</ul>
+<p>Tutorial videos will be coming soon to better illustrate this section. In the meantime, if you have a question, feel free to post in the <a href="https://github.com/spatian-dev/artix/discussions/categories/general" target="_blank">💬General category on Discussions</a>.</p>
+<blockquote>
+<p><strong>ℹ️</strong> Want to help fill this section ? Please make a short video showing how to setup Artix in your DAW and reach out to me!</p>
+</blockquote>
+<h2 id="platforms-build-and-debug">Platforms, Build, and Debug</h2><h3 id="supported-platforms">Supported platforms</h3><p>Currently, the only version being built is a Windows x64 VST3 in Visual Studio 2022. However, it should not be very difficult to build this for your platform.</p>
+<blockquote>
+<p><strong>ℹ️</strong> Want to help maintain builds for platforms other than windows ? Please reach out!</p>
+</blockquote>
+<h3 id="building">Building</h3><p>This project is made with the awesome <a href="https://github.com/juce-framework/JUCE" target="_blank">JUCE Framework</a>. Please see <a href="https://docs.juce.com/master/tutorial_new_projucer_project.html" target="_blank">Getting Started with JUCE</a>.<br>You will need to install a C++ toolchain (and likely and IDE) for your platform.</p>
+<p>Once that is done, you can simply open the included <a href="https://github.com/spatian-dev/artix/blob/1.x/artix.jucer" target="_blank">artix.jucer</a> file in Projucer, select or add an exporter, and open the project as shown in JUCE&#39;s getting started tutorial.</p>
+<h3 id="debugging">Debugging</h3><blockquote>
+<p><strong>⚠️</strong> The following instructions are for Visual Studio 2022.</p>
+</blockquote>
+<p>To make debugging easy while developing:</p>
+<ul>
+<li>Set the project <strong>Artix_VST3</strong> as your startup project.</li>
+<li>Set the debugging command in your IDE to JUCE&#39;s included <a href="https://github.com/juce-framework/JUCE/tree/master/extras/AudioPluginHost" target="_blank">AudioPluginHost</a>.</li>
+<li>Set the debugging command arguments to the full path of <a href="https://github.com/spatian-dev/artix/blob/1.x/Debug.filtergraph" target="_blank">Debug.filtergraph</a>.</li>
+</ul>
+<p>If additionally you would like to have the <a href="https://learn.microsoft.com/en-us/cpp/sanitizers/asan?view=msvc-170" target="_blank">Address Sanitizer (ASan)</a>, then make sure to:</p>
 <ul>
 <li>Rebuild the AudioPluginHost with ASan enabled.</li>
 <li>Have ASan enabled in all projects in the solution. (<em><code>Properties</code></em> &gt; <em><code>C/C++</code></em> &gt; <em><code>Enable Address Sanitizer</code></em>).</li>
 </ul>
+<p>Eventually, and before releasing, you might want to test / debug the plugin inside actual DAWs. To do so, replace <strong>AudioPluginHost</strong> in your startup project&#39;s debugging command with your DAW&#39;s executable. Then when your DAW starts up, add an instance of the plugin and you should be able to hit breakpoints etc.</p>
+<h3 id="contributing">Contributing</h3><blockquote>
+<p><strong>⚠️</strong> Before submitting a PR or an issue, make sure to use the search bar in the issues section to see if the problem is not already addressed or currently being addressed.</p>
+</blockquote>
+<p>If you have an idea for an improvement, please send a post in the <a href="https://github.com/spatian-dev/artix/discussions/categories/ideas" target="_blank">💡Ideas category on Discussions</a>, or open an issue and select <em>Feature request</em>.</p>
+<p>If you&#39;re encountering a problem related to the code or build process, please open an issue and select <em>Bug report</em>, then thoroughly fill the form.
+If you want to contribute a fix for a bug, please open an issue and select <em>Bug report</em>, then thoroughly fill the form.</p>
+<p>Please include a <a href="https://en.wikipedia.org/wiki/Minimal_reproducible_example" target="_blank">minimal reproducible example</a> to avoid your issue being closed.</p>
+<h2 id="credits">Credits</h2><ul>
+<li>This package was inspired by <a href="https://www.syntheticorchestra.com/tools/articulate/" target="_blank">BRSO Articulate</a>. Shout out to them.</li>
+<li><a href="https://github.com/saadsidqui" target="_blank">Saad Sidqui</a></li>
+<li><a href="https://github.com/spatian-dev/artix/graphs/contributors" target="_blank">All the contributors</a></li>
+</ul>
+<h3 id="license">License</h3><p>Artix is free and open-source software released under the AGPL-3.0 license. See <a href="https://github.com/spatian-dev/artix/blob/1.x/LICENSE" target="_blank">LICENSE</a> for more information.</p>
 
         </main>
 
