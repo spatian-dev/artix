@@ -18,7 +18,7 @@ This allows sending notes on different MIDI channels to trigger a different arti
    - [Debugging](#debugging)
    - [Contributing](#contributing)
 - **[Credits](#credits)**
-   - [License](#license)
+- **[License](#license)**
 
 ## Does this work with my DAW
 The only prerequisite is that your DAW supports assigning different MIDI channels to individual notes on the same track. This is the main feature of this plugin.
@@ -103,7 +103,7 @@ Currently, the only version being built is a Windows x64 VST3 in Visual Studio 2
 
 ### Building
 This project is made with the awesome [JUCE Framework](https://github.com/juce-framework/JUCE). Please see [Getting Started with JUCE](https://docs.juce.com/master/tutorial_new_projucer_project.html).\
-You will need to install a C++ toolchain (and likely and IDE) for your platform.
+You will need to install a C++ toolchain (and likely an IDE) for your platform.
 
 Once that is done, you can simply open the included [artix.jucer](./artix.jucer) file in Projucer, select or add an exporter, and open the project as shown in JUCE's getting started tutorial.
 
@@ -136,5 +136,5 @@ Please include a [minimal reproducible example](https://en.wikipedia.org/wiki/Mi
 - [Saad Sidqui](https://github.com/saadsidqui)
 - [All the contributors](https://github.com/spatian-dev/artix/graphs/contributors)
 
-### License
+## License
 Artix is free and open-source software released under the AGPL-3.0 license. See [LICENSE](LICENSE) for more information.
