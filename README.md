@@ -7,7 +7,7 @@ This allows sending notes on different MIDI channels to trigger a different arti
 
 ![Artix in action](.pages/static/images/how-it-works.jpg)
 
-- **[Does this work with my DAW ?](#does-this-work-with-my-daw-)**
+- **[Does this work with my DAW](#does-this-work-with-my-daw)**
 - **[How to use Artix](#how-to-use-artix)**
    - [Installation](#installation)
    - [User Interface](#user-interface)
@@ -20,7 +20,7 @@ This allows sending notes on different MIDI channels to trigger a different arti
 - **[Credits](#credits)**
    - [License](#license)
 
-## Does this work with my DAW ?
+## Does this work with my DAW
 The only prerequisite is that your DAW supports assigning different MIDI channels to individual notes on the same track. This is the main feature of this plugin.
 
 Unfortunately, some DAWs like Ableton Live and Avid ProTools do not support this feature, and as such this plugin is of limited use in those DAWs.
