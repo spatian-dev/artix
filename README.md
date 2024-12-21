@@ -29,7 +29,7 @@ This plugin is confirmed to work correctly on the following platforms:
 - [Image-Line FL Studio](https://www.image-line.com/): Windows 10, Windows 11
 - [Cockos Reaper](https://www.reaper.fm/): Windows 10, Windows 11
 
-> **ℹ️** Have you built and tested this plugin on a platform / DAW missing form this list, please reach out!
+> **ℹ️** Have you built and tested this plugin on a platform / DAW missing form this list ? Please reach out!
 
 ## How to use Artix
 ### Installation
@@ -64,7 +64,7 @@ The settings menu allows you to access and change a handful of useful configurat
 
 **2. Main area**
 - **(B)** MIDI Output Channel Selector\
-Click and drag up or down to change. If you drag farther notes will change faster. You can also use you mouse's scroll wheel when the cursor is on top of the selector to make changes.\
+Click and drag up or down to change. If you drag farther the channel number will change faster. You can also use you mouse's scroll wheel when the cursor is on top of the selector to make changes.\
 	This is the MIDI channel that all MIDI messages going through Artix will be rerouted through.
 
 - **(C)** MIDI Channel Panel
